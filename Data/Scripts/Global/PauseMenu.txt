@@ -1,0 +1,841 @@
+//-----------------Sonic CD Pause Menu Script-----------------//
+//--------Scripted by Christian Whitehead 'The Taxman'--------//
+//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+
+// Aliases
+private alias object.propertyValue : Object.TimerThreshold
+private alias object.value0 : Object.Timer
+private alias object.value1 : Object.SelectedButton
+private alias object.value2 : Object.SpritesXPos
+private alias object.value3 : Object.BlackBarXPos
+private alias object.value4 : Object.BlackBarYPos
+private alias object.value5 : Object.BlackBarHeight
+private alias object.value6 : Object.BlockRestart
+
+// States
+private alias 0 : PAUSEMENU_START_PAUSE
+private alias 1 : PAUSEMENU_SLIDE_IN
+private alias 2 : PAUSEMENU_SPRITES_FADE_IN
+private alias 3 : PAUSEMENU_CONTROLS
+private alias 4 : PAUSEMENU_CONFIRMED
+private alias 5 : PAUSEMENU_RESUME_GAME
+private alias 6 : PAUSEMENU_EXIT_LEVEL // Not the best name but is essentially what will happen here
+
+// Ink
+private alias 2 : INK_ALPHA
+
+// Player
+private alias 0 : PLAYER_SONIC
+
+// Languages
+private alias 0 : LANG_ENGLISH
+private alias 1 : LANG_FRENCH
+private alias 2 : LANG_ITALIAN
+private alias 3 : LANG_DEUTSCH
+private alias 4 : LANG_SPANISH
+private alias 5 : LANG_JAPANESE
+
+// Game Mode Aliases
+private alias 2 : MODE_TIMEATTACK
+
+// Presentation Stages
+private alias 0 : STAGE_P_TITLE
+private alias 2 : STAGE_P_TATTACK
+
+// Global SFX
+private alias 23 : SFX_G_MENUBUTTON
+private alias 24 : SFX_G_FLYING
+private alias 27 : SFX_G_SELECT
+
+// Engine & Callbacks
+private alias 2 : MESSAGE_LOSTFOCUS
+private alias 3 : MESSAGE_YES_SELECTED
+private alias 4 : MESSAGE_NO_SELECTED
+
+private alias 6 : CALLBACK_RESTART_SELECTED
+private alias 7 : CALLBACK_EXIT_SELECTED
+private alias 8 : CALLBACK_BUY_FULL_GAME_SELECTED
+
+
+event ObjectUpdate
+	switch object.state
+	case PAUSEMENU_START_PAUSE
+		PauseMusic()
+		object.xpos = screen.xsize
+		Object.BlackBarXPos = 0
+		Object.Timer = 0
+		object.inkEffect = INK_ALPHA
+		object.alpha = 0
+		switch engine.language
+		case LANG_ENGLISH
+		case LANG_JAPANESE
+			Object.TimerThreshold = 12
+			break
+
+		case LANG_FRENCH
+			Object.TimerThreshold = 15
+			break
+
+		case LANG_ITALIAN
+		case LANG_DEUTSCH
+		case LANG_SPANISH
+			Object.TimerThreshold = 13
+			break
+
+		end switch
+
+		if Player.Lives < 2
+			Object.BlockRestart = true
+		else
+			if stage.activeList == SPECIAL_STAGE
+				Object.BlockRestart = true
+			else
+				Object.BlockRestart = false
+			end if
+
+		end if
+
+		object.state++
+		break
+
+	case PAUSEMENU_SLIDE_IN
+		Object.BlackBarXPos = Object.Timer
+		Object.BlackBarXPos *= screen.xsize
+		Object.BlackBarXPos /= 12
+
+		Object.BlackBarYPos = Object.Timer
+		Object.BlackBarYPos *= 240
+		Object.BlackBarYPos /= 12
+
+		temp0 = Object.Timer
+		temp0 <<= 7
+		temp0 /= 12
+		object.xpos = screen.xsize
+		object.xpos -= temp0
+
+		if Object.Timer < Object.TimerThreshold
+			Object.Timer++
+		else
+			PauseMusic()
+			Object.SpritesXPos = object.xpos
+			Object.SpritesXPos += 48
+			Object.Timer = 0
+			object.state++
+		end if
+		break
+
+	case PAUSEMENU_SPRITES_FADE_IN
+		if Object.Timer < 256
+			Object.Timer += 16
+			if Object.Timer < 255
+				object.alpha = Object.Timer
+			else
+				object.alpha = 255
+			end if
+		else
+			Object.Timer = 0
+			object.alpha = 255
+			object.state++
+		end if
+		break
+
+	case PAUSEMENU_CONTROLS
+		checkResult = true
+
+		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
+		if checkResult == true
+			if keyPress[0].up == true
+				PlaySfx(SFX_G_MENUBUTTON, false)
+
+				Object.Timer = 0
+				object.animationTimer = 0
+				object.frame = 0
+				Object.SpritesXPos = screen.xsize
+				Object.SelectedButton--
+
+				if Options.DevMenuFlag == true
+					if Object.SelectedButton < 0
+						Object.SelectedButton = 3
+					end if
+				else
+					if Object.SelectedButton < 0
+						if engine.trialMode == true
+							Object.SelectedButton = 3
+						else
+							Object.SelectedButton = 2
+						end if
+					end if
+				end if
+
+				if Object.BlockRestart == true
+					if Object.SelectedButton == 1
+						Object.SelectedButton--
+					end if
+				end if
+			end if
+
+			if keyPress[0].down == true
+				PlaySfx(SFX_G_MENUBUTTON, false)
+
+				Object.Timer = 0
+				object.animationTimer = 0
+				object.frame = 0
+				Object.SpritesXPos = screen.xsize
+				Object.SelectedButton++
+
+				if Options.DevMenuFlag == true
+					if Object.SelectedButton > 3
+						Object.SelectedButton = 0
+					end if
+				else
+					if engine.trialMode == true
+						if Object.SelectedButton > 3
+							Object.SelectedButton = 0
+						end if
+					else
+						if Object.SelectedButton > 2
+							Object.SelectedButton = 0
+						end if
+					end if
+				end if
+
+				if Object.BlockRestart == true
+					if Object.SelectedButton == 1
+						Object.SelectedButton++
+					end if
+				end if
+			end if
+
+			if keyPress[0].start == true
+				PlaySfx(SFX_G_SELECT, false)
+
+				object.state = PAUSEMENU_CONFIRMED
+				object.alpha = 248
+				Object.Timer = 0
+			end if
+
+			if keyPress[0].buttonA == true
+				PlaySfx(SFX_G_SELECT, false)
+
+				object.state = PAUSEMENU_CONFIRMED
+				object.alpha = 248
+				Object.Timer = 0
+			end if
+
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult > -1
+
+				Options.PhysicalControls = false
+				Object.SelectedButton = -1
+
+			end if
+		else
+// WARNING: Variable VAR_ENGINEMESSAGE does not exist in RSDKv4!
+
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			temp3 = checkResult
+			CheckTouchRect(temp0, 32, screen.xsize, 64)
+			if checkResult > -1
+				Object.SelectedButton = 0
+			else
+				if temp3 < 0
+					if Object.SelectedButton == 0
+						PlaySfx(SFX_G_SELECT, false)
+
+						object.state = PAUSEMENU_CONFIRMED
+						object.alpha = 248
+						Object.Timer = 0
+					end if
+				else
+					if Object.SelectedButton == 0
+						Object.SelectedButton = -1
+					end if
+				end if
+			end if
+
+			if Object.BlockRestart == false
+				CheckTouchRect(temp0, 80, screen.xsize, 112)
+				if checkResult > -1
+					Object.SelectedButton = 1
+				else
+					if temp3 < 0
+						if Object.SelectedButton == 1
+							PlaySfx(SFX_G_SELECT, false)
+
+							object.state = PAUSEMENU_CONFIRMED
+							object.alpha = 248
+							Object.Timer = 0
+						end if
+					else
+						if Object.SelectedButton == 1
+							Object.SelectedButton = -1
+						end if
+					end if
+				end if
+			end if
+
+			CheckTouchRect(temp0, 128, screen.xsize, 160)
+			if checkResult > -1
+				Object.SelectedButton = 2
+			else
+				if temp3 < 0
+					if Object.SelectedButton == 2
+						PlaySfx(SFX_G_SELECT, false)
+
+						object.state = PAUSEMENU_CONFIRMED
+						object.alpha = 248
+						Object.Timer = 0
+					end if
+				else
+					if Object.SelectedButton == 2
+						Object.SelectedButton = -1
+					end if
+				end if
+			end if
+
+			if Options.DevMenuFlag == true
+				CheckTouchRect(temp0, 176, screen.xsize, 208)
+				if checkResult > -1
+					Object.SelectedButton = 3
+				else
+					if temp3 < 0
+						if Object.SelectedButton == 3
+							PlaySfx(SFX_G_SELECT, false)
+
+							object.state = PAUSEMENU_CONFIRMED
+							object.alpha = 248
+							Object.Timer = 0
+						end if
+					else
+						if Object.SelectedButton == 3
+							Object.SelectedButton = -1
+						end if
+					end if
+				end if
+			end if
+
+			if engine.trialMode == true
+				CheckTouchRect(temp0, 176, screen.xsize, 208)
+				if checkResult > -1
+					Object.SelectedButton = 3
+				else
+					if temp3 < 0
+						if Object.SelectedButton == 3
+							PlaySfx(SFX_G_SELECT, false)
+
+							object.state = PAUSEMENU_CONFIRMED
+							object.alpha = 248
+							Object.Timer = 0
+						end if
+					else
+						if Object.SelectedButton == 3
+							Object.SelectedButton = -1
+						end if
+					end if
+				end if
+			end if
+
+			if keyPress[0].up == true
+				if Options.DevMenuFlag == true
+					Object.SelectedButton = 3
+				else
+					Object.SelectedButton = 2
+				end if
+
+			end if
+
+			if keyPress[0].down == true
+				Object.SelectedButton = 0
+
+			end if
+		end if
+
+		if Object.Timer < 60
+			Object.Timer++
+		else
+			object.frame = object.animationTimer
+			object.frame >>= 4
+			object.frame++
+
+			object.animationTimer++
+			object.animationTimer &= 31
+		end if
+		break
+
+	case PAUSEMENU_CONFIRMED
+		Object.Timer++
+		Object.Timer &= 3
+
+		Object.SpritesXPos += 4
+		if object.alpha > 0
+			object.alpha -= 8
+		else
+			if Object.SelectedButton == 0
+				Object.SpritesXPos = object.xpos
+				Object.SpritesXPos += 48
+				Object.BlackBarYPos = 202
+
+				Object.Timer = 0
+				object.alpha = 128
+
+				object.state = PAUSEMENU_RESUME_GAME
+				stage.state = STAGE_RUNNING
+			else
+				// Blit/Origins method of this process
+				Object.SpritesXPos = object.xpos
+				Object.SpritesXPos += 48
+				StopMusic()
+				object.state = PAUSEMENU_EXIT_LEVEL
+			end if
+		end if
+		break
+
+	case PAUSEMENU_RESUME_GAME
+		if object.alpha > 0
+			object.alpha -= 8
+			object.xpos += 16
+			Object.SpritesXPos += 16
+			Object.BlackBarYPos += 16
+		else
+			ResumeMusic()
+			ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+			if object[0].animation == ANI_FLYING
+				PlaySfx(SFX_G_FLYING, true)
+			end if
+
+			if object[0].animation == ANI_FLYINGTIRED
+				PlaySfx(SFX_G_FLYING, true)
+			end if
+		end if
+		break
+
+	case PAUSEMENU_EXIT_LEVEL
+		if object.xpos > -64
+			object.xpos -= 16
+			Object.SpritesXPos += 16
+		else
+			switch Object.SelectedButton
+			case 1 // Restart
+				LampPost.Check = 0
+				if Options.GameMode == MODE_TIMEATTACK
+					Player.Lives = 1
+					Player.Score = 0
+				else
+					Player.Lives--
+				end if
+				LoadStage()
+				break
+			case 2 // Exit
+
+				stage.activeList = PRESENTATION_STAGE
+				LampPost.Check = 0
+
+				if Options.GameMode == MODE_TIMEATTACK
+					stage.listPos = STAGE_P_TATTACK
+					TimeAttack.Result = 0
+				else
+					stage.listPos = STAGE_P_TITLE
+				end if
+				LoadStage()
+				break
+
+			case 3 // Dev Menu
+				//TimeAttack.Round = -1
+				engine.state = RESET_GAME
+				break
+			end switch
+		end if
+		break
+	end switch
+end event
+
+
+event ObjectDraw
+	SetActivePalette(0, 0, screen.ysize)
+
+	switch object.state
+	case PAUSEMENU_START_PAUSE
+	case PAUSEMENU_SLIDE_IN
+	case PAUSEMENU_SPRITES_FADE_IN
+		// Pause White BG
+		if Object.BlackBarHeight < 240
+			if Object.BlackBarYPos > Object.BlackBarHeight
+				temp0 = Object.BlackBarYPos
+				temp0 -= Object.BlackBarHeight
+				DrawRect(0, Object.BlackBarHeight, 384, temp0, 255, 255, 255, 128)
+				Object.BlackBarHeight = Object.BlackBarYPos
+			end if
+		end if
+		// Fall-through
+	case PAUSEMENU_CONTROLS
+		DrawSpriteScreenXY(3, object.xpos, 0)
+		DrawSpriteScreenXY(3, object.xpos, 32)
+		DrawSpriteScreenXY(3, object.xpos, 64)
+		DrawSpriteScreenXY(3, object.xpos, 96)
+		DrawSpriteScreenXY(3, object.xpos, 128)
+		DrawSpriteScreenXY(3, object.xpos, 160)
+		DrawSpriteScreenXY(3, object.xpos, 192)
+		DrawSpriteScreenXY(3, object.xpos, 224)
+
+		// Black Bar position
+		temp0 = object.xpos
+		temp0 += 128
+		DrawRect(temp0, 0, 128, screen.ysize, 0, 0, 0, 255)
+		DrawRect(0, 202, Object.BlackBarXPos, 13, 0, 0, 0, 255)
+
+		DrawSpriteScreenFX(4, FX_INK, 0, 202)
+		temp0 = object.xpos
+		temp0 += 48
+
+		if Object.SpritesXPos > temp0
+			temp1 = temp0
+			temp1 -= Object.SpritesXPos
+			temp1 >>= 3
+			Object.SpritesXPos += temp1
+		end if
+
+		temp1 = 48
+		DrawSpriteScreenFX(6, FX_INK, temp0, temp1)
+		if Object.SelectedButton == 0
+			DrawSpriteScreenFX(5, FX_INK, Object.SpritesXPos, temp1)
+			DrawSpriteScreenFX(object.frame, FX_INK, temp0, temp1)
+		end if
+
+		temp1 += 48
+		if Object.BlockRestart == false
+			DrawSpriteScreenFX(7, FX_INK, temp0, temp1)
+		else
+			temp2 = object.alpha
+			object.alpha >>= 1
+			DrawSpriteScreenFX(7, FX_INK, temp0, temp1)
+			object.alpha = temp2
+		end if
+
+		if Object.SelectedButton == 1
+			DrawSpriteScreenFX(5, FX_INK, Object.SpritesXPos, temp1)
+			DrawSpriteScreenFX(object.frame, FX_INK, temp0, temp1)
+		end if
+
+		temp1 += 48
+		DrawSpriteScreenFX(8, FX_INK, temp0, temp1)
+		if Object.SelectedButton == 2
+			DrawSpriteScreenFX(5, FX_INK, Object.SpritesXPos, temp1)
+			DrawSpriteScreenFX(object.frame, FX_INK, temp0, temp1)
+		end if
+
+		temp1 += 48
+		if Options.DevMenuFlag == true
+			DrawSpriteScreenFX(9, FX_INK, temp0, temp1)
+			if Object.SelectedButton == 3
+				DrawSpriteScreenFX(5, FX_INK, Object.SpritesXPos, temp1)
+				DrawSpriteScreenFX(object.frame, FX_INK, temp0, temp1)
+			end if
+		else
+			if engine.trialMode == true
+				DrawSpriteScreenFX(10, FX_INK, temp0, temp1)
+				if Object.SelectedButton == 3
+					DrawSpriteScreenFX(5, FX_INK, Object.SpritesXPos, temp1)
+					DrawSpriteScreenFX(object.frame, FX_INK, temp0, temp1)
+				end if
+			end if
+		end if
+		break
+
+	case PAUSEMENU_CONFIRMED
+		DrawSpriteScreenXY(3, object.xpos, 0)
+		DrawSpriteScreenXY(3, object.xpos, 32)
+		DrawSpriteScreenXY(3, object.xpos, 64)
+		DrawSpriteScreenXY(3, object.xpos, 96)
+		DrawSpriteScreenXY(3, object.xpos, 128)
+		DrawSpriteScreenXY(3, object.xpos, 160)
+		DrawSpriteScreenXY(3, object.xpos, 192)
+		DrawSpriteScreenXY(3, object.xpos, 224)
+
+		// Black Bar position
+		temp0 = object.xpos
+		temp0 += 128
+		DrawRect(temp0, 0, 128, screen.ysize, 0, 0, 0, 255)
+
+		DrawRect(0, 202, Object.BlackBarXPos, 13, 0, 0, 0, 255)
+		DrawSpriteScreenXY(4, 0, 202)
+
+		temp0 = object.xpos
+		temp0 += 48
+		temp1 = 48
+
+		if Object.SelectedButton == 0 // Continue
+			if Object.Timer < 2
+				DrawSpriteScreenXY(6, temp0, temp1)
+			end if
+			DrawSpriteScreenXY(5, Object.SpritesXPos, temp1)
+			DrawSpriteScreenXY(object.frame, temp0, temp1)
+		else
+			DrawSpriteScreenFX(6, FX_INK, temp0, temp1)
+		end if
+
+		temp1 += 48
+		if Object.SelectedButton == 1 // Reset
+			if Object.Timer < 2
+				DrawSpriteScreenXY(7, temp0, temp1)
+			end if
+			DrawSpriteScreenXY(5, Object.SpritesXPos, temp1)
+			DrawSpriteScreenXY(object.frame, temp0, temp1)
+		else
+			if Object.BlockRestart == false
+				DrawSpriteScreenFX(7, FX_INK, temp0, temp1)
+			else
+				temp2 = object.alpha
+				object.alpha >>= 1
+				DrawSpriteScreenFX(7, FX_INK, temp0, temp1)
+				object.alpha = temp2
+			end if
+		end if
+
+		temp1 += 48
+		if Object.SelectedButton == 2 // Exit
+			if Object.Timer < 2
+				DrawSpriteScreenXY(8, temp0, temp1)
+			end if
+			DrawSpriteScreenXY(5, Object.SpritesXPos, temp1)
+			DrawSpriteScreenXY(object.frame, temp0, temp1)
+		else
+			DrawSpriteScreenFX(8, FX_INK, temp0, temp1)
+		end if
+
+		temp1 += 48
+		if Options.DevMenuFlag == true
+			if Object.SelectedButton == 3 // Dev Menu
+				if Object.Timer < 2
+					DrawSpriteScreenXY(9, temp0, temp1)
+				end if
+				DrawSpriteScreenXY(5, Object.SpritesXPos, temp1)
+				DrawSpriteScreenXY(object.frame, temp0, temp1)
+			else
+				DrawSpriteScreenFX(9, FX_INK, temp0, temp1)
+			end if
+		else
+			if engine.trialMode == true
+				if Object.SelectedButton == 3 // Buy Demo
+					if Object.Timer < 2
+						DrawSpriteScreenXY(10, temp0, temp1)
+					end if
+					DrawSpriteScreenXY(5, Object.SpritesXPos, temp1)
+					DrawSpriteScreenXY(object.frame, temp0, temp1)
+				else
+					DrawSpriteScreenFX(10, FX_INK, temp0, temp1)
+				end if
+			end if
+		end if
+		break
+
+	case PAUSEMENU_RESUME_GAME
+		if object.alpha < 128
+			DrawRect(0, 0, screen.xsize, 240, 255, 255, 255, object.alpha)
+		end if
+
+		DrawSpriteScreenXY(3, object.xpos, 0)
+		DrawSpriteScreenXY(3, object.xpos, 32)
+		DrawSpriteScreenXY(3, object.xpos, 64)
+		DrawSpriteScreenXY(3, object.xpos, 96)
+		DrawSpriteScreenXY(3, object.xpos, 128)
+		DrawSpriteScreenXY(3, object.xpos, 160)
+		DrawSpriteScreenXY(3, object.xpos, 192)
+		DrawSpriteScreenXY(3, object.xpos, 224)
+
+		// Black Bar position
+		temp0 = object.xpos
+		temp0 += 128
+		DrawRect(temp0, 0, 128, screen.ysize, 0, 0, 0, 255)
+		DrawRect(0, Object.BlackBarYPos, screen.xsize, 13, 0, 0, 0, 255)
+		DrawSpriteScreenXY(4, 0, Object.BlackBarYPos)
+
+		switch Object.SelectedButton
+		case 0 // Continue
+			DrawSpriteScreenXY(6, Object.SpritesXPos, 48)
+			DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 48)
+			break
+		case 1 // Reset
+			DrawSpriteScreenXY(6, Object.SpritesXPos, 96)
+			DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 96)
+			break
+		case 2 // Exit
+			DrawSpriteScreenXY(8, Object.SpritesXPos, 144)
+			DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 144)
+			break
+		case 3 // Dev Menu
+			if Options.DevMenuFlag == true
+				DrawSpriteScreenXY(9, Object.SpritesXPos, 192)
+				DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 192)
+			else
+				if engine.trialMode == true
+					DrawSpriteScreenXY(10, Object.SpritesXPos, 192)
+					DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 192)
+				end if
+			end if
+			break
+		end switch
+		break
+
+	case PAUSEMENU_EXIT_LEVEL
+
+		temp0 = screen.xsize
+		temp0 -= 96
+		DrawRect(temp0, 0, 96, 240, 0, 0, 0, 255)
+		DrawSpriteScreenXY(3, object.xpos, 0)
+		DrawSpriteScreenXY(3, object.xpos, 32)
+		DrawSpriteScreenXY(3, object.xpos, 64)
+		DrawSpriteScreenXY(3, object.xpos, 96)
+		DrawSpriteScreenXY(3, object.xpos, 128)
+		DrawSpriteScreenXY(3, object.xpos, 160)
+		DrawSpriteScreenXY(3, object.xpos, 192)
+		DrawSpriteScreenXY(3, object.xpos, 224)
+
+		// Black Bar position
+		temp0 = object.xpos
+		temp0 += 128
+		DrawRect(temp0, 0, 128, screen.ysize, 0, 0, 0, 255)
+
+		switch Object.SelectedButton
+		case 0 // Continue
+			DrawSpriteScreenXY(6, Object.SpritesXPos, 48)
+			DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 48)
+			break
+		case 1 // Reset
+			DrawSpriteScreenXY(6, Object.SpritesXPos, 96)
+			DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 96)
+			break
+		case 2 // Exit
+			DrawSpriteScreenXY(8, Object.SpritesXPos, 144)
+			DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 144)
+			break
+		case 3 // Dev Menu
+			if Options.DevMenuFlag == true
+				DrawSpriteScreenXY(9, Object.SpritesXPos, 192)
+				DrawSpriteScreenXY(object.frame, Object.SpritesXPos, 192)
+			end if
+			break
+		end switch
+		break
+	end switch
+end event
+
+
+event ObjectStartup
+	switch engine.language
+	case LANG_ENGLISH
+	case LANG_JAPANESE
+		LoadSpriteSheet("Global/Pause_EN.gif")
+		break
+	case LANG_FRENCH
+		LoadSpriteSheet("Global/Pause_FR.gif")
+		break
+	case LANG_ITALIAN
+		LoadSpriteSheet("Global/Pause_IT.gif")
+		break
+	case LANG_DEUTSCH
+		LoadSpriteSheet("Global/Pause_DE.gif")
+		break
+	case LANG_SPANISH
+		LoadSpriteSheet("Global/Pause_ES.gif")
+		break
+	end switch
+
+	if stage.playerListPos == PLAYER_SONIC
+		SpriteFrame(-28, -14, 16, 24, 1, 103) // #0  - Sonic
+		SpriteFrame(-28, -14, 16, 24, 18, 103) // #1  - Sonic Waiting Frame 0
+		SpriteFrame(-28, -14, 16, 24, 35, 103) // #2  - Sonic Waiting Frame 1
+	else
+		SpriteFrame(-28, -14, 16, 24, 52, 103) // #0  - Tails
+		SpriteFrame(-28, -14, 16, 24, 69, 103) // #1  - Tails Waiting Frame 0
+		SpriteFrame(-28, -14, 16, 24, 86, 103) // #2  - Tails Waiting Frame 1
+	end if
+
+	SpriteFrame(0, 0, 128, 32, 0, 0) // #3  - Menu BG Section
+	SpriteFrame(0, -19, 128, 32, 0, 32) // #4  - Pause
+	SpriteFrame(-6, 7, 128, 3, 0, 65) // #5  - White Bar
+
+	switch engine.language
+	case LANG_ENGLISH
+	case LANG_JAPANESE
+		SpriteFrame(0, -5, 65, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 55, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 30, 11, 66, 69) // #8  - Exit
+		SpriteFrame(0, -5, 64, 11, 56, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 72, 11, 0, 92) // #10 - Full Game (Unused)
+		break
+
+	case LANG_FRENCH
+		SpriteFrame(0, -5, 73, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 95, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 53, 11, 74, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 96, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 72, 11, 0, 92) // #10 - Full Game (Unused)
+		break
+
+	case LANG_ITALIAN
+		SpriteFrame(0, -5, 65, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 78, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 28, 11, 66, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 79, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 72, 11, 0, 92) // #10 - Full Game (Unused)
+		break
+
+	case LANG_DEUTSCH
+		SpriteFrame(0, -5, 48, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 65, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 71, 11, 49, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 66, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 72, 11, 0, 92) // #10 - Full Game (Unused)
+		break
+
+	case LANG_SPANISH
+		SpriteFrame(0, -5, 73, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 67, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 36, 11, 74, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 68, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 55, 11, 0, 92) // #10 - Full Game (Unused)
+		break
+
+	end switch
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	temp1 = object.ypos
+
+	// Menu Draw
+	DrawSpriteXY(0, object.xpos, temp1)
+	temp1 += 0x200000
+
+	DrawSpriteXY(0, object.xpos, temp1)
+	temp1 += 0x200000
+
+	DrawSpriteXY(0, object.xpos, temp1)
+	temp1 += 0x200000
+
+	DrawSpriteXY(0, object.xpos, temp1)
+	temp1 += 0x200000
+
+	DrawSpriteXY(0, object.xpos, temp1)
+	temp1 += 0x200000
+
+	DrawSpriteXY(0, object.xpos, temp1)
+	temp1 += 0x200000
+
+	DrawSpriteXY(0, object.xpos, temp1)
+	temp1 += 0x200000
+
+	DrawSpriteXY(0, object.xpos, temp1)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Pause_EN.gif")
+	SpriteFrame(0, 0, 128, 32, 0, 0) // #0  - Menu BG Section
+
+
+end event

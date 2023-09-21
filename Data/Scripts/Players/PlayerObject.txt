@@ -33,6 +33,10 @@ public alias  1 : CONTROLMODE_P2
 public alias  2 : CONTROLMODE_P3 // Although unused by the game normally, RSDKv5u does have support for up to 4 players
 public alias  3 : CONTROLMODE_P4
 
+// Pause Menu Aliases
+private alias object[9].drawOrder : PauseMenu.DrawOrder
+private alias object[9].priority : PauseMenu.Priority
+
 // Camera Styles
 public alias 0 : CAMERASTYLE_FOLLOW
 public alias 1 : CAMERASTYLE_EXTENDED
@@ -1489,19 +1493,25 @@ public function Player_ProcessUpdate
 			CheckTouchRect(240, 0, screen.xsize, 40)
 			if checkResult > -1
 				if options.vsMode == false
+					stage.state = STAGE_PAUSED
 					PlaySfx(SfxName[Menu Back], false)
 					StopSfx(SfxName[Flying])
 					StopSfx(SfxName[Tired])
-					engine.state = 5
+					object[9].type = TypeName[Pause Menu]
+					PauseMenu.DrawOrder = 6
+					PauseMenu.Priority = PRIORITY_ALWAYS
 				end if
 			end if
 
 			if keyPress[0].start == true
 				if options.vsMode == false
+					stage.state = STAGE_PAUSED
 					PlaySfx(SfxName[Menu Back], false)
 					StopSfx(SfxName[Flying])
 					StopSfx(SfxName[Tired])
-					engine.state = 5
+					object[9].type = TypeName[Pause Menu]
+					PauseMenu.DrawOrder = 6
+					PauseMenu.Priority = PRIORITY_ALWAYS
 				end if
 			end if
 		end if

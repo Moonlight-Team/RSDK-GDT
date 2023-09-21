@@ -145,7 +145,8 @@ event ObjectUpdate
 		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
 		if checkResult == true
 			if keyPress[0].up == true
-				PlaySfx(SFX_G_MENUBUTTON, false)
+				//PlaySfx(SFX_G_MENUBUTTON, false)
+				PlaySfx(SfxName[Menu Move], false)
 
 				Object.Timer = 0
 				object.animationTimer = 0
@@ -175,7 +176,8 @@ event ObjectUpdate
 			end if
 
 			if keyPress[0].down == true
-				PlaySfx(SFX_G_MENUBUTTON, false)
+				//PlaySfx(SFX_G_MENUBUTTON, false)
+				PlaySfx(SfxName[Menu Move], false)
 
 				Object.Timer = 0
 				object.animationTimer = 0
@@ -207,7 +209,8 @@ event ObjectUpdate
 			end if
 
 			if keyPress[0].start == true
-				PlaySfx(SFX_G_SELECT, false)
+				//PlaySfx(SFX_G_SELECT, false)
+				PlaySfx(SfxName[Menu Select], false)
 
 				object.state = PAUSEMENU_CONFIRMED
 				object.alpha = 248
@@ -215,8 +218,8 @@ event ObjectUpdate
 			end if
 
 			if keyPress[0].buttonA == true
-				PlaySfx(SFX_G_SELECT, false)
-
+				//PlaySfx(SFX_G_SELECT, false)
+				PlaySfx(SfxName[Menu Select], false)
 				object.state = PAUSEMENU_CONFIRMED
 				object.alpha = 248
 				Object.Timer = 0
@@ -240,7 +243,8 @@ event ObjectUpdate
 			else
 				if temp3 < 0
 					if Object.SelectedButton == 0
-						PlaySfx(SFX_G_SELECT, false)
+						//PlaySfx(SFX_G_SELECT, false)
+						PlaySfx(SfxName[Menu Select], false)
 
 						object.state = PAUSEMENU_CONFIRMED
 						object.alpha = 248
@@ -260,7 +264,8 @@ event ObjectUpdate
 				else
 					if temp3 < 0
 						if Object.SelectedButton == 1
-							PlaySfx(SFX_G_SELECT, false)
+							//PlaySfx(SFX_G_SELECT, false)
+							PlaySfx(SfxName[Menu Select], false)
 
 							object.state = PAUSEMENU_CONFIRMED
 							object.alpha = 248
@@ -280,7 +285,8 @@ event ObjectUpdate
 			else
 				if temp3 < 0
 					if Object.SelectedButton == 2
-						PlaySfx(SFX_G_SELECT, false)
+						//PlaySfx(SFX_G_SELECT, false)
+						PlaySfx(SfxName[Menu Select], false)
 
 						object.state = PAUSEMENU_CONFIRMED
 						object.alpha = 248
@@ -300,7 +306,8 @@ event ObjectUpdate
 				else
 					if temp3 < 0
 						if Object.SelectedButton == 3
-							PlaySfx(SFX_G_SELECT, false)
+							//PlaySfx(SFX_G_SELECT, false)
+							PlaySfx(SfxName[Menu Select], false)
 
 							object.state = PAUSEMENU_CONFIRMED
 							object.alpha = 248
@@ -321,7 +328,8 @@ event ObjectUpdate
 				else
 					if temp3 < 0
 						if Object.SelectedButton == 3
-							PlaySfx(SFX_G_SELECT, false)
+							//PlaySfx(SFX_G_SELECT, false)
+							PlaySfx(SfxName[Menu Select], false)
 
 							object.state = PAUSEMENU_CONFIRMED
 							object.alpha = 248
@@ -740,15 +748,15 @@ event ObjectStartup
 		break
 	end switch
 
-	if stage.playerListPos == PLAYER_SONIC
+	//if stage.playerListPos == PLAYER_SONIC
 		SpriteFrame(-28, -14, 16, 24, 1, 103) // #0  - Sonic
 		SpriteFrame(-28, -14, 16, 24, 18, 103) // #1  - Sonic Waiting Frame 0
 		SpriteFrame(-28, -14, 16, 24, 35, 103) // #2  - Sonic Waiting Frame 1
-	else
-		SpriteFrame(-28, -14, 16, 24, 52, 103) // #0  - Tails
-		SpriteFrame(-28, -14, 16, 24, 69, 103) // #1  - Tails Waiting Frame 0
-		SpriteFrame(-28, -14, 16, 24, 86, 103) // #2  - Tails Waiting Frame 1
-	end if
+	//else
+		//SpriteFrame(-28, -14, 16, 24, 52, 103) // #0  - Tails
+		//SpriteFrame(-28, -14, 16, 24, 69, 103) // #1  - Tails Waiting Frame 0
+		//SpriteFrame(-28, -14, 16, 24, 86, 103) // #2  - Tails Waiting Frame 1
+	//end if
 
 	SpriteFrame(0, 0, 128, 32, 0, 0) // #3  - Menu BG Section
 	SpriteFrame(0, -19, 128, 32, 0, 32) // #4  - Pause

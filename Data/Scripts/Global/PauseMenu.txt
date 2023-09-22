@@ -470,7 +470,7 @@ event ObjectDraw
 			if Object.BlackBarYPos > Object.BlackBarHeight
 				temp0 = Object.BlackBarYPos
 				temp0 -= Object.BlackBarHeight
-				DrawRect(0, Object.BlackBarHeight, 384, temp0, 255, 255, 255, 128)
+				DrawRect(0, Object.BlackBarHeight, 384, temp0, 6, 6, 10, 128)
 				Object.BlackBarHeight = Object.BlackBarYPos
 			end if
 		end if
@@ -638,7 +638,7 @@ event ObjectDraw
 
 	case PAUSEMENU_RESUME_GAME
 		if object.alpha < 128
-			DrawRect(0, 0, screen.xsize, 240, 255, 255, 255, object.alpha)
+			DrawRect(0, 0, screen.xsize, 240, 6, 6, 10, object.alpha)
 		end if
 
 		DrawSpriteScreenXY(3, object.xpos, 0)

@@ -1,5 +1,5 @@
 // ----------------------------------
-// RSDK Project: Project Virtua
+// RSDK Project: RSDK-GDT
 // Script Description: Title Card Object
 // Script Author: Geared
 // ----------------------------------
@@ -206,24 +206,24 @@ end event
 event ObjectDraw
 	if object.state < TITLECARD_CREDITSFADEIN
 		SetActivePalette(0, 0, screen.ysize)
-		DrawRect(0, 0, screen.xsize, screen.ysize, 0, 0, 0, object.alpha) //Black that fades out
+		DrawRect(0, 0, screen.xsize, screen.ysize, 8, 8, 11, object.alpha) //Black that fades out
 
 		// The red ribbon
 		temp0 = screen.xcenter
 		temp0 -= 109
-		DrawRect(temp0, 0, 12, redribbony, 224, 0, 0, 255)
+		DrawRect(temp0, 0, 12, redribbony, 225, 0, 0, 255)
 		temp0 += 12
-		DrawRect(temp0, 0, 8, redribbony, 192, 0, 32, 255)
+		DrawRect(temp0, 0, 8, redribbony, 225, 0, 0, 255)
 		temp0 += 8
-		DrawRect(temp0, 0, 10, redribbony, 128, 0, 0, 255)
+		DrawRect(temp0, 0, 10, redribbony, 225, 0, 0, 255)
 		temp0 += 10
-		DrawRect(temp0, 0, 8, redribbony, 96, 0, 32, 255)
+		DrawRect(temp0, 0, 8, redribbony, 225, 0, 0, 255)
 		temp0 += 8
-		DrawRect(temp0, 0, 11, redribbony, 128, 0, 0, 255)
+		DrawRect(temp0, 0, 11, redribbony, 225, 0, 0, 255)
 		temp0 += 11
-		DrawRect(temp0, 0, 7, redribbony, 192, 0, 32, 255)
+		DrawRect(temp0, 0, 7, redribbony, 225, 0, 0, 255)
 		temp0 += 7
-		DrawRect(temp0, 0, 12, redribbony, 224, 0, 0, 255)
+		DrawRect(temp0, 0, 12, redribbony, 225, 0, 0, 255)
 
 		// the "Project Virtua" text
 		temp0 = screen.xcenter

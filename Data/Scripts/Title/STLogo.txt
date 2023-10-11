@@ -254,6 +254,7 @@ end function
 
 event ObjectUpdate
 #platform: USE_STANDALONE
+LoadPalette("title.act", 0, 0, 0, 256)
 	if stage.player2Enabled == true
 		stage.playerListPos = PLAYER_SONIC_AND_TAILS
 	end if

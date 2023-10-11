@@ -74,7 +74,7 @@ private value MenuControl_PPZCodeCounter 		= 0
 
 // Code to open the game config menu
 private table MenuControl_OptionsMenu
-	0, 0
+	0, 0, 0
 end table
 
 // Code to enable debug mode
@@ -108,6 +108,27 @@ end table
 
 private table MenuControl_EntryTable
 	0, 0,  1,  0, 14,  1	//  0 - Emerald Hill 1
+	0, 1,  1,  1, 15,  1	//  1 - Emerald Hill 2
+	0, 3,  1,  2, 17,  2	//  2 - Chemical Plant 1
+	0, 4,  1,  3, 17,  2	//  3 - Chemical Plant 2
+	0, 6,  1,  4, 18,  3	//  4 - Aquatic Ruin 1
+	0, 7,  1,  5, 18,  3	//  5 - Aquatic Ruin 2
+	0, 9,  1,  6, 19,  4	//  6 - Casino Night 1
+	0, 10, 1,  7, 19,  4	//  7 - Casino Night 2
+	0, 12, 1,  8, 20,  5	//  8 - Hill Top 1
+	0, 13, 1,  9, 20,  5	//  9 - Hill Top 2
+	0, 15, 1, 10, 21,  6	// 10 - Mystic Cave 1
+	0, 16, 1, 11, 21,  6	// 11 - Mystic Cave 2
+	0, 18, 1, 12, 22,  8	// 12 - Oil Ocean 1
+	0, 19, 1, 13, 22,  8	// 13 - Oil Ocean 2
+	1, 0,  1, 14,  0,  9	// 14 - Metropolis 1
+	1, 1,  1, 15,  1,  9	// 15 - Metropolis 2
+	1, 2,  1, 16,  2,  9	// 16 - Metropolis 3
+	1, 3,  1, 17,  2, 10	// 17 - Sky Chase
+	1, 6,  1, 18,  4, 11	// 18 - Wing Fortress
+	1, 9,  1, 19,  6, 12	// 19 - Death Egg
+	1, 12, 1, 20,  8,  7	// 20 - Hidden Palace (or Proto Palace)
+	1, 15, 2,  0, 10, 13	// 21 - Special Stage
 	1, 18, 0,  0, 67,  0 	// 22 - Sound Test
 end table
 
@@ -127,7 +148,7 @@ private function MenuControl_HandleSecrets
 
 	if temp0 == hexNo[+1].number
 		MenuControl_optionsMenuCounter++
-		if MenuControl_optionsMenuCounter == 1
+		if MenuControl_optionsMenuCounter == 3
 			MenuControl_optionsMenuCounter = 0
 	
 			CreateTempObject(TypeName[Config Screen], 0, 0, 0)
@@ -528,21 +549,17 @@ event ObjectUpdate
 
 			// Player selected the option?
 			if keyPress[0].start == true
-//all of this code is the original SS code only comented due this demo dont have SS lol
+
 				// Special Stage
-				//if object.currentSelection == 21
-				//	PlaySfx(SfxName[Warp], false)
-				//	object.state = MENUCONTROL_LOADSPECIAL
-				//	fadeColor = 208
-				//	fadeColor <<= 16
-				//	temp0 = 255
-				//	temp0 <<= 8
-				//	fadeColor += temp0
-				//	fadeColor += 224
-				if object.currentSelection == 1			
-					stage.activeList = REGULAR_STAGE
-					stage.listPos = 0
-					LoadStage()
+				if object.currentSelection == 21
+					PlaySfx(SfxName[Warp], false)
+					object.state = MENUCONTROL_LOADSPECIAL
+					fadeColor = 208
+					fadeColor <<= 16
+					temp0 = 255
+					temp0 <<= 8
+					fadeColor += temp0
+					fadeColor += 224
 				else
 					// Hidden Palace?
 					if object.currentSelection == 20
@@ -589,25 +606,23 @@ event ObjectUpdate
 		break
 
 	case MENUCONTROL_LOADSPECIAL
-	//this is commented from the same reason LOL
-	//	if object.timer < 768
-	//		music.volume -= 10
-	//		object.timer += 8
-	//		SetScreenFade(0xD0, 0xFF, 0xE0, object.timer)
-	//	else
-	//		StopMusic()
-	//		temp0 = object.currentSelection
-	//		temp0 *= 6
-	//		temp0 += 2
-	//		GetTableValue(temp1, temp0, MenuControl_EntryTable)
-	//		temp0++
-	//		GetTableValue(temp2, temp0, MenuControl_EntryTable)
-	//		stage.activeList = temp1
-	//		stage.listPos = temp2
-	//		LoadStage()
-	//		SetScreenFade(0xD0, 0xFF, 0xE0, 0xFF)
-	//	end if
-		
+		if object.timer < 768
+			music.volume -= 10
+			object.timer += 8
+			SetScreenFade(0xD0, 0xFF, 0xE0, object.timer)
+		else
+			StopMusic()
+			temp0 = object.currentSelection
+			temp0 *= 6
+			temp0 += 2
+			GetTableValue(temp1, temp0, MenuControl_EntryTable)
+			temp0++
+			GetTableValue(temp2, temp0, MenuControl_EntryTable)
+			stage.activeList = temp1
+			stage.listPos = temp2
+			LoadStage()
+			SetScreenFade(0xD0, 0xFF, 0xE0, 0xFF)
+		end if
 		break
 		
 	end switch
@@ -628,12 +643,6 @@ end event
 
 
 event ObjectStartup
-	MenuControl_optionsMenuCounter = 0
-	
-	CreateTempObject(TypeName[Config Screen], 0, 0, 0)
-	MenuControl_optionsMenuOpen = true
-	
-	PlaySfx(SfxName[Resume], false)
 	// Load the sprite sheet
 	// No need to setup sprite frames since using the menu system will handle them automatically
 	LoadSpriteSheet("LevelSelect/Text.gif")
@@ -658,47 +667,48 @@ event ObjectStartup
 	SetupMenu(MENU_1, 0, 3, 1)
 
 	// Add the entries
-	AddMenuEntry(MENU_1, "Desert Dazzle", true)
-	AddMenuEntry(MENU_1, " PRESS START ", false)
+	AddMenuEntry(MENU_1, "DESERT DAZZLE@@ 1", true)
 	AddMenuEntry(MENU_1, " ", false)
 	AddMenuEntry(MENU_1, " ", false)
+	AddMenuEntry(MENU_1, "PLACEHOLDER@@ 1", true)
+	AddMenuEntry(MENU_1, "2", false)
 	AddMenuEntry(MENU_1, " ", false)
+	AddMenuEntry(MENU_1, "PLACEHOLDER@@ 1", true)
+	AddMenuEntry(MENU_1, "2", false)
 	AddMenuEntry(MENU_1, " ", false)
+	AddMenuEntry(MENU_1, "PLACEHOLDER@@ 1", true)
+	AddMenuEntry(MENU_1, "2", false)
 	AddMenuEntry(MENU_1, " ", false)
+	AddMenuEntry(MENU_1, "PLACEHOLDER@@ 1", true)
+	AddMenuEntry(MENU_1, "2", false)
 	AddMenuEntry(MENU_1, " ", false)
+	AddMenuEntry(MENU_1, "PLACEHOLDER@@ 1", true)
+	AddMenuEntry(MENU_1, "2", false)
 	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
-	AddMenuEntry(MENU_1, " ", false)
+	AddMenuEntry(MENU_1, "PLACEHOLDER@@ 1", true)
+	AddMenuEntry(MENU_1, "2", false)
 	AddMenuEntry(MENU_1, " ", false)
 
 	// Setup menu 2 (right column)
 	SetupMenu(MENU_2, 0, 3, 1)
 
 	// Add its entries
-	AddMenuEntry(MENU_2, "", false)
-	AddMenuEntry(MENU_2, "", false)
-	AddMenuEntry(MENU_2, "", false)
-	AddMenuEntry(MENU_2, "", false)
+	AddMenuEntry(MENU_2, "PLACEHOLDER 1", true)
+	AddMenuEntry(MENU_2, "2", false)
+	AddMenuEntry(MENU_2, "3", false)
+	AddMenuEntry(MENU_2, "PLACEHOLDER@@", true)
 	AddMenuEntry(MENU_2, " ", false)
 	AddMenuEntry(MENU_2, " ", false)
-	AddMenuEntry(MENU_2, "", false)
+	AddMenuEntry(MENU_2, "PLACEHOLDER@@", true)
 	AddMenuEntry(MENU_2, " ", false)
 	AddMenuEntry(MENU_2, " ", false)
-	AddMenuEntry(MENU_2, "", false)
+	AddMenuEntry(MENU_2, "PLACEHOLDER@@", true)
 	AddMenuEntry(MENU_2, " ", false)
 	AddMenuEntry(MENU_2, " ", false)
-	AddMenuEntry(MENU_2, "", false)
+	AddMenuEntry(MENU_2, "PLACEHOLDER@@", true)
 	AddMenuEntry(MENU_2, " ", 0)
 	AddMenuEntry(MENU_2, " ", 0)
-	AddMenuEntry(MENU_2, " ", false)
+	AddMenuEntry(MENU_2, "SPECIAL STAGE@@", true)
 	AddMenuEntry(MENU_2, " ", false)
 	AddMenuEntry(MENU_2, " ", false)
 	AddMenuEntry(MENU_2, "SOUND TEST@ *@@*", true)

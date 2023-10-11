@@ -547,7 +547,7 @@ event ObjectStartup
 		stage.deformationData2[arrayPos0] = stage.deformationData2[arrayPos1]
 		arrayPos0++
 	loop
-    SpriteFrame(-116,-26, 318, 61, 190, 1)	// Emblem (Top) 			- #0
+    SpriteFrame(-117,-26, 325, 61, 183, 1)	// Emblem (Top) 			- #0
 	SpriteFrame(0, 0, 0, 0, 0, 0)	// Emblem (Bottom) 			- #1
 	SpriteFrame(0, -19, 72, 40, 1, 66)		// Sonic - Frame 1 			- #2
 	SpriteFrame(0, -35, 72, 67, 1, 66)		// Sonic - Frame 2 			- #3

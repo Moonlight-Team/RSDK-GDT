@@ -392,7 +392,7 @@ case STLOGO_FADEIN
 	case STLOGO_FINISHEDANIMATING
 		object.timer++
 		if object.timer > 7
-			tileLayer[2].deformationOffset++
+			tileLayer[4].deformationOffset++
 			object.timer = 0
 		end if
 		break

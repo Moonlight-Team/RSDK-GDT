@@ -19,7 +19,7 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 * Get the RSDK Decomp
 * Download the Build from RELEASES, not the source!
 # Compatible Versions
-* [RSDK v4](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation)
+* [RSDKv4](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation)
 * [RSDK VT (Custom Version of V4 by Virtua Studio)](https://github.com/Sonic-Geared/RSDK-VT)
 * [RSDKv5 Ultimate](https://github.com/Rubberduckycooly/RSDKv5-Decompilation)
   

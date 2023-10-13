@@ -1,0 +1,178 @@
+//---------------Sonic CD Text Font 2 Script------------------//
+//--------Scripted by Christian Whitehead 'The Taxman'--------//
+//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+
+// Aliases
+private alias object.value1 : Object.TargetLine
+
+// Text Info type
+private alias 0 : TEXTINFO_TEXTDATA
+private alias 1 : TEXTINFO_TEXTSIZE
+
+
+event ObjectDraw
+
+	// Only show the 4th letter and onwards, the first 3 letters are for identifying the text type
+	arrayPos0 = 3
+
+	// Get how long the line is
+	GetTextInfo(temp1, MENU_1, TEXTINFO_TEXTSIZE, Object.TargetLine, 0)
+
+	// Taking 3 away from the letter account for the reason mentioned above...
+	temp1 -= 3
+
+	// Getting the base position to draw the text at
+	temp2 = temp1
+	temp2 <<= 18
+	FlipSign(temp2)
+	temp2 += object.xpos
+
+	// Main loop for drawing all the letters in the text
+	while temp1 > 0
+
+		// Get the current target letter
+		GetTextInfo(temp0, MENU_1, TEXTINFO_TEXTDATA, Object.TargetLine, arrayPos0)
+
+		// And if it's a special exception, jump to its corresponding Ansi ID
+		switch temp0
+		default
+
+			// Translating lowercase letters to Sprite Frames
+			object.frame = 0
+			if temp0 > 64
+				if temp0 < 91
+					object.frame = temp0
+					object.frame -= 64
+				end if
+			end if
+
+			// Translating uppercase letters to Sprite Frames
+			if temp0 > 96
+				if temp0 < 123
+					object.frame = temp0
+					object.frame -= 96
+				end if
+			end if
+
+			if object.frame > 0
+				// Draw the letter, if valid
+				DrawSpriteXY(object.frame, temp2, object.ypos)
+			end if
+			break
+
+		case 38
+			// Ampersand - &
+			DrawSpriteXY(32, temp2, object.ypos)
+			break
+
+		case 39
+			// Tick - '
+			DrawSpriteXY(30, temp2, object.ypos)
+			break
+
+		case 44
+			// Comma - ,
+			DrawSpriteXY(28, temp2, object.ypos)
+			break
+
+		case 46
+			// Period - .
+			DrawSpriteXY(27, temp2, object.ypos)
+			break
+
+		case 47
+			// Forward slash - /
+			DrawSpriteXY(31, temp2, object.ypos)
+			break
+
+		case 58
+			// Colon - ;
+
+			DrawSpriteXY(29, temp2, object.ypos)
+			break
+
+		case 225
+			// Accent mark A - Ã¡
+			DrawSpriteXY(33, temp2, object.ypos)
+			break
+
+		case 233
+			// Accent mark E - Ã©
+			DrawSpriteXY(34, temp2, object.ypos)
+			break
+
+		case 243
+			// Accent mark O - Ã³
+			DrawSpriteXY(35, temp2, object.ypos)
+			break
+
+		case 250
+			// Accent mark U - Ãº
+			DrawSpriteXY(36, temp2, object.ypos)
+			break
+
+		end switch
+
+		// Move to the next letter & decrease the letter count by onw
+		arrayPos0++
+		temp1--
+
+		// Each letter has 8px spacing
+		temp2 += 0x80000
+	loop
+
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Menu/CreditsText.gif")
+
+	// Setup all the Sprite Frames
+	SpriteFrame(-3, -9, 8, 16, 37, 35)
+
+	temp1 = 52
+	while temp1 < 74
+		temp0 = 1
+		while temp0 < 127
+			SpriteFrame(-3, -5, 8, 10, temp0, temp1)
+			temp0 += 9
+		loop
+		temp1 += 11
+	loop
+
+	temp0 = 1
+	while temp0 < 37
+		SpriteFrame(-3, -5, 8, 10, temp0, temp1)
+		temp0 += 9
+	loop
+
+	SpriteFrame(-3, -8, 8, 13, 37, 74)
+	SpriteFrame(-3, -8, 8, 13, 46, 74)
+	SpriteFrame(-3, -8, 8, 13, 55, 74)
+	SpriteFrame(-3, -8, 8, 13, 64, 74)
+
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	temp0 = 0
+	while temp0 < 4
+		DrawSprite(temp0)
+		temp0++
+	loop
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Menu/CreditsText.gif")
+	SpriteFrame(0, -5, 8, 10, 46, 63)
+	SpriteFrame(9, -5, 8, 10, 37, 52)
+	SpriteFrame(18, -5, 8, 10, 82, 63)
+	SpriteFrame(27, -5, 8, 10, 46, 63)
+
+
+end event

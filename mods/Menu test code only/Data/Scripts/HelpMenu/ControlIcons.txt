@@ -1,0 +1,71 @@
+//---------------Sonic CD Control Icons Script----------------//
+//--------Scripted by Christian Whitehead 'The Taxman'--------//
+//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+//---This Object is normally only used by Mobile Data files---//
+
+
+event ObjectDraw
+	object.scale = 224
+	DrawSpriteFX(object.propertyValue, FX_SCALE, object.xpos, object.ypos)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Menu/MetalSonic.gif")
+
+	SpriteFrame(-32, -32, 64, 64, 129, 1) // #0 - D-Pad Neutral
+	SpriteFrame(-32, -32, 64, 64, 129, 68) // #1 - D-Pad Up
+	SpriteFrame(-32, -32, 64, 64, 129, 135) // #2 - D-Pad Down
+	SpriteFrame(-24, -24, 48, 48, 129, 202) // #3 - D-Pad Jump
+	SpriteFrame(-24, -24, 48, 48, 196, 1) // #4 - Pause
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+
+
+
+// Property Value
+
+
+// Frame
+
+
+
+
+
+// Property Value
+
+
+// Frame
+
+
+
+
+
+
+
+event RSDKDraw
+	DrawSprite(object.propertyValue)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Menu/MetalSonic.gif")
+	SpriteFrame(-32, -32, 64, 64, 129, 1) // #0 - D-Pad Neutral
+	SpriteFrame(-32, -32, 64, 64, 129, 68) // #1 - D-Pad Up
+	SpriteFrame(-32, -32, 64, 64, 129, 135) // #2 - D-Pad Down
+	SpriteFrame(-24, -24, 48, 48, 129, 202) // #3 - D-Pad Jump
+	SpriteFrame(-24, -24, 48, 48, 196, 1) // #4 - Pause
+
+
+
+
+
+
+
+
+end event

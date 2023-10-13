@@ -1,0 +1,229 @@
+//-------------Sonic CD Special Large Icon Script-------------//
+//--------Scripted by Christian Whitehead 'The Taxman'--------//
+//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+
+// Aliases
+private alias object.propertyValue : Object.Portrait
+
+// Menu Control Aliases
+private alias object[0].value0 : MenuControl.Timer
+private alias object[0].value5 : MenuControl.SMCurrentButton
+private alias object[0].state : MenuControl.State
+
+// States
+private alias 0 : SLARGEICON_BLANK
+private alias 1 : SLARGEICON_ENTER_SCREEN
+private alias 2 : SLARGEICON_LEAVE_SCREEN
+
+// Menu Control States
+// *SM = Sub Menu
+private alias 7 : MENUCONTROL_SM_CONTROLS
+private alias 10 : MENUCONTROL_SM_CONFIRMED
+private alias 11 : MENUCONTROL_SM_LOAD_LEVEL
+private alias 13 : MENUCONTROL_SM_COMFIRMED_LEAVE
+
+// Property Values
+private alias 0 : SPECIAL_STAGE_1_LARGE_ICON
+private alias 1 : SPECIAL_STAGE_2_LARGE_ICON
+private alias 2 : SPECIAL_STAGE_3_LARGE_ICON
+private alias 3 : SPECIAL_STAGE_4_LARGE_ICON
+private alias 4 : SPECIAL_STAGE_5_LARGE_ICON
+private alias 5 : SPECIAL_STAGE_6_LARGE_ICON
+private alias 6 : SPECIAL_STAGE_7_LARGE_ICON
+
+
+event ObjectUpdate
+	switch object.state
+	case SLARGEICON_BLANK
+		break
+
+	case SLARGEICON_ENTER_SCREEN
+		temp0 = screen.xcenter
+		temp0 -= 72
+		temp0 <<= 16
+		if object.xpos < temp0
+			object.xpos += 0x100000
+			if object.xpos > temp0
+				object.xpos = temp0
+			end if
+		else
+			object.state = SLARGEICON_BLANK
+		end if
+		break
+
+	case SLARGEICON_LEAVE_SCREEN
+		if object.xpos > -0x480000
+			object.xpos -= 0x100000
+			if object.xpos < -0x480000
+				object.xpos = -0x480000
+			end if
+		else
+			object.state = SLARGEICON_BLANK
+		end if
+		break
+
+	end switch
+end event
+
+
+event ObjectDraw
+	DrawSprite(8)
+	DrawSprite(Object.Portrait)
+	temp0 = screen.xcenter
+	temp0 -= 72
+	temp0 <<= 16
+	temp0 -= object.xpos
+	temp0 >>= 16
+	temp0 += screen.xcenter
+	temp0 += 20
+	temp1 = temp0
+	temp1 += 68
+#platform: Mobile
+	switch MenuControl.State
+	default
+		DrawSprite(9)
+		DrawSpriteScreenXY(13, temp1, 11)
+		break
+
+	case MENUCONTROL_SM_CONTROLS
+		switch MenuControl.SMCurrentButton
+		default
+			DrawSprite(9)
+			DrawSpriteScreenXY(13, temp1, 11)
+			break
+
+		case 0
+			DrawSprite(10)
+			DrawSpriteScreenXY(13, temp1, 11)
+			break
+
+		case 1
+			DrawSprite(9)
+			DrawSpriteScreenXY(13, temp1, 11)
+			break
+
+		case 2
+			DrawSprite(9)
+			DrawSpriteScreenXY(14, temp1, 11)
+			break
+
+		end switch
+		break
+
+	case MENUCONTROL_SM_CONFIRMED
+		temp2 = MenuControl.Timer
+		temp2 &= 3
+		temp2 >>= 1
+		if temp2 == 0
+			DrawSpriteScreenXY(14, temp1, 11)
+		else
+			DrawSpriteScreenXY(13, temp1, 11)
+		end if
+		DrawSprite(9)
+		break
+
+	case MENUCONTROL_SM_LOAD_LEVEL
+		DrawSprite(9)
+		DrawSpriteScreenXY(14, temp1, 11)
+		break
+
+	case MENUCONTROL_SM_COMFIRMED_LEAVE
+		temp2 = MenuControl.Timer
+		temp2 &= 3
+		temp2 >>= 1
+		if temp2 == 0
+			DrawSprite(10)
+		else
+			DrawSprite(9)
+		end if
+		DrawSpriteScreenXY(13, temp1, 11)
+		break
+
+	end switch
+#endplatform
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("TAttack/TimeAttack.gif")
+
+	SpriteFrame(-64, -72, 128, 144, 0, 288) // #0  - Special Stage 1 Icon
+	SpriteFrame(-64, -72, 128, 144, 128, 288) // #1  - Special Stage 2 Icon
+	SpriteFrame(-64, -72, 128, 144, 256, 288) // #2  - Special Stage 3 Icon
+	SpriteFrame(-64, -72, 128, 144, 384, 288) // #3  - Special Stage 4 Icon
+	SpriteFrame(-64, -72, 128, 144, 0, 432) // #4  - Special Stage 5 Icon
+	SpriteFrame(-64, -72, 128, 144, 128, 432) // #5  - Special Stage 6 Icon
+	SpriteFrame(-64, -72, 128, 144, 256, 432) // #6  - Special Stage 7 Icon
+	SpriteFrame(-64, -72, 128, 144, 384, 432) // #7  - Sonic The Hedgehog CD
+	SpriteFrame(-67, -75, 134, 150, 306, 873) // #8  - Icon Border
+	SpriteFrame(-67, -95, 64, 20, 280, 680) // #9  - Exit
+	SpriteFrame(-67, -95, 64, 20, 135, 617) // #10 - Exit Highlight
+	SpriteFrame(0, 0, 64, 20, 280, 659) // #11 - Next
+	SpriteFrame(0, 0, 64, 20, 200, 617) // #12 - Next Highlight
+	SpriteFrame(0, 0, 64, 20, 345, 659) // #13 - Go
+	SpriteFrame(0, 0, 64, 20, 265, 617) // #14 - Go Highlight
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+
+
+
+// Property Value
+
+
+// frame
+
+
+
+
+
+// Property Value
+
+
+// frame
+
+
+
+
+
+
+
+event RSDKDraw
+	DrawSprite(8)
+	DrawSprite(object.propertyValue)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("TAttack/TimeAttack.gif")
+	SpriteFrame(-64, -72, 128, 144, 0, 288) // #0 - Special Stage 1 Icon
+	SpriteFrame(-64, -72, 128, 144, 128, 288) // #1 - Special Stage 2 Icon
+	SpriteFrame(-64, -72, 128, 144, 256, 288) // #2 - Special Stage 3 Icon
+	SpriteFrame(-64, -72, 128, 144, 384, 288) // #3 - Special Stage 4 Icon
+	SpriteFrame(-64, -72, 128, 144, 0, 432) // #4 - Special Stage 5 Icon
+	SpriteFrame(-64, -72, 128, 144, 128, 432) // #5 - Special Stage 6 Icon
+	SpriteFrame(-64, -72, 128, 144, 256, 432) // #6 - Special Stage 7 Icon
+	SpriteFrame(-64, -72, 128, 144, 384, 432) // #7 - Sonic The Hedgehog CD
+	SpriteFrame(-67, -75, 134, 150, 306, 873) // #8 - Icon Border
+	SpriteFrame(-67, -95, 64, 20, 280, 680) // #9 - Exit
+	SpriteFrame(-67, -95, 64, 20, 135, 617) // #10 - Exit Highlight
+	SpriteFrame(0, 0, 64, 20, 280, 659) // #11 - Next
+	SpriteFrame(0, 0, 64, 20, 200, 617) // #12 - Next Highlight
+	SpriteFrame(0, 0, 64, 20, 345, 659) // #13 - Go
+	SpriteFrame(0, 0, 64, 20, 265, 617) // #14 - Go Highlight
+
+
+
+
+
+
+
+
+
+
+
+end event

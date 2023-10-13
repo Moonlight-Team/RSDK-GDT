@@ -1,0 +1,402 @@
+// ----------------------------------
+// RSDK Project: RSDK-GDT 
+// Script Description: CD Menu Window
+// Script Author: Christian Whitehead adapted with the RSDK Script Converter to v4 and with manual modifications by Zero242
+// Original v3/CD Script Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+// Aliases
+private alias object.value0 : Object.Timer
+private alias object.value1 : Object.Width
+private alias object.value2 : Object.Height
+private alias object.value3 : Object.XOffset
+private alias object.value4 : Object.YOffset
+private alias object.value5 : Object.EntityPos
+
+//Object[1] is a blank object just to share values
+private alias object[1].value4 : Object.BackTouchPress
+
+// States
+private alias 0 : MENUWINDOW_EXPAND
+private alias 1 : MENUWINDOW_SCALEDOWN
+private alias 2 : MENUWINDOW_BLANK
+private alias 3 : MENUWINDOW_SHRINK
+private alias 4 : MENUWINDOW_FIT_IN_BUTTON
+private alias 5 : MENUWINDOW_SOUNDTRACK_EXPAND
+private alias 6 : MENUWINDOW_SOUNDTRACK_SHRINK
+
+// Menu Button States
+private alias 7 : MENUBUTTON_RESET
+
+// Languages
+private alias 0 : LANG_ENGLISH
+private alias 1 : LANG_FRENCH
+private alias 2 : LANG_ITALIAN
+private alias 3 : LANG_DEUTSCH
+private alias 4 : LANG_SPANISH
+private alias 5 : LANG_JAPANESE
+
+// Ink Effects
+private alias 2 : INK_ALPHA
+
+
+event ObjectUpdate
+	switch object.state
+	case MENUWINDOW_EXPAND
+		if Object.Timer < 14
+			Object.Timer++
+			//Width
+			temp0 = 300
+			temp0 -= Object.Width
+			temp0 >>= 3
+			Object.Width += temp0
+			//Height
+			temp0 = 224
+			temp0 -= Object.Height
+			temp0 >>= 3
+			Object.Height += temp0
+			//XPos
+			temp0 = screen.xcenter
+			temp0 <<= 16
+			temp0 -= object.xpos
+			temp0 >>= 2
+			object.xpos += temp0
+			//YPos
+			temp0 = screen.ycenter
+			temp0 -= 6
+			temp0 <<= 16
+			temp0 -= object.ypos
+			temp0 >>= 2
+			object.ypos += temp0
+		else
+			Object.Timer = 0
+			object.state++
+		end if
+		break
+
+	case MENUWINDOW_SCALEDOWN
+		if Object.Timer < 30
+			Object.Timer++
+			// Width
+			temp0 = 256
+			temp0 -= Object.Width
+			temp0 >>= 2
+			Object.Width += temp0
+			// Height
+			temp0 = 160
+			temp0 -= Object.Height
+			temp0 >>= 2
+			Object.Height += temp0
+			// XPos
+			temp0 = screen.xcenter
+			temp0 <<= 16
+			if object.xpos > temp0
+				object.xpos -= 0x10000
+			end if
+
+			if object.xpos < temp0
+				object.xpos += 0x10000
+			end if
+			// YPos
+			temp0 = screen.ycenter
+			temp0 -= 8
+			temp0 <<= 16
+			if object.ypos > temp0
+				object.ypos -= 0x10000
+			end if
+
+			if object.ypos < temp0
+				object.ypos += 0x10000
+			end if
+		else
+			Object.Timer = 0
+			object.state++
+		end if
+		break
+
+	case MENUWINDOW_BLANK
+		// Nothing
+		break
+
+	case MENUWINDOW_SHRINK
+		if Object.Timer < 14
+			Object.Timer++
+			// Width
+			temp0 = 132
+			temp0 -= Object.Width
+			temp0 >>= 3
+			Object.Width += temp0
+			// Height
+			temp0 = 18
+			temp0 -= Object.Height
+			temp0 >>= 3
+			Object.Height += temp0
+			// XPos
+			temp0 = Object.XOffset
+			temp0 -= object.xpos
+			temp0 >>= 2
+			object.xpos += temp0
+			// YPos
+			temp0 = Object.YOffset
+			temp0 -= object.ypos
+			temp0 >>= 2
+			object.ypos += temp0
+		else
+			Object.Timer = 0
+			object.state++
+		end if
+		break
+
+	case MENUWINDOW_FIT_IN_BUTTON
+		if Object.Timer < 14
+			Object.Timer++
+			// Width
+			temp0 = 144
+			temp0 -= Object.Width
+			temp0 >>= 3
+			Object.Width += temp0
+			// Height
+			temp0 = 21
+			temp0 -= Object.Height
+			temp0 >>= 3
+			Object.Height += temp0
+			// XPos
+			if object.xpos > Object.XOffset
+				object.xpos -= 0x10000
+			end if
+
+			if object.xpos < Object.XOffset
+				object.xpos += 0x10000
+			end if
+			// YPos
+			if object.ypos > Object.YOffset
+				object.ypos -= 0x10000
+			end if
+
+			if object.ypos < Object.YOffset
+				object.ypos += 0x10000
+			end if
+		else
+			Object.Timer++
+			if Object.Timer == 16
+				Object.Timer = 0
+				object.type = TypeName[Blank Object]
+			end if
+
+			arrayPos0 = Object.EntityPos
+			object[arrayPos0].type = TypeName[Menu Button]
+			object[arrayPos0].state = MENUBUTTON_RESET
+		end if
+		break
+
+	case MENUWINDOW_SOUNDTRACK_EXPAND
+		if Object.Timer < 14
+			Object.Timer++
+			// Width
+			temp0 = 300
+			temp0 -= Object.Width
+			temp0 >>= 3
+			Object.Width += temp0
+			// Height
+			temp0 = 192
+			temp0 -= Object.Height
+			temp0 >>= 3
+			Object.Height += temp0
+			// XPos
+			temp0 = screen.xcenter
+			temp0 <<= 16
+			temp0 -= object.xpos
+			temp0 >>= 2
+			object.xpos += temp0
+			// YPos
+			temp0 = screen.ycenter
+			temp0 -= 6
+			temp0 <<= 16
+			temp0 -= object.ypos
+			temp0 >>= 2
+			object.ypos += temp0
+		else
+			Object.Timer = 0
+			object.state++
+		end if
+		break
+
+	case MENUWINDOW_SOUNDTRACK_SHRINK
+		if Object.Timer < 30
+			Object.Timer++
+			// Width
+			temp0 = 256
+			temp0 -= Object.Width
+			temp0 >>= 2
+			Object.Width += temp0
+			// Height
+			temp0 = 128
+			temp0 -= Object.Height
+			temp0 >>= 2
+			Object.Height += temp0
+			// XPos
+			temp0 = screen.xcenter
+			temp0 <<= 16
+			if object.xpos > temp0
+				object.xpos -= 0x10000
+			end if
+			if object.xpos < temp0
+				object.xpos += 0x10000
+			end if
+			// YPos
+			temp0 = screen.ycenter
+			temp0 -= 8
+			temp0 <<= 16
+			if object.ypos > temp0
+				object.ypos -= 0x10000
+			end if
+			if object.ypos < temp0
+				object.ypos += 0x10000
+			end if
+		else
+			Object.Timer = 0
+			object.state = MENUWINDOW_BLANK
+		end if
+		break
+
+	end switch
+end event
+
+
+event ObjectDraw
+	//Upper Left Border
+	temp0 = Object.Width
+	temp0 *= -0x8000
+	temp0 += object.xpos
+	temp1 = Object.Height
+	temp1 *= -0x8000
+	temp1 += object.ypos
+	DrawSpriteXY(0, temp0, temp1)
+
+	//Upper Right Border
+	temp0 = Object.Width
+	temp0 <<= 15
+	temp0 += object.xpos
+	DrawSpriteXY(1, temp0, temp1)
+
+	//Bottom Left Border
+	temp0 = Object.Width
+	temp0 *= -0x8000
+	temp0 += object.xpos
+	temp1 = Object.Height
+	temp1 <<= 15
+	temp1 += object.ypos
+	DrawSpriteXY(2, temp0, temp1)
+
+	//Bottom Right Border
+	temp0 = Object.Width
+	temp0 <<= 15
+	temp0 += object.xpos
+	DrawSpriteXY(3, temp0, temp1)
+
+	//Menu Filling
+	temp0 = Object.Width
+	temp0 *= -0x8000
+	temp0 += object.xpos
+	temp0 >>= 16
+	temp1 = Object.Height
+	temp1 *= -0x8000
+	temp1 += object.ypos
+	temp1 += 0xA0000
+	temp1 >>= 16
+	temp2 = Object.Width
+	temp2 -= 2
+	temp3 = Object.Height
+	temp3 -= 21
+	DrawRect(temp0, temp1, temp2, temp3, 96, 96, 128, 255)
+
+	//Menu Shadow
+	temp0 = Object.Width
+	temp0 <<= 15
+	temp0 += object.xpos
+	temp0 -= 0x20000
+	temp0 >>= 16
+	temp2 = 2
+	DrawRect(temp0, temp1, temp2, temp3, 0, 0, 0, 255)
+
+	object.inkEffect = INK_ALPHA
+	switch object.state
+	case MENUWINDOW_EXPAND
+	case MENUWINDOW_SCALEDOWN
+	case MENUWINDOW_SOUNDTRACK_EXPAND
+	case MENUWINDOW_SOUNDTRACK_SHRINK
+		if object.alpha < 248
+			object.alpha += 5
+		end if
+		break
+
+	case MENUWINDOW_BLANK
+		object.alpha = 255
+		break
+
+	case MENUWINDOW_SHRINK
+	case MENUWINDOW_FIT_IN_BUTTON
+		if object.alpha > 0
+			object.alpha -= 8
+		end if
+		break
+
+	end switch
+	temp0 = screen.xsize
+	temp0 -= 48
+	if Object.BackTouchPress == true
+		DrawSpriteScreenFX(5, FX_INK, temp0, 225)
+	else
+		DrawSpriteScreenFX(4, FX_INK, temp0, 225)
+	end if
+end event
+
+
+event ObjectStartup
+	switch engine.language
+	case LANG_ENGLISH
+		LoadSpriteSheet("Menu/MenuGfx2_EN.gif")
+		break
+	case LANG_FRENCH
+		LoadSpriteSheet("Menu/MenuGfx2_FR.gif")
+		break
+	case LANG_ITALIAN
+		LoadSpriteSheet("Menu/MenuGfx2_IT.gif")
+		break
+	case LANG_DEUTSCH
+		LoadSpriteSheet("Menu/MenuGfx2_DE.gif")
+		break
+	case LANG_SPANISH
+		LoadSpriteSheet("Menu/MenuGfx2_ES.gif")
+		break
+	case LANG_JAPANESE
+		LoadSpriteSheet("Menu/MenuGfx2_JP.gif")
+		break
+	end switch
+
+	// (#0 - #3) - Borders for the Menu Window, Upper Left - Right - Bottom Left - Bottom Right
+	SpriteFrame(0, 0, 140, 10, 259, 246)
+	SpriteFrame(-140, 0, 140, 10, 263, 246)
+	SpriteFrame(0, -11, 140, 11, 259, 256)
+	SpriteFrame(-140, -11, 140, 11, 263, 256)
+
+	SpriteFrame(-32, -24, 64, 24, 404, 146) // #4 - Back Button
+	SpriteFrame(-32, -24, 64, 24, 404, 171) // #5 - Back Button Highlight
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143) // #0 - "Script" Icon
+
+
+end event

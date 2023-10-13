@@ -1,0 +1,35 @@
+//-----------------Sonic CD Metal Sonic Script----------------//
+//--------Scripted by Christian Whitehead 'The Taxman'--------//
+//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+//---This Object is normally only used by Mobile Data files---//
+
+
+event ObjectDraw
+	object.scale = object.propertyValue
+	object.scale <<= 1
+	DrawSpriteFX(0, FX_SCALE, object.xpos, object.ypos)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Menu/MetalSonic.gif")
+
+	SpriteFrame(-63, -127, 126, 254, 1, 1) // #0 - Metal Sonic
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Menu/MetalSonic.gif")
+	SpriteFrame(-63, -127, 126, 254, 1, 1) // #0 - Metal Sonic
+
+
+end event

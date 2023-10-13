@@ -1,0 +1,1196 @@
+// ----------------------------------
+// RSDK Project: RSDK-GDT 
+// Script Description: CD Options Menu
+// Script Author: Christian Whitehead adapted with the RSDK Script Converter to v4 and with manual modifications by Zero242
+// Original v3/CD Script Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+// Aliases
+private alias object.value0 : Object.Timer
+private alias object.value1 : Object.CurrentSelection
+private alias object.value3 : Object.BGMDecreaseTimer
+private alias object.value4 : Object.BGMIncreaseTimer
+private alias object.value5 : Object.SFXDecreaseTimer
+private alias object.value6 : Object.SFXIncreaseTimer
+private alias object.value7 : Object.TouchDelay
+
+//Object[+4] is Empty, only used to set the Maximum amount of options for the controls
+private alias object[+4].value1 : Object.OptionCount
+
+//Object[+ArrayPos0] can be the BlankObjects 63, 64, 65 and 66. Depending of the CurrentSelection value
+private alias object[+ArrayPos0].value2 : Object.FlickerText
+
+// MenuHeading Aliases
+private alias object[33].state : MenuHeading.State
+private alias object[33].propertyValue : MenuHeading.Header
+
+// MenuWindow Aliases
+private alias object[-1].state : MenuWindow.State
+
+// Helper Aliases
+private alias object[1].value4 : Object.BackTouchPress
+
+// States
+private alias 0 : OPTIONS_SETUP
+private alias 1 : OPTIONS_CONTROLS
+private alias 2 : OPTIONS_SELECTED
+private alias 3 : OPTIONS_STAGE_LOAD
+private alias 4 : OPTIONS_SETTINGS_SETUP
+private alias 5 : OPTIONS_SETTINGS_POPIN
+private alias 6 : OPTIONS_SETTINGS_CONTROLS
+private alias 7 : OPTIONS_UNUSED
+private alias 8 : OPTIONS_UNUSED2
+private alias 9 : OPTIONS_EXIT_SETTINGS
+private alias 10 : OPTIONS_LEAVE_SUBMENU
+private alias 11 : OPTIONS_EXIT
+private alias 12 : OPTIONS_ENTER_ABOUT_MENU
+private alias 13 : OPTIONS_ENTER_ABOUTMENU
+private alias 14 : OPTIONS_ABOUTMENU_CONTROLS
+private alias 15 : OPTIONS_EXIT_ABOUTMENU
+private alias 16 : OPTIONS_RETURN_TO_TITLE
+private alias 17 : OPTIONS_RETURN_TO_TITLE_ALT // before you say this looks silly, it's actually used to draw different
+
+// Menu Window States
+private alias 3 : MENUWINDOW_SHRINK
+
+// Menu Button States
+private alias 1 : MENUBUTTON_BUTTONS_IN
+
+// Menu Heading States
+private alias 1 : MENUHEADING_LEAVE_SCREEN
+
+// Menu Heading Property Values
+private alias 5 : MAINMENU_HEADER
+
+// Presentation Stages
+private alias 0 : STAGE_P_TITLE
+private alias 6 : STAGE_P_HELP
+private alias 7 : STAGE_P_STAFFCREDITS
+private alias 12 : STAGE_P_APPLETV
+
+// Global SFX
+private alias 23 : SFX_G_MENUBUTTON
+private alias 27 : SFX_G_SELECT
+
+// Stage SFX
+private alias 1 : SFX_S_BACKBUTTON
+
+// Languages
+private alias 0 : LANG_ENGLISH
+private alias 1 : LANG_FRENCH
+private alias 2 : LANG_ITALIAN
+private alias 3 : LANG_DEUTSCH
+private alias 4 : LANG_SPANISH
+private alias 5 : LANG_JAPANESE
+
+// Ink Effects
+private alias 2 : INK_ALPHA
+
+// DeviceType
+private alias 1 : RETRO_MOBILE
+
+// SaveRAM Values
+// 32	:	SavedSettings
+// 33	:	BGM
+// 34	:	SFX
+// 35	:	Controls
+// 40	:	Haptic
+
+// Function declarations
+reserve function OptionsMenu_DrawOptions
+
+public function OptionsMenu_DrawOptions
+	// Note: Technically, this function is from OptionsMenuH/OptionsMenuC function depending of the version played, replicated here for simplicity sake
+	switch Object.FlickerText
+	case false
+		if arrayPos0 == Object.CurrentSelection
+			DrawSpriteScreenFX(9, FX_INK, object.xpos, object.ypos)
+			temp0 = arrayPos0
+			temp0 += 14
+			DrawSpriteScreenFX(temp0, FX_INK, object.xpos, object.ypos)
+		else
+			temp0 = arrayPos0
+			temp0 += 10
+			DrawSpriteScreenFX(temp0, FX_INK, object.xpos, object.ypos)
+		end if
+		break
+
+	case true
+		temp0 = Object.Timer
+		temp0 &= 3
+		temp0 >>= 1
+		DrawSpriteScreenFX(9, FX_INK, object.xpos, object.ypos)
+		if temp0 == 0
+			temp0 = arrayPos0
+			temp0 += 14
+			DrawSpriteScreenFX(temp0, FX_INK, object.xpos, object.ypos)
+		end if
+		break
+
+	end switch
+
+	DrawSpriteScreenFX(8, FX_INK, object.xpos, object.ypos)
+	DrawSpriteScreenFX(arrayPos0, FX_INK, object.xpos, object.ypos)
+end function
+
+event ObjectUpdate
+	switch object.state
+	case OPTIONS_SETUP
+		// This is part of Standalone too
+		if Options.PhysicalControls == false
+			Object.CurrentSelection = -1
+		end if
+		object.xpos = screen.xcenter
+		object.xpos -= 126
+		if Object.Timer < 256
+			object.alpha = Object.Timer
+			Object.Timer += 6
+		else
+			Object.Timer = 0
+			object.alpha = 255
+			object.state++
+		end if
+		break
+
+	case OPTIONS_CONTROLS
+		//checkResult = true
+		CheckEqual(Options.PhysicalControls, true)
+		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
+		if checkResult == true
+			if keyPress[0].up == true
+				Object.CurrentSelection--
+				if Object.CurrentSelection < 0
+					Object.CurrentSelection = 3
+				end if
+				PlaySfx(SfxName[Menu Move], false)
+			end if
+
+			if keyPress[0].down == true
+				Object.CurrentSelection++
+				if Object.CurrentSelection > 3
+					Object.CurrentSelection = 0
+				end if
+				PlaySfx(SfxName[Menu Move], false)
+			end if
+
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult > -1
+				Options.PhysicalControls = false
+				Object.CurrentSelection = -1
+			end if
+		else
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			temp3 = checkResult
+
+			temp0 = 0
+			CallFunction(LoadSaveMenu_CheckTouchSave)
+			if checkResult > -1
+				Object.CurrentSelection = 0
+			else
+				if temp3 < 0
+					if Object.CurrentSelection == 0
+						keyPress[0].start = true
+					end if
+				else
+					if Object.CurrentSelection == 0
+						Object.CurrentSelection = -1
+					end if
+				end if
+			end if
+
+			temp0 = 1
+			CallFunction(LoadSaveMenu_CheckTouchSave)
+			if checkResult > -1
+				Object.CurrentSelection = 1
+			else
+				if temp3 < 0
+					if Object.CurrentSelection == 1
+						keyPress[0].start = true
+					end if
+				else
+					if Object.CurrentSelection == 1
+						Object.CurrentSelection = -1
+					end if
+				end if
+			end if
+
+			temp0 = 2
+			CallFunction(LoadSaveMenu_CheckTouchSave)
+			if checkResult > -1
+				Object.CurrentSelection = 2
+			else
+				if temp3 < 0
+					if Object.CurrentSelection == 2
+						keyPress[0].start = true
+					end if
+				else
+					if Object.CurrentSelection == 2
+						Object.CurrentSelection = -1
+					end if
+				end if
+			end if
+
+			temp0 = 3
+			CallFunction(LoadSaveMenu_CheckTouchSave)
+			if checkResult > -1
+				Object.CurrentSelection = 3
+			else
+				if temp3 < 0
+					if Object.CurrentSelection == 3
+						keyPress[0].start = true
+					end if
+				else
+					if Object.CurrentSelection == 3
+						Object.CurrentSelection = -1
+					end if
+				end if
+			end if
+
+			CallFunction(MenuHeading_CheckTouchBack)
+			if keyPress[0].up == true
+				Object.CurrentSelection = 3
+				Options.PhysicalControls = true
+			end if
+
+			if keyPress[0].down == true
+				Object.CurrentSelection = 0
+				Options.PhysicalControls = true
+			end if
+		end if
+
+		checkResult = false
+
+		if Object.CurrentSelection > -1
+			if keyPress[0].start == true
+				checkResult = true
+			end if
+
+			if keyPress[0].buttonA == true
+				checkResult = true
+			end if
+		end if
+
+		if checkResult == true
+			if Object.CurrentSelection < 4
+				arrayPos0 = Object.CurrentSelection
+				Object.FlickerText = 1
+				object.state++
+				switch Object.CurrentSelection
+				case 0
+					StopMusic()
+					break
+
+				case 1
+					break
+
+				case 2
+					StopMusic()
+					break
+
+				case 3
+					break
+
+				end switch
+				PlaySfx(SfxName[Menu Select], false)
+			end if
+		end if
+
+		if keyPress[0].buttonB == true
+			Object.Timer = 248
+			object.state = OPTIONS_EXIT
+			PlaySfx(SfxName[Menu Back], false)
+		end if
+		break
+
+	case OPTIONS_SELECTED
+		if Object.Timer < 30
+			Object.Timer++
+		else
+			Object.Timer = 0
+			arrayPos0 = Object.CurrentSelection
+			Object.FlickerText = 0
+			switch Object.CurrentSelection
+			case 0
+				object.state = OPTIONS_STAGE_LOAD
+				break
+
+			case 1
+				ReadSaveRAM()
+				if saveRAM[32] == false // SavedSettings
+					saveRAM[33] = 100 // BGM
+					saveRAM[34] = 100 // SFX
+					saveRAM[35] = 0 // Control Type
+				end if
+				object.state = OPTIONS_SETTINGS_SETUP
+				object.ypos = 40
+				object.ypos *= Object.CurrentSelection
+				object.ypos += screen.ycenter
+				object.ypos -= 87
+				break
+
+			case 2
+				object.state = OPTIONS_STAGE_LOAD
+				break
+
+			case 3
+				object.state = OPTIONS_ENTER_ABOUT_MENU
+				object.ypos = 40
+				object.ypos *= Object.CurrentSelection
+				object.ypos += screen.ycenter
+				object.ypos -= 87
+				break
+
+			end switch
+		end if
+		break
+
+	case OPTIONS_STAGE_LOAD
+		if Object.Timer < 320
+			Object.Timer += 8
+		else
+			switch Object.CurrentSelection
+			case 0
+				if Options.DevMenuFlag == true
+					engine.state = RESET_GAME
+				else
+					stage.listPos = STAGE_P_HELP
+					LoadStage()
+				end if
+				break
+
+			case 2
+				stage.listPos = STAGE_P_STAFFCREDITS
+				LoadStage()
+				break
+
+			case 3 //Unused
+				engine.state = RESET_GAME
+				break
+
+			end switch
+		end if
+
+		temp0 = Object.Timer
+		if temp0 > 255
+			temp0 = 255
+		end if
+		SetScreenFade(0, 0, 0, temp0)
+		break
+
+	case OPTIONS_SETTINGS_SETUP
+		temp0 = screen.ycenter
+		temp0 -= 87
+		if object.ypos > temp0
+			object.ypos -= 8
+			if object.ypos < temp0
+				object.ypos = temp0
+			end if
+		else
+			object.state++
+			object.alpha = 0
+			Object.OptionCount = 0
+
+			if Options.PhysicalControls == false
+				arrayPos0 = Object.CurrentSelection
+				Object.OptionCount = -1
+			end if
+		end if
+		break
+
+	case OPTIONS_SETTINGS_POPIN
+		if Object.Timer < 256
+			object.alpha = Object.Timer
+			Object.Timer += 8
+		else
+			Object.Timer = 0
+			object.alpha = 255
+			object.state++
+		end if
+		break
+
+	case OPTIONS_SETTINGS_CONTROLS
+		// Origins completely drops most of this options in favor of letting HE2 handle audio
+		// So we only have available the spin dash type
+		arrayPos0 = Object.CurrentSelection
+		//checkResult = true
+		CheckEqual(Options.PhysicalControls, true)
+		if checkResult == true
+			if keyPress[0].up == true
+				Object.OptionCount--
+				PlaySfx(SfxName[Menu Move], false)
+				if Object.OptionCount < 0
+					Object.OptionCount = 2
+				end if
+			end if
+
+			if keyPress[0].down == true
+				Object.OptionCount++
+				PlaySfx(SfxName[Menu Move], false)
+				if Object.OptionCount > 2
+					Object.OptionCount = 0
+				end if
+			end if
+
+			switch Object.OptionCount
+			case 0 // BGM
+				if keyPress[0].left == true
+					Object.BGMDecreaseTimer = 10
+					saveRAM[33] -= 10
+					if saveRAM[33] < 0
+						saveRAM[33] = 0
+						engine.bgmVolume = saveRAM[33]
+					else
+						engine.bgmVolume = saveRAM[33]
+						PlaySfx(SfxName[Menu Move], false)
+					end if
+				end if
+
+				if keyPress[0].right == true
+					Object.BGMIncreaseTimer = 10
+					saveRAM[33] += 10
+					if saveRAM[33] > 100
+						saveRAM[33] = 100
+						engine.bgmVolume = saveRAM[33]
+					else
+						engine.bgmVolume = saveRAM[33]
+						PlaySfx(SfxName[Menu Move], false)
+					end if
+				end if
+				break
+
+			case 1 // SFX
+				if keyPress[0].left == true
+					Object.SFXDecreaseTimer = 10
+					saveRAM[34] -= 10
+					if saveRAM[34] < 0
+						saveRAM[34] = 0
+						engine.sfxVolume = saveRAM[34]
+					else
+						PlaySfx(SfxName[Menu Move], false)
+						engine.sfxVolume = saveRAM[34]
+					end if
+				end if
+
+				if keyPress[0].right == true
+					Object.SFXIncreaseTimer = 10
+					saveRAM[34] += 10
+					if saveRAM[34] > 100
+						saveRAM[34] = 100
+					else
+						PlaySfx(SfxName[Menu Move], false)
+						engine.sfxVolume = saveRAM[34]
+					end if
+				end if
+				break
+
+			case 2 // Control Type
+				if keyPress[0].left == true
+					saveRAM[35]--
+					if saveRAM[35] < 0
+						saveRAM[35] = 1
+					end if
+					PlaySfx(SfxName[Menu Move], false)
+				end if
+
+				if keyPress[0].right == true
+					saveRAM[35]++
+					if saveRAM[35] > 1
+						saveRAM[35] = 0
+					end if
+					PlaySfx(SfxName[Menu Move], false)
+				end if
+				break
+
+			end switch
+		end if
+		// Just to make it look neat, instead of continuing the code from an open if on another platform, we ask again for a check in the physical controls
+		if Options.PhysicalControls == true
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult > -1
+				Options.PhysicalControls = false
+				Object.OptionCount = -1
+			end if
+		else
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult > -1
+				Object.TouchDelay++
+				Object.TouchDelay %= 24
+			else
+				Object.TouchDelay = 0
+			end if
+			temp3 = checkResult
+
+			temp0 = screen.xcenter
+			temp0 += 16
+			temp1 = screen.xcenter
+			temp1 += 48
+			// BGM Decrease
+			CheckTouchRect(temp0, 72, temp1, 99)
+			if checkResult > -1
+				Object.OptionCount = 3
+				Object.BGMDecreaseTimer = 10
+				if Object.TouchDelay == 23
+					saveRAM[33] -= 10
+					if saveRAM[33] < 0
+						saveRAM[33] = 0
+						engine.bgmVolume = saveRAM[33]
+					else
+						engine.bgmVolume = saveRAM[33]
+						PlaySfx(SfxName[Menu Move], false)
+					end if
+				end if
+			else
+				if temp3 < 0
+					if Object.OptionCount == 3
+						Object.BGMDecreaseTimer = 0
+						saveRAM[33] -= 10
+						if saveRAM[33] < 0
+							saveRAM[33] = 0
+							engine.bgmVolume = saveRAM[33]
+						else
+							engine.bgmVolume = saveRAM[33]
+							PlaySfx(SfxName[Menu Move], false)
+						end if
+						Object.OptionCount = -1
+					end if
+				else
+					if Object.OptionCount == 3
+						Object.OptionCount = -1
+					end if
+				end if
+			end if
+
+			// SFX Decrease
+			CheckTouchRect(temp0, 101, temp1, 128)
+			if checkResult > -1
+				Object.OptionCount = 4
+				Object.SFXDecreaseTimer = 10
+				if Object.TouchDelay == 23
+					saveRAM[34] -= 10
+					if saveRAM[34] < 0
+						saveRAM[34] = 0
+						engine.sfxVolume = saveRAM[34]
+					else
+						engine.sfxVolume = saveRAM[34]
+						PlaySfx(SfxName[Menu Move], false)
+					end if
+				end if
+			else
+				if temp3 < 0
+					if Object.OptionCount == 4
+						Object.SFXDecreaseTimer = 0
+						saveRAM[34] -= 10
+						if saveRAM[34] < 0
+							saveRAM[34] = 0
+							engine.sfxVolume = saveRAM[34]
+						else
+							engine.sfxVolume = saveRAM[34]
+							PlaySfx(SfxName[Menu Move], false)
+						end if
+						Object.OptionCount = -1
+					end if
+				else
+					if Object.OptionCount == 4
+						Object.OptionCount = -1
+					end if
+				end if
+			end if
+
+			// BGM Increase
+			temp0 = screen.xcenter
+			temp0 += 84
+			temp1 = screen.xcenter
+			temp1 += 120
+			CheckTouchRect(temp0, 72, temp1, 99)
+			if checkResult > -1
+				Object.OptionCount = 5
+				Object.BGMIncreaseTimer = 10
+				if Object.TouchDelay == 23
+					saveRAM[33] += 10
+					if saveRAM[33] > 100
+						saveRAM[33] = 100
+						engine.bgmVolume = saveRAM[33]
+					else
+						engine.bgmVolume = saveRAM[33]
+						PlaySfx(SfxName[Menu Move], false)
+					end if
+				end if
+			else
+				if temp3 < 0
+					if Object.OptionCount == 5
+						Object.BGMIncreaseTimer = 0
+						saveRAM[33] += 10
+						if saveRAM[33] > 100
+							saveRAM[33] = 100
+							engine.bgmVolume = saveRAM[33]
+						else
+							engine.bgmVolume = saveRAM[33]
+							PlaySfx(SfxName[Menu Move], false)
+						end if
+						Object.OptionCount = -1
+					end if
+				else
+					if Object.OptionCount == 5
+						Object.OptionCount = -1
+					end if
+				end if
+			end if
+
+			// SFX Increase
+			CheckTouchRect(temp0, 101, temp1, 128)
+			if checkResult > -1
+				Object.OptionCount = 6
+				Object.SFXIncreaseTimer = 10
+				if Object.TouchDelay == 23
+					saveRAM[34] += 10
+					if saveRAM[34] > 100
+						saveRAM[34] = 100
+						engine.sfxVolume = saveRAM[34]
+					else
+						engine.sfxVolume = saveRAM[34]
+						PlaySfx(SfxName[Menu Move], false)
+					end if
+				end if
+			else
+				if temp3 < 0
+					if Object.OptionCount == 6
+						Object.SFXIncreaseTimer = 0
+						saveRAM[34] += 10
+						if saveRAM[34] > 100
+							saveRAM[34] = 100
+							engine.sfxVolume = saveRAM[34]
+						else
+							engine.sfxVolume = saveRAM[34]
+							PlaySfx(SfxName[Menu Move], false)
+						end if
+						Object.OptionCount = -1
+					end if
+				else
+					if Object.OptionCount == 6
+						Object.OptionCount = -1
+					end if
+				end if
+			end if
+
+			// CD Control Type
+			temp0 = screen.xcenter
+			temp0 += 14
+			temp1 = screen.xcenter
+			temp1 += 64
+			CheckTouchRect(temp0, 132, temp1, 184)
+			if checkResult > -1
+				Object.OptionCount = 7
+			else
+				if temp3 < 0
+					if Object.OptionCount == 7
+						saveRAM[35] = 0
+						PlaySfx(SfxName[Menu Move], false)
+						Object.OptionCount = -1
+					end if
+				else
+					if Object.OptionCount == 7
+						Object.OptionCount = -1
+					end if
+				end if
+			end if
+
+			// S2 Control Type
+			temp0 = screen.xcenter
+			temp0 += 68
+			temp1 = screen.xcenter
+			temp1 += 114
+			CheckTouchRect(temp0, 132, temp1, 184)
+			if checkResult > -1
+				Object.OptionCount = 8
+			else
+				if temp3 < 0
+					if Object.OptionCount == 8
+						saveRAM[35] = 1
+						PlaySfx(SfxName[Menu Move], false)
+						Object.OptionCount = -1
+					end if
+				else
+					if Object.OptionCount == 8
+						Object.OptionCount = -1
+					end if
+				end if
+			end if
+
+			temp0 = screen.xsize
+			temp0 -= 96
+			CheckTouchRect(temp0, 192, screen.xsize, screen.ysize)
+			if checkResult > -1
+				Object.OptionCount = 9
+				Object.BackTouchPress = true
+			else
+				Object.BackTouchPress = false
+				if temp3 < 0
+					if Object.OptionCount == 9
+						keyPress[0].buttonB = true
+					end if
+				else
+					if Object.OptionCount == 9
+						Object.OptionCount = -1
+					end if
+				end if
+			end if
+
+			if keyPress[0].up == true
+				Object.OptionCount = 2
+				Options.PhysicalControls = true
+			end if
+
+			if keyPress[0].down == true
+				Object.OptionCount = 0
+				Options.PhysicalControls = true
+			end if
+		end if
+		if keyPress[0].buttonB == true
+			object.state = OPTIONS_EXIT_SETTINGS
+			Object.Timer = 248
+
+			Options.OriginalControls = saveRAM[35]
+			saveRAM[32] = true
+			WriteSaveRAM()
+			PlaySfx(SfxName[Menu Back], false)
+		end if
+		break
+		
+	case OPTIONS_UNUSED
+		if Object.Timer < 30
+			Object.Timer++
+		else
+			Object.Timer = 0
+			object.state++
+		end if
+		break
+
+	case OPTIONS_UNUSED2
+		if Object.Timer > 0
+			Object.Timer -= 8
+		else
+			if Options.PhysicalControls == false
+				Object.CurrentSelection = -1
+			end if
+			object.state = OPTIONS_CONTROLS
+			PlayMusic(0)
+		end if
+		temp0 = Object.Timer
+		if temp0 > 255
+			temp0 = 255
+		end if
+		SetScreenFade(0, 0, 0, temp0)
+		break
+		
+	case OPTIONS_EXIT_SETTINGS
+		if Object.Timer > 0
+			object.alpha = Object.Timer
+			Object.Timer -= 8
+		else
+			object.alpha = 0
+			object.state++
+		end if
+		break
+
+	case OPTIONS_LEAVE_SUBMENU
+		temp0 = Object.CurrentSelection
+		temp0 *= 40
+		temp0 += screen.ycenter
+		temp0 -= 87
+		if object.ypos < temp0
+			object.ypos += 8
+			if object.ypos > temp0
+				object.ypos = temp0
+			end if
+			object.alpha = 0
+		else
+			if Options.PhysicalControls == false
+				Object.CurrentSelection = -1
+			end if
+			object.state = OPTIONS_CONTROLS
+			object.alpha = 255
+		end if
+		break
+
+	case OPTIONS_EXIT
+		if Object.Timer > 0
+			object.alpha = Object.Timer
+			Object.Timer -= 8
+		else
+			object.type = TypeName[Blank Object]
+			MenuWindow.State = MENUWINDOW_SHRINK
+			//All of this is MenuButton Objects
+			object[34].state = MENUBUTTON_BUTTONS_IN
+			object[35].state = MENUBUTTON_BUTTONS_IN
+			object[36].state = MENUBUTTON_BUTTONS_IN
+			object[37].state = MENUBUTTON_BUTTONS_IN
+			object[38].state = MENUBUTTON_BUTTONS_IN
+			object[39].state = MENUBUTTON_BUTTONS_IN
+			object[40].state = MENUBUTTON_BUTTONS_IN
+			object[41].state = MENUBUTTON_BUTTONS_IN
+			object[42].state = MENUBUTTON_BUTTONS_IN
+			//End
+			MenuHeading.State = MENUHEADING_LEAVE_SCREEN
+			MenuHeading.Header = MAINMENU_HEADER
+		end if
+		break
+
+	case OPTIONS_ENTER_ABOUT_MENU
+		temp0 = screen.ycenter
+		temp0 -= 87
+		if object.ypos > temp0
+			object.ypos -= 8
+			if object.ypos < temp0
+				object.ypos = temp0
+			end if
+		else
+			temp0 = object.entityPos
+			temp0 += 10
+			ResetObjectEntity(temp0, TypeName[About Menu], 0, 0, 0)
+			SetupMenu(MENU_1, 0, 3, 1)
+			GetVersionNumber(MENU_1, 1)
+			object[+10].inkEffect = INK_ALPHA
+			object.state++
+			object.alpha = 0
+			Object.OptionCount = 0
+			if Options.PhysicalControls == false
+				arrayPos0 = Object.CurrentSelection
+				Object.OptionCount = -1
+			end if
+		end if
+		break
+
+	case OPTIONS_ENTER_ABOUTMENU
+		if Object.Timer < 256
+			object.alpha = Object.Timer
+			Object.Timer += 8
+		else
+			Object.Timer = 0
+			object.alpha = 255
+			object.state++
+		end if
+		break
+
+	case OPTIONS_ABOUTMENU_CONTROLS
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		temp3 = checkResult
+		temp0 = screen.xsize
+		temp0 -= 96
+		CheckTouchRect(temp0, 192, screen.xsize, screen.ysize)
+		if checkResult > -1
+			Object.OptionCount = 9
+			Object.BackTouchPress = true
+		else
+			Object.BackTouchPress = false
+			if temp3 < 0
+				if Object.OptionCount == 9
+					keyPress[0].buttonB = true
+				end if
+			else
+				if Object.OptionCount == 9
+					Object.OptionCount = -1
+				end if
+			end if
+		end if
+		if keyPress[0].buttonB == true
+			object.state = OPTIONS_EXIT_ABOUTMENU
+			Object.Timer = 248
+			PlaySfx(SfxName[Menu Back], false)
+		end if
+		break
+
+	case OPTIONS_EXIT_ABOUTMENU
+		if Object.Timer > 0
+			object.alpha = Object.Timer
+			Object.Timer -= 8
+		else
+			object.alpha = 0
+			object.state = OPTIONS_LEAVE_SUBMENU
+			object[+10].type = TypeName[Blank Object]
+		end if
+		break
+
+	case OPTIONS_RETURN_TO_TITLE
+		Object.Timer += 4
+		if Object.Timer == 384
+			stage.activeList = PRESENTATION_STAGE
+			stage.listPos = STAGE_P_TITLE
+			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, Object.Timer)
+		break
+
+	case OPTIONS_RETURN_TO_TITLE_ALT
+		Object.Timer += 4
+		if Object.Timer == 384
+			stage.activeList = PRESENTATION_STAGE
+			stage.listPos = STAGE_P_TITLE
+			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, Object.Timer)
+		break
+
+	end switch
+end event
+
+
+event ObjectDraw
+	switch object.state
+	case OPTIONS_SETUP
+	case OPTIONS_CONTROLS
+	case OPTIONS_SELECTED
+	case OPTIONS_STAGE_LOAD
+	case OPTIONS_UNUSED2
+	case OPTIONS_EXIT
+	case OPTIONS_RETURN_TO_TITLE
+		object.ypos = screen.ycenter
+		object.ypos -= 87
+		arrayPos0 = 0
+		CallFunction(OptionsMenu_DrawOptions)
+		object.ypos += 40
+		arrayPos0++
+		CallFunction(OptionsMenu_DrawOptions)
+		object.ypos += 40
+		arrayPos0++
+		CallFunction(OptionsMenu_DrawOptions)
+		object.ypos += 40
+		arrayPos0++
+		CallFunction(OptionsMenu_DrawOptions)
+		break
+
+	case OPTIONS_SETTINGS_SETUP
+	case OPTIONS_ENTER_ABOUT_MENU
+		arrayPos0 = Object.CurrentSelection
+		CallFunction(OptionsMenu_DrawOptions)
+		break
+
+	case OPTIONS_SETTINGS_POPIN
+	case OPTIONS_SETTINGS_CONTROLS
+	case OPTIONS_EXIT_SETTINGS
+	case OPTIONS_LEAVE_SUBMENU
+	case OPTIONS_RETURN_TO_TITLE_ALT
+		arrayPos0 = Object.CurrentSelection
+		temp0 = screen.xcenter
+		temp0 += 15
+
+		if Object.OptionCount == 7
+			DrawSpriteScreenFX(40, FX_INK, temp0, 134)
+		else
+			DrawSpriteScreenFX(29, FX_INK, temp0, 134)
+		end if
+
+		temp0 += 52
+		if Object.OptionCount == 8
+			DrawSpriteScreenFX(41, FX_INK, temp0, 134)
+		else
+			DrawSpriteScreenFX(30, FX_INK, temp0, 134)
+		end if
+		temp0 = screen.xcenter
+		temp0 -= 117
+		//checkResult = true
+		CheckEqual(Options.PhysicalControls, true)
+		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
+		if checkResult == true
+			switch Object.OptionCount
+			case 0
+				DrawSpriteScreenFX(32, FX_INK, temp0, 81)
+				DrawSpriteScreenFX(33, FX_INK, temp0, 110)
+				DrawSpriteScreenFX(35, FX_INK, temp0, 151)
+				break
+
+			case 1
+				DrawSpriteScreenFX(31, FX_INK, temp0, 81)
+				DrawSpriteScreenFX(34, FX_INK, temp0, 110)
+				DrawSpriteScreenFX(35, FX_INK, temp0, 151)
+				break
+
+			case 2
+				DrawSpriteScreenFX(31, FX_INK, temp0, 81)
+				DrawSpriteScreenFX(33, FX_INK, temp0, 110)
+				DrawSpriteScreenFX(36, FX_INK, temp0, 151)
+				break
+
+			end switch
+		else
+			DrawSpriteScreenFX(31, FX_INK, temp0, 81)
+			DrawSpriteScreenFX(33, FX_INK, temp0, 110)
+			DrawSpriteScreenFX(35, FX_INK, temp0, 151)
+		end if
+
+		//Controls Drawing
+		if saveRAM[35] == 0
+			DrawSpriteScreenFX(37, FX_INK, temp0, 169)
+			temp0 += 132
+			DrawSpriteScreenFX(39, FX_INK, temp0, 134)
+		else
+			DrawSpriteScreenFX(38, FX_INK, temp0, 169)
+			temp0 += 184
+			DrawSpriteScreenFX(39, FX_INK, temp0, 134)
+		end if
+
+		//BGM Drawing
+		temp1 = screen.xcenter
+		temp1 += 23
+		if Object.BGMDecreaseTimer > 0
+			Object.BGMDecreaseTimer--
+			DrawSpriteScreenFX(5, FX_INK, temp1, 76)
+		else
+			DrawSpriteScreenFX(4, FX_INK, temp1, 76)
+		end if
+
+		temp1 += 66
+		if Object.BGMIncreaseTimer > 0
+			Object.BGMIncreaseTimer--
+			DrawSpriteScreenFX(7, FX_INK, temp1, 76)
+		else
+			DrawSpriteScreenFX(6, FX_INK, temp1, 76)
+		end if
+
+		temp1 -= 42
+		DrawSpriteScreenFX(18, FX_INK, temp1, 76)
+
+		temp0 = saveRAM[33]
+		temp0 /= 10
+		temp0 += 18
+		DrawSpriteScreenFX(temp0, FX_INK, temp1, 76)
+
+		//SFX Drawing
+		temp1 = screen.xcenter
+		temp1 += 23
+		if Object.SFXDecreaseTimer > 0
+			Object.SFXDecreaseTimer--
+			DrawSpriteScreenFX(5, FX_INK, temp1, 105)
+		else
+			DrawSpriteScreenFX(4, FX_INK, temp1, 105)
+		end if
+
+		temp1 += 66
+		if Object.SFXIncreaseTimer > 0
+			Object.SFXIncreaseTimer--
+			DrawSpriteScreenFX(7, FX_INK, temp1, 105)
+		else
+			DrawSpriteScreenFX(6, FX_INK, temp1, 105)
+		end if
+
+		temp1 -= 42
+		DrawSpriteScreenFX(18, FX_INK, temp1, 105)
+
+		temp0 = saveRAM[34]
+		temp0 /= 10
+		temp0 += 18
+		DrawSpriteScreenFX(temp0, FX_INK, temp1, 105)
+		object.alpha = 255
+		CallFunction(OptionsMenu_DrawOptions)
+		break
+
+	case OPTIONS_ENTER_ABOUTMENU
+	case OPTIONS_ABOUTMENU_CONTROLS
+	case OPTIONS_EXIT_ABOUTMENU
+		arrayPos0 = Object.CurrentSelection
+		object.alpha = 255
+		CallFunction(OptionsMenu_DrawOptions)
+		break
+
+	end switch
+end event
+
+
+event ObjectStartup
+	switch engine.language
+	case LANG_ENGLISH
+		LoadSpriteSheet("Menu/MenuGfx2_EN.gif")
+		break
+	case LANG_FRENCH
+		LoadSpriteSheet("Menu/MenuGfx2_FR.gif")
+		break
+	case LANG_ITALIAN
+		LoadSpriteSheet("Menu/MenuGfx2_IT.gif")
+		break
+	case LANG_DEUTSCH
+		LoadSpriteSheet("Menu/MenuGfx2_DE.gif")
+		break
+	case LANG_SPANISH
+		LoadSpriteSheet("Menu/MenuGfx2_ES.gif")
+		break
+	case LANG_JAPANESE
+		LoadSpriteSheet("Menu/MenuGfx2_JP.gif")
+		break
+	end switch
+
+	if saveRAM[32] == false
+		saveRAM[33] = 100
+		saveRAM[34] = 100
+		saveRAM[35] = 0
+	end if
+	Options.OriginalControls = saveRAM[35]
+
+	SpriteFrame(4, 2, 32, 32, 479, 34) // #0 - Gear
+	SpriteFrame(4, 2, 32, 32, 479, 34) // #1 - Gear Again
+	SpriteFrame(4, 2, 32, 32, 479, 34) // #2 - Why is this a Gear again
+	SpriteFrame(4, 2, 32, 32, 479, 34) // #3 - Please Stop.
+	SpriteFrame(0, 0, 20, 20, 168, 366) // #4 - Decrease button
+	SpriteFrame(0, 0, 20, 20, 168, 387) // #5 - Decrease button Highlight
+	SpriteFrame(0, 0, 20, 20, 189, 366) // #6 - Increase button
+	SpriteFrame(0, 0, 20, 20, 189, 387) // #7 - Increase button Highlight
+	SpriteFrame(45, 12, 13, 13, 488, 1) // #8 - Triangle detail
+	SpriteFrame(0, 0, 250, 37, 259, 421) // #9 - Selection Border
+
+	if Options.DevMenuFlag == true
+		SpriteFrame(64, 12, 66, 16, 259, 598) // #10 - Dev Menu
+	else
+		SpriteFrame(64, 12, 128, 16, 1, 188) // #10 - Instructions
+	end if
+
+	SpriteFrame(64, 12, 128, 16, 1, 205) // #11 - Settings
+	SpriteFrame(64, 12, 128, 16, 1, 222) // #12 - Staff Credits
+	SpriteFrame(64, 12, 128, 16, 1, 239) // #13 - About
+
+	if Options.DevMenuFlag == true
+		SpriteFrame(64, 12, 66, 16, 326, 598) // #14 - Dev Menu Highlight
+	else
+		SpriteFrame(64, 12, 128, 16, 130, 188) // #14 - Instructions Highlight
+	end if
+
+	SpriteFrame(64, 12, 128, 16, 130, 205) // #15 - Settings Highlight
+	SpriteFrame(64, 12, 128, 16, 130, 222) // #16 - Staff Credits Highlight
+	SpriteFrame(64, 12, 128, 16, 130, 239) // #17 - About Highlight
+	SpriteFrame(0, 0, 38, 20, 171, 324) // #18 - Minimal Volume
+	SpriteFrame(0, 0, 4, 20, 171, 345) // #19 - Volume Bar 1
+	SpriteFrame(0, 0, 8, 20, 171, 345) // #20 - Volume Bar 2
+	SpriteFrame(0, 0, 12, 20, 171, 345) // #21 - Volume Bar 3
+	SpriteFrame(0, 0, 16, 20, 171, 345) // #22 - Volume Bar 4
+	SpriteFrame(0, 0, 20, 20, 171, 345) // #23 - Volume Bar 5
+	SpriteFrame(0, 0, 24, 20, 171, 345) // #24 - Volume Bar 6
+	SpriteFrame(0, 0, 28, 20, 171, 345) // #25 - Volume Bar 7
+	SpriteFrame(0, 0, 32, 20, 171, 345) // #26 - Volume Bar 8
+	SpriteFrame(0, 0, 36, 20, 171, 345) // #27 - Volume Bar 9
+	SpriteFrame(0, 0, 38, 20, 171, 345) // #28 - Volume Bar 10
+	SpriteFrame(0, 0, 48, 48, 210, 324) // #29 - S2 Spin Dash
+	SpriteFrame(0, 0, 48, 48, 210, 373) // #30 - CD Spin Dash
+	SpriteFrame(0, 0, 128, 16, 1, 256) // #31 - Music
+	SpriteFrame(0, 0, 128, 16, 130, 256) // #32 - Music Highlight
+	SpriteFrame(0, 0, 128, 16, 1, 273) // #32 - SFX
+	SpriteFrame(0, 0, 128, 16, 130, 273) // #33 - SFX Highlight
+	SpriteFrame(0, 0, 128, 16, 1, 307) // #34 - Spin Dash
+	SpriteFrame(0, 0, 128, 16, 130, 307) // #35 - Spin Dash Highlight
+	SpriteFrame(0, 0, 88, 8, 259, 44) // #36 - Genesis
+	SpriteFrame(0, 0, 88, 8, 259, 35) // #37 - Original
+	SpriteFrame(0, 0, 48, 48, 405, 88) // #38 - Icon Border
+	SpriteFrame(0, 0, 48, 48, 119, 324) // #39 - S2 Spin Dash Highlight
+	SpriteFrame(0, 0, 48, 48, 119, 373) // #40 - CD Spin Dash Highlight
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Menu/MenuGfx2_EN.gif")
+	SpriteFrame(16, 0, 90, 30, 71, 677) // Options
+end event 

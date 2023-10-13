@@ -1,0 +1,451 @@
+//-----------------Sonic CD Help Menu Script------------------//
+//--------Scripted by Christian Whitehead 'The Taxman'--------//
+//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+
+// Aliases
+private alias object.value0 : Object.Timer //Also used for fading
+private alias object.value2 : Object.YOffset
+private alias object.value3 : Object.HelpPage
+private alias object.value4 : Object.PageTimer
+
+// States
+private alias 0 : HELPMENU_SETUP
+private alias 1 : HELPMENU_FADEIN
+private alias 2 : HELPMENU_CONTROLS
+private alias 3 : HELPMENU_PAGEDOWN
+private alias 4 : HELPMENU_PAGEUP
+private alias 5 : HELPMENU_LEAVE
+
+// Languages
+private alias 0 : LANG_ENGLISH
+private alias 1 : LANG_FRENCH
+private alias 2 : LANG_ITALIAN
+private alias 3 : LANG_DEUTSCH
+private alias 4 : LANG_SPANISH
+private alias 5 : LANG_JAPANESE
+
+// Global SFX
+private alias 26 : SFX_G_OUTTAHERE
+private alias 27 : SFX_G_SELECT
+
+// Soundtrack
+private alias 0 : OST_JP
+
+// Presentation Stages
+private alias 1 : STAGE_P_MENU
+
+// Engine & Callbacks
+private alias 5 : ENGINE_ENTER_HIRESMODE
+private alias 6 : ENGINE_EXIT_HIRESMODE
+
+// Priority
+private alias 1 : PRIORITY_ACTIVE
+
+// Function declarations
+reserve function HelpMenu_PageLoad
+
+public function HelpMenu_PageLoad
+	switch Object.HelpPage
+	case 0
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg1_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg1_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg1_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg1_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg1_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg1_JP.txt", 1)
+			break
+		end switch
+		break
+	case 1
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg2_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg2_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg2_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg2_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg2_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg2_JP.txt", 1)
+			break
+		end switch
+		break
+	case 2
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg3_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg3_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg3_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg3_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg3_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg3_JP.txt", 1)
+			break
+		end switch
+		break
+	case 3
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg4_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg4_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg4_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg4_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg4_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg4_JP.txt", 1)
+			break
+		end switch
+		break
+	case 4
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg5_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg5_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg5_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg5_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg5_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg5_JP.txt", 1)
+			break
+		end switch
+		break
+	case 5
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg6_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg6_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg6_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg6_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg6_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg6_JP.txt", 1)
+			break
+		end switch
+		break
+	case 6
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg7_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg7_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg7_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg7_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg7_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg7_JP.txt", 1)
+			break
+		end switch
+		break
+	case 7
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg8_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg8_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg8_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg8_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg8_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg8_JP.txt", 1)
+			break
+		end switch
+		break
+	case 8
+		switch engine.language
+		case LANG_ENGLISH
+			LoadTextFile(MENU_1, "Data/Game/EN_Help/SCD_Pg9_EN.txt", 1)
+			break
+		case LANG_FRENCH
+			LoadTextFile(MENU_1, "Data/Game/FR_Help/SCD_Pg9_FR.txt", 1)
+			break
+		case LANG_ITALIAN
+			LoadTextFile(MENU_1, "Data/Game/IT_Help/SCD_Pg9_IT.txt", 1)
+			break
+		case LANG_DEUTSCH
+			LoadTextFile(MENU_1, "Data/Game/DE_Help/SCD_Pg9_DE.txt", 1)
+			break
+		case LANG_SPANISH
+			LoadTextFile(MENU_1, "Data/Game/ES_Help/SCD_Pg9_ES.txt", 1)
+			break
+		case LANG_JAPANESE
+			LoadTextFile(MENU_1, "Data/Game/JP_Help/SCD_Pg9_JP.txt", 1)
+			break
+		end switch
+		break
+	end switch
+end function
+
+
+event ObjectUpdate
+	switch object.state
+	case HELPMENU_SETUP
+		temp0 = 256
+		temp0 -= screen.xcenter
+		screen.xoffset = temp0
+		Object.HelpPage = 0
+		CallFunction(HelpMenu_PageLoad)
+		PlayMusic(1)
+		Object.Timer = 384
+		object.state++
+		SetScreenFade(0, 0, 0, 255)
+		break
+
+	case HELPMENU_FADEIN
+		if Object.Timer > 0
+			Object.Timer -= 8
+		else
+			object.state++
+		end if
+		SetScreenFade(0, 0, 0, Object.Timer)
+		break
+
+	case HELPMENU_CONTROLS
+		if keyPress[0].down == true
+			if Object.HelpPage < 8
+				PlaySfx(SFX_G_SELECT, false)
+				Object.Timer = 256
+				object.state = HELPMENU_PAGEDOWN
+			end if
+		end if
+
+		if keyPress[0].up == true
+			if Object.HelpPage > 0
+				PlaySfx(SFX_G_SELECT, false)
+				object.state = HELPMENU_PAGEUP
+			end if
+		end if
+
+		if keyPress[0].buttonB == true
+			PlaySfx(SFX_G_OUTTAHERE, false)
+			object.state = HELPMENU_LEAVE
+		end if
+		break
+
+	case HELPMENU_PAGEDOWN
+		if Object.Timer > 0
+			Cos(temp0, Object.Timer)
+			temp0 >>= 1
+			temp0 += 256
+			temp1 = Object.YOffset
+			temp1 += temp0
+			screen.yoffset = temp1
+
+			temp1 += 256
+			temp1 >>= 9
+			if temp1 > Object.HelpPage
+				Object.HelpPage++
+				if Object.HelpPage == 2
+					SetActivePalette(1, 0, screen.ysize)
+				else
+					SetActivePalette(0, 0, screen.ysize)
+				end if
+				CallFunction(HelpMenu_PageLoad)
+			end if
+
+			Object.Timer -= 3
+			if Object.Timer < 0
+				Object.Timer = 0
+			end if
+		else
+			Object.YOffset += 512
+			screen.yoffset = Object.YOffset
+			object.state = HELPMENU_CONTROLS
+		end if
+		break
+
+	case HELPMENU_PAGEUP
+		if Object.Timer < 256
+			Cos(temp0, Object.Timer)
+			temp0 >>= 1
+			temp0 -= 256
+			temp1 = Object.YOffset
+			temp1 += temp0
+			screen.yoffset = temp1
+
+			temp1 += 256
+			temp1 >>= 9
+			if temp1 < Object.HelpPage
+				Object.HelpPage--
+				if Object.HelpPage == 2
+					SetActivePalette(1, 0, screen.ysize)
+				else
+					SetActivePalette(0, 0, screen.ysize)
+				end if
+				CallFunction(HelpMenu_PageLoad)
+			end if
+
+			Object.Timer += 3
+			if Object.Timer > 256
+				Object.Timer = 256
+			end if
+		else
+			Object.YOffset -= 512
+			screen.yoffset = Object.YOffset
+
+			Object.Timer = 0
+			object.state = HELPMENU_CONTROLS
+		end if
+		break
+
+	case HELPMENU_LEAVE
+		if Object.Timer < 348
+			Object.Timer += 8
+		else
+			stage.listPos = STAGE_P_MENU
+			engine.state = ENGINE_EXIT_HIRESMODE
+			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, Object.Timer)
+		break
+
+	end switch
+end event
+
+
+event ObjectDraw
+	Object.PageTimer--
+	if Object.PageTimer < -31
+		Object.PageTimer += 32
+	end if
+	temp1 = Object.PageTimer
+	temp1 >>= 1
+	while temp1 < screen.ysize
+		temp0 = Object.PageTimer
+		temp0 >>= 1
+		while temp0 < screen.xsize
+			DrawSpriteScreenXY(0, temp0, temp1)
+			temp0 += 128
+		loop
+		temp1 += 128
+	loop
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Menu/HelpBG.gif")
+
+	SpriteFrame(0, 0, 128, 128, 1, 1)
+
+	if engine.language == LANG_JAPANESE
+		object[59].xpos -= 0x100000
+		object[60].xpos -= 0x100000
+		object[61].xpos -= 0x100000
+		object[62].xpos -= 0x100000
+		object[63].xpos -= 0x100000
+		object[64].xpos += 0x500000
+		object[59].ypos += 0x180000
+		object[60].ypos += 0x180000
+		object[61].ypos += 0x180000
+		object[62].ypos += 0x180000
+		object[63].ypos += 0x180000
+		object[64].ypos -= 0x2F0000
+	end if
+
+	LoadPalette("HelpPal1.act", 0, 0, 0, 256)
+	LoadPalette("HelpPal2.act", 1, 0, 0, 256)
+// WARNING: Function FUNC_LOADTEXTFONT does not exist in RSDKv4!
+// Arguments: "Data/Game/HelpText.bin"
+
+
+	if Options.Soundtrack == OST_JP
+		SetMusicTrack("JP/DAGarden.ogg", 1, 1)
+	else
+		SetMusicTrack("US/DAGarden.ogg", 1, 117382)
+	end if
+
+	engine.state = ENGINE_ENTER_HIRESMODE
+	screen.cameraEnabled = false
+
+	object[0].type = TypeName[Help Menu]
+	object[0].priority = PRIORITY_ACTIVE
+	object[0].drawOrder = 0
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Menu/MenuGfx2_EN.gif")
+	SpriteFrame(16, 0, 46, 30, 1, 677) // Help
+
+
+end event

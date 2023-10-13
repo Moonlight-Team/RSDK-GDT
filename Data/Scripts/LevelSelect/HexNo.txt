@@ -33,6 +33,7 @@ end event
 
 
 event ObjectStartup
+LoadPalette("LSelect.act", 0, 0, 0, 256)
 	LoadSpriteSheet("LevelSelect/Text.gif")
 
 	// Use loops to automate sprite framing

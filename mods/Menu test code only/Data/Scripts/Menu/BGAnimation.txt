@@ -61,7 +61,8 @@ event ObjectStartup
 	// So this is removing the stage's FG layer but,
 	// the stage's configuration in the act file already has it set up like that anyways...
 	stage.activeLayer[0] = 9
-
+// so um i had to add a extrenal palette, Sorry Zero! -klashie
+	LoadPalette("menu.act", 0, 0, 0, 256)
 	LoadSpriteSheet("Menu/MenuGfx1_EN.gif")
 
 	SpriteFrame(-160, -104, 320, 224, 0, 0) // #0 - Sonic Background
@@ -118,12 +119,12 @@ event ObjectStartup
 	faceBuffer[0].flag = FACE_FLAG_COLOURED_3D
 
 	// Setting the color of the first rectangle, giving it a green of sorts (0x80E040)
-	faceBuffer[0].color = 128
+	faceBuffer[0].color = 225
 	faceBuffer[0].color <<= 16
-	temp0 = 224
+	temp0 = 225
 	temp0 <<= 8
 	faceBuffer[0].color += temp0
-	faceBuffer[0].color += 64
+	faceBuffer[0].color += 225
 	faceBuffer[0].color += 0x7F000000 // Half transparency
 
 	// Now, set up the second rectanlge
@@ -157,12 +158,12 @@ event ObjectStartup
 	faceBuffer[1].flag = FACE_FLAG_COLOURED_3D
 
 	// Setting the color of the second rectangle, this one gets a cool orange (0xE0A060)
-	faceBuffer[1].color = 224
+	faceBuffer[1].color = 231
 	faceBuffer[1].color <<= 16
-	temp0 = 160
+	temp0 = 26
 	temp0 <<= 8
 	faceBuffer[1].color += temp0
-	faceBuffer[1].color += 96
+	faceBuffer[1].color += 33
 	faceBuffer[1].color += 0x7F000000 // Once again, half transparency
 
 	// And last but not least, set up the third rectangle
@@ -196,12 +197,12 @@ event ObjectStartup
 	faceBuffer[2].flag = FACE_FLAG_COLOURED_3D
 
 	// Setting the color of the a rectangle one last time, the third one gets a nice blue (0x8080E0)
-	faceBuffer[2].color = 128
+	faceBuffer[2].color = 27
 	faceBuffer[2].color <<= 16
-	temp0 = 128
+	temp0 = 138
 	temp0 <<= 8
 	faceBuffer[2].color += temp0
-	faceBuffer[2].color += 224
+	faceBuffer[2].color += 59
 	faceBuffer[2].color += 0x7F000000
 end event
 

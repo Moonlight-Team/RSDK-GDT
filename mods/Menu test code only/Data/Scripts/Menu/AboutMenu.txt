@@ -250,7 +250,7 @@ event ObjectStartup
 	LoadSpriteSheet("Menu/MenuGfx1_EN.gif")
 
 	SpriteFrame(0, 0, 132, 113, 154, 235) //	#0 - Sonic CD Mini Logo
-	SpriteFrame(-28, 0, 56, 16, 154, 349) //	#1 - Version
+	SpriteFrame(-28, 0, 87, 16, 154, 349) //	#1 - Version (engine)
 
 	temp1 = 366
 	while temp1 < 417

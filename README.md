@@ -25,7 +25,12 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 
 # How to run
 * Get the RSDK Decomp
-* Download the Build from RELEASES, not the source!
+* Download the Build
+* run and play!
+
+# How to Setup For making Games?
+* theres a doc included in source for your needs, but we are planning to make a wiki for GDT soon. 
+
 # Compatible Versions
 * [RSDKv4](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation)
 * [RSDK VT (Custom Version of V4 by Virtua Studio)](https://github.com/Sonic-Geared/RSDK-VT)

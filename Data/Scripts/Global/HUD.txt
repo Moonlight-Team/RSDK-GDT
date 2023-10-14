@@ -127,6 +127,8 @@ private function HUD_Draw_Standard
 			//DrawNumbers(0, 80, 29, stage.seconds, 2, 8, true) //CD/time attack
 			//DrawNumbers(0, 56, 29, stage.minutes, 1, 8, true) //CD/time attack
 			//DrawNumbers(0, 80, 45, player[0].rings, 3, 8, false) //CD/time attack
+// How did we genuinely forget about putting the milliseconds thing here too? this is probably the thing that's causing time attack to only load the seconds & minutes!
+			DrawNumbers(0, 109, 29, stage.milliSeconds, 2, 8, true)//mania
 			DrawNumbers(0, 84, 29, stage.seconds, 2, 8, true) //mania
 			DrawNumbers(0, 59, 29, stage.minutes, 1, 8, true) //mania
 			DrawNumbers(0, 109, 45, player[0].rings, 3, 8, false) //mania

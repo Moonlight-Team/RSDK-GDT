@@ -1,0 +1,189 @@
+//-----------------Sonic CD BGEffects Script------------------//
+//--------Scripted by Christian Whitehead 'The Taxman'--------//
+//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+
+// Aliases
+// Values 0-1 are unused...
+private alias Object.Value2 : Object.PrevAngle
+private alias Object.Value3 : Object.FansTimer
+private alias Object.Value4 : Object.CrunchersTimer
+private alias Object.Value5 : Object.FansSprite
+private alias Object.Value6 : Object.CrunchersSprite
+
+// Priority
+private alias 1 : PRIORITY_ACTIVE
+
+
+event ObjectDraw
+	// Animate the Fans
+	Object.FansTimer++
+	if Object.FansTimer > 2
+		Object.FansTimer = 0
+		Object.FansSprite++
+		Object.FansSprite %= 3
+		switch Object.FansSprite
+		case 0
+			// Fans are 4x4 tiles, with 8 unique tiles in them, so
+			// 8 tiles need to be updated to change the entire sprite
+			Copy16x16Tile(122, 428)
+			Copy16x16Tile(123, 429)
+			Copy16x16Tile(124, 430)
+			Copy16x16Tile(125, 431)
+			Copy16x16Tile(126, 432)
+			Copy16x16Tile(127, 433)
+			Copy16x16Tile(128, 434)
+			Copy16x16Tile(129, 435)
+			break
+			
+		case 1
+			Copy16x16Tile(122, 436)
+			Copy16x16Tile(123, 437)
+			Copy16x16Tile(124, 438)
+			Copy16x16Tile(125, 439)
+			Copy16x16Tile(126, 440)
+			Copy16x16Tile(127, 441)
+			Copy16x16Tile(128, 442)
+			Copy16x16Tile(129, 443)
+			break
+			
+		case 2
+			Copy16x16Tile(122, 444)
+			Copy16x16Tile(123, 445)
+			Copy16x16Tile(124, 446)
+			Copy16x16Tile(125, 447)
+			Copy16x16Tile(126, 448)
+			Copy16x16Tile(127, 449)
+			Copy16x16Tile(128, 450)
+			Copy16x16Tile(129, 451)
+			break
+			
+		end switch
+	end if
+	
+	// Animate the Crunchers
+	Object.CrunchersTimer++
+	if Object.CrunchersTimer > 5
+		Object.CrunchersTimer = 0
+		Object.CrunchersSprite++
+		Object.CrunchersSprite &= 3
+		switch Object.CrunchersSprite
+		case 0
+			Copy16x16Tile(157, 452)
+			Copy16x16Tile(158, 453)
+			Copy16x16Tile(159, 456)
+			Copy16x16Tile(160, 457)
+			break
+			
+		case 1
+			Copy16x16Tile(157, 454)
+			Copy16x16Tile(158, 455)
+			Copy16x16Tile(159, 458)
+			Copy16x16Tile(160, 459)
+			break
+			
+		case 2
+			Copy16x16Tile(157, 460)
+			Copy16x16Tile(158, 461)
+			Copy16x16Tile(159, 464)
+			Copy16x16Tile(160, 465)
+			break
+			
+		case 3
+			Copy16x16Tile(157, 462)
+			Copy16x16Tile(158, 463)
+			Copy16x16Tile(159, 466)
+			Copy16x16Tile(160, 467)
+			break
+			
+		end switch
+	end if
+	
+	// Find the difference between the current scroll and last scroll pos
+	temp1 = Object.PrevAngle
+	temp2 = TileLayer[0].Angle
+	if temp1 < temp2
+		temp3 = temp2
+		temp3 -= temp1
+		if temp3 > 256
+			// Account for looping
+			temp1 += 512
+		end if
+	else
+		temp3 = temp1
+		temp3 -= temp2
+		if temp3 > 256
+			// Account for looping
+			temp2 += 512
+		end if
+	end if
+	
+	temp0 = temp1
+	temp0 -= temp2
+	
+	// Store the current angle for use next frame
+	Object.PrevAngle = TileLayer[0].Angle
+	
+	// Move all the other BG layers in accordance with the difference from last frame
+	temp1 = 0x20000
+	temp2 = 0x10000
+	
+	temp1 *= temp0
+	temp2 *= temp0
+	
+	HParallax[0].ScrollPos += temp1
+	HParallax[1].ScrollPos += temp2
+	
+end event
+
+
+event ObjectStartup
+	
+	// Set stage bounds
+	Stage.curXBoundary1 = 0x3800000  // 896 pixels to the left
+	Stage.curXBoundary2 = 0xC800000  // 3200 pixels to the right
+	Stage.curYBoundary1 = 0x3800000  // 896 pixels upwards
+	Stage.curYBoundary2 = 0xC800000  // 3200 pixels downwards
+	
+//#platform: HW_Rendering
+	// Load the stage map if using the hardware render
+	
+	LoadSpriteSheet("Special/SSMap2.gif")
+//#endplatform
+	
+	// Setup all BGEffect objects present in the level
+	ArrayPos0 = 32
+	while ArrayPos0 < 1056
+		if Object[ArrayPos0].Type == TypeName[BGEffects]
+			
+			// Set the object to always be active
+			Object[ArrayPos0].Priority = PRIORITY_ACTIVE
+			
+			// Place the object among the first to be drawn
+			Object[ArrayPos0].DrawOrder = 0
+			
+			// And set its starting angle, assuming that Sonic is facing left
+			Object[ArrayPos0].PrevAngle = 368
+			
+		end if
+		
+		ArrayPos0++
+	loop
+	
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Special/SSMap2.gif")
+	SpriteFrame(-256, -256, 512, 512, 0, 0)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

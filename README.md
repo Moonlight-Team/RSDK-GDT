@@ -14,7 +14,15 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 * Drop dash from Sonic Origins
 * Roll Jump Lock removed
 * Pause Menu From CD
-  
+* Main Menu From CD (work in progress)
+
+# Planned Features
+* 3D Special Stage
+* Boss battle
+* DDZ Act 2
+* Badnik overhaul
+* Improved test level design
+
 # How to run
 * Get the RSDK Decomp
 * Download the Build from RELEASES, not the source!

@@ -1,0 +1,232 @@
+// ----------------------------------
+// RSDK Project: RSDK: Game Development Template
+// Script Description: Parachute Object
+// Script Author: Christian Whitehead/Geared
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias object.value0  : object.playerNo
+private alias object.value1  : object.startX
+private alias object.value2  : object.startY
+
+// States
+private alias 0 : PARACHUTE_STOPPED
+private alias 1 : PARACHUTE_RAISE
+private alias 2 : PARACHUTE_FALL
+private alias 3 : PARACHUTE_DISAPPEAR
+
+// Property Values
+private alias 0 : PARACHUTE_INACTIVATED
+private alias 1 : PARACHUTE_ACTIVATED
+
+// Player Aliases
+private alias object.entityPos		 :	player.entityPos 		// Where the player is on the object list - P1 should be 0, P2 should be 1
+private alias object.state			 :	player.state
+private alias object.xpos			 :	player.xpos				// Total world-space position (0x10000 == 1.0)
+private alias object.ypos			 :	player.ypos
+private alias object.xvel			 :	player.xvel				// Based on world-space (see above)
+private alias object.yvel			 :	player.yvel
+private alias object.speed			 :	player.speed			// Based on world-space (see above)
+private alias object.direction		 :	player.direction
+private alias object.gravity		 :	player.gravity			// GRAVITY_GROUND or GRAVITY_AIR. Not to be confused with player.gravityStrength, see there for more info
+private alias object.animation		 :	player.animation
+private alias object.collisionTop	 :	player.collisionTop
+private alias object.jumpPress	:	player.jumpPress
+private alias object.left		:	player.left
+private alias object.right		:	player.right
+
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	switch object.state
+	case PARACHUTE_RAISE
+		player.entityPos = object.playerNo
+		player.animation = ANI_HANGING
+
+		if player.left == true
+			player.direction = FACING_LEFT
+		end if
+		if player.right == true
+			player.direction = FACING_RIGHT
+		end if
+
+		if player.direction == FACING_RIGHT
+			if player.speed < -0x30000
+				player.speed *= 104
+				player.speed >>= 7
+			end if
+			if player.speed > 0x30000
+				player.speed *= 104
+				player.speed >>= 7
+				if player.speed < 0x30000
+					player.speed = 0x30000
+				end if
+			else
+				player.speed += 0x1000
+				if player.speed > 0x30000
+					player.speed = 0x30000
+				end if
+			end if
+		else
+			if player.speed > 0x30000
+				player.speed = 0x30000
+			end if
+			if player.speed < -0x30000
+				player.speed *= 104
+				player.speed >>= 7
+				if player.speed > -0x30000
+					player.speed = -0x30000
+				end if
+			else
+				player.speed -= 0x1000
+				if player.speed < -0x30000
+					player.speed = -0x30000
+				end if
+			end if
+		end if
+
+		if player.yvel < 0x10000
+			player.yvel += 0x2000
+		end if
+
+		player.xvel = player.speed
+		object.xpos = player.xpos
+		object.ypos = player.ypos
+
+		if player.state == Player_State_GotHit
+			object.priority = PRIORITY_ACTIVE
+			object.state = PARACHUTE_FALL
+			arrayPos0 = object.playerNo
+			object[arrayPos0].propertyValue = PARACHUTE_INACTIVATED
+			object.xvel = player.xvel
+		end if
+
+		if player.gravity == GRAVITY_GROUND
+			object.priority = PRIORITY_ACTIVE
+			object.state = PARACHUTE_FALL
+			arrayPos0 = object.playerNo
+			object[arrayPos0].propertyValue = PARACHUTE_INACTIVATED
+			object.xvel = player.xvel
+		else
+			object.yvel = player.yvel
+		end if
+
+		if player.jumpPress == true
+			PlaySfx(SfxName[Jump], false)
+			player.state = Player_State_Air
+			player.animation = ANI_JUMPING
+			player.yvel = -0x40000
+			player.gravity = GRAVITY_AIR
+
+			object.priority = PRIORITY_ACTIVE
+			object.state = PARACHUTE_FALL
+			arrayPos0 = object.playerNo
+			object[arrayPos0].propertyValue = PARACHUTE_INACTIVATED
+			object.xvel = player.xvel
+		end if
+
+		break
+	case PARACHUTE_FALL
+		if object.yvel < 0x10000
+			object.yvel += 0x2000
+		end if
+
+		object.xpos += object.xvel
+		object.ypos += object.yvel
+
+		if object.outOfBounds == true
+			object.state = PARACHUTE_DISAPPEAR
+			object.xpos = object.startX
+			object.ypos = object.startY
+		end if
+		break
+
+	case PARACHUTE_DISAPPEAR
+		if object.outOfBounds == true
+			object.state = PARACHUTE_STOPPED
+			object.priority = PRIORITY_BOUNDS
+		end if
+		break
+	end switch
+
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		if object.state == PARACHUTE_STOPPED
+			BoxCollisionTest(C_TOUCH, object.entityPos, -16, 20, 16, 24, currentPlayer, -16, 20, 16, 24)
+			if checkResult == true
+				object.startX = object.xpos
+				object.startY = object.ypos
+
+				object.playerNo = player[currentPlayer].entityPos
+				arrayPos0 = player[currentPlayer].entityPos
+				object[arrayPos0].propertyValue = PARACHUTE_ACTIVATED
+				player[currentPlayer].animation = ANI_HANGING
+				object.xpos = player[currentPlayer].xpos
+				object.ypos = player[currentPlayer].ypos
+				player[currentPlayer].speed = player[currentPlayer].xvel
+				object.state = PARACHUTE_RAISE
+				player[currentPlayer].yvel = 0
+				player[currentPlayer].gravity = GRAVITY_AIR
+				player[currentPlayer].state = Player_State_Carried
+				PlaySfx(SfxName[Catch], false)
+			end if
+		end if
+	next
+end event
+
+
+event ObjectDraw
+	switch object.state
+	case PARACHUTE_STOPPED
+		DrawSprite(0)
+		break
+	case PARACHUTE_RAISE
+	case PARACHUTE_FALL
+		temp0 = object.frame
+		temp0 >>= 3
+		DrawSprite(temp0)
+		object.frame++
+		if object.frame > 63
+			object.frame = 0
+		end if
+		DrawSprite(temp0)
+		break
+	end switch
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	
+	// Parachute Frames
+	SpriteFrame(-24, -20, 48, 43, 50, 62)
+	SpriteFrame(-19, -20, 48, 43, 1, 106)
+	SpriteFrame(-15, -20, 48, 43, 50, 106)
+	SpriteFrame(-19, -20, 48, 43, 1, 106)
+	SpriteFrame(-24, -20, 48, 43, 50, 62)
+	SpriteFrame(-29, -20, 48, 43, 1, 55)
+	SpriteFrame(-34, -20, 47, 43, 72, 18)
+	SpriteFrame(-29, -20, 48, 43, 1, 55)
+end event
+
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	SpriteFrame(-24, -20, 48, 43, 50, 62)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

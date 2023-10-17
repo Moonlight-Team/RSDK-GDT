@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="ppz">
+  <Images>
+    <ImageFromSheet id="bg" sheet="TAttack/TimeAttack.gif" sourcex="81" sourcey="831" width="224" height="192">
+      <Offset X="-60" Y="0"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="ppz" sheet="TAttack/TimeAttack.gif" sourcex="1" sourcey="731" width="64" height="32">
+      <Offset X="-32" Y="17"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone1" sheet="TAttack/TimeAttack.gif" sourcex="368" sourcey="593" width="38" height="16">
+      <Offset X="-20" Y="49"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone2" sheet="TAttack/TimeAttack.gif" sourcex="366" sourcey="610" width="40" height="15">
+      <Offset X="-20" Y="49"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone3" sheet="TAttack/TimeAttack.gif" sourcex="422" sourcey="655" width="40" height="15">
+      <Offset X="-20" Y="49"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Zone ID" type="frames" startbit="0" length="2" />
+  </Properties>
+  <Enums>
+    <Enum name="frames">
+	  <EnumMember name="Zone 1" />
+	  <EnumMember name="Zone 2" />
+	  <EnumMember name="Zone 3" />
+    </Enum>
+  </Enums>
+  <Display>
+    <DisplayOption>
+      <Condition property="Zone ID" value="Zone 1" />
+      <ImageRef image="bg" />
+	  <ImageRef image="ppz" />
+	  <ImageRef image="zone1" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Zone ID" value="Zone 2" />
+      <ImageRef image="bg" />
+	  <ImageRef image="ppz" />
+	  <ImageRef image="zone2" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Zone ID" value="Zone 3" />
+      <ImageRef image="bg" />
+	  <ImageRef image="ppz" />
+	  <ImageRef image="zone3" />
+    </DisplayOption>
+  </Display>
+</ObjDef>

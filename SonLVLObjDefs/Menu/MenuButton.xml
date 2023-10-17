@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="button">
+  <Images>
+    <ImageFromSheet id="button" sheet="Menu/MenuGfx2_EN.gif" sourcex="259" sourcey="71" width="144" height="21">
+      <Offset X="0" Y="-10"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_2" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="18" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_3" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="35" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_4" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="52" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_5" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="69" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_6" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="86" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_7" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="103" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_8" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="547" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_9" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="564" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_a" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="581" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_b" sheet="Menu/MenuGfx2_EN.gif" sourcex="1" sourcey="598" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite_c" sheet="Menu/MenuGfx2_EN.gif" sourcex="162" sourcey="649" width="128" height="16">
+      <Offset X="19" Y="-7"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Button" type="buttons" startbit="0" length="4" />
+  </Properties>
+  <Enums>
+    <Enum name="buttons">
+      <EnumMember name="None" />
+	  <EnumMember name="Start Game" />
+	  <EnumMember name="Time Attack" />
+	  <EnumMember name="Achievements" />
+	  <EnumMember name="Leaderboards" />
+	  <EnumMember name="Help And Options" />
+	  <EnumMember name="Extras" />
+	  <EnumMember name="Buy Full Game" />
+	  <EnumMember name="Unlock Full Game" />
+	  <EnumMember name="Exit" />
+	  <EnumMember name="Soundtrack" />
+	  <EnumMember name="More Games" />
+    </Enum>
+  </Enums>
+  <Display>
+    <DisplayOption>
+      <Condition property="Button" value="None" />
+      <ImageRef image="button" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Start Game" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_2" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Time Attack" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_3" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Achievements" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_4" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Leaderboards" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_5" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Help And Options" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_6" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Extras" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_7" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Buy Full Game" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_8" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Unlock Full Game" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_9" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Exit" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_a" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="Soundtrack" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_b" />
+    </DisplayOption>
+	<DisplayOption>
+      <Condition property="Button" value="More Games" />
+      <ImageRef image="button" />
+	  <ImageRef image="sprite_c" />
+    </DisplayOption>
+  </Display>
+</ObjDef>

@@ -200,7 +200,7 @@ event ObjectUpdate
 		else
 			object.animationTimer = 0
 			object.state = SOUNDMENU_BACK
-			SetMusicTrack("Menu.ogg", 0, true)
+			SetMusicTrack("MainMenu.ogg", 0, true)
 		end if
 		break
 

@@ -82,7 +82,6 @@ event ObjectUpdate
 		end if
 		SetScreenFade(0, 0, 0, Object.Fade)
 		break
-
 	case MENUCONTROL_CONTROLS
 		CheckEqual(Options.PhysicalControls, true)
 		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
@@ -307,9 +306,9 @@ end event
 event ObjectStartup
 	options.touchControls = false
 	if Options.Soundtrack == OST_JP
-		SetMusicTrack("Menu", 0, 100512)
+		SetMusicTrack("MainMenu.ogg", 0, 100512)
 	else
-		SetMusicTrack("Menu", 0, 117382)
+		SetMusicTrack("MainMenuSAGE.ogg", 0, 117382)
 	end if
 	object[0].type = TypeName[Menu Control]
 	Object.ButtonYOffset[0] = 32

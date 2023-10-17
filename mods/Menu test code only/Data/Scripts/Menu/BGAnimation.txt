@@ -64,7 +64,6 @@ event ObjectStartup
 // so um i had to add a extrenal palette, Sorry Zero! -klashie
 	LoadPalette("menu.act", 0, 0, 0, 256)
 	LoadSpriteSheet("Menu/MenuGfx1_EN.gif")
-
 	SpriteFrame(-160, -104, 320, 224, 0, 0) // #0 - Sonic Background
 
 	arrayPos0 = 32

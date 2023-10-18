@@ -172,7 +172,6 @@ event ObjectUpdate
 				object.state = PARACHUTE_RAISE
 				player[currentPlayer].yvel = 0
 				player[currentPlayer].gravity = GRAVITY_AIR
-				player[currentPlayer].state = Player_State_Carried
 				PlaySfx(SfxName[Catch], false)
 			end if
 		end if

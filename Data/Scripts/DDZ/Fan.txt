@@ -27,9 +27,9 @@ event ObjectUpdate
 		arrayPos0 = player[currentPlayer].entityPos
 		if object[arrayPos0].propertyValue == FAN_ACTIVATED
 			BoxCollisionTest(C_TOUCH, object.entityPos, -32, -480, 32, 8, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
-			if checkResult == true
-				if player.yvel > -0x40000
-					player.yvel -= 0x3000
+			if checkResult == 1
+				if player[currentPlayer].yvel > -262144
+					player[currentPlayer].yvel -= 12288
 				end if
 			end if
 		end if

@@ -181,17 +181,17 @@ end event
 
 event ObjectStartup
 	
-	LoadSpriteSheet("SSZ/Objects.gif")
+	LoadSpriteSheet("SSZ/Gimmicks.gif")
 	
-	//Parachute Frames
-	SpriteFrame(-24,-20,48,43,98,133)
-	SpriteFrame(-19,-20,48,43,147,133)
-	SpriteFrame(-15,-20,48,43,196,133)
-	SpriteFrame(-19,-20,48,43,147,133)
-	SpriteFrame(-24,-20,48,43,98,133)
-	SpriteFrame(-29,-20,48,43,49,133)
-	SpriteFrame(-34,-20,47,43,1,133)
-	SpriteFrame(-29,-20,48,43,49,133)
+	// Parachute Frames
+	SpriteFrame(-24, -20, 48, 43, 50, 62)
+	SpriteFrame(-19, -20, 48, 43, 1, 106)
+	SpriteFrame(-15, -20, 48, 43, 50, 106)
+	SpriteFrame(-19, -20, 48, 43, 1, 106)
+	SpriteFrame(-24, -20, 48, 43, 50, 62)
+	SpriteFrame(-29, -20, 48, 43, 1, 55)
+	SpriteFrame(-34, -20, 47, 43, 72, 18)
+	SpriteFrame(-29, -20, 48, 43, 1, 55)
 	
 end event
 
@@ -201,10 +201,10 @@ end event
 
 
 event RSDKLoad
-	LoadSpriteSheet("SSZ/Objects.gif")
+	LoadSpriteSheet("SSZ/Gimmicks.gif")
 	
 	//Parachute Frames
-	SpriteFrame(-24,-20,48,43,98,133)
+SpriteFrame(-24, -20, 48, 43, 50, 62)
 	
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

@@ -464,20 +464,15 @@ event ObjectUpdate
 				break
 
 			case Menu_Extras
-				MenuHeading.State = MENUHEADING_LEAVE_SCREEN
-				MenuHeading.Header = EXTRAS_HEADER
+				object.state = MENUBUTTON_BLANK
 
-				CallFunction(MenuButton_SetupMenuWindow)
-				ResetObjectEntity(62, TypeName[Extras Menu], 0, 0, 0)
-
-				Object.NextMenuInkEffect = INK_ALPHA
-				Object.NextMenuAlpha = 0
+				MenuControl.State = MENUCONTROL_ENTER_TIMEATTACK
+				MenuControl.Fade = 0
 
 				ResetObjectEntity(63, TypeName[Blank Object], 0, 0, 0)
 				ResetObjectEntity(64, TypeName[Blank Object], 0, 0, 0)
 				ResetObjectEntity(65, TypeName[Blank Object], 0, 0, 0)
 				ResetObjectEntity(66, TypeName[Blank Object], 0, 0, 0)
-				object.type = TypeName[Blank Object]
 				break
 
 			case Menu_UnlockFullGame
@@ -495,11 +490,16 @@ event ObjectUpdate
 				break
 
 			case Menu_Exit
-				//StopMusic()
-				//CallNativeFunction(ExitGame)
-				MenuControl.State = MENUCONTROL_CONTROLS
-				Object.State  = MENUBUTTON_CONFIRM_SELECTION
-				MenuControl.Fade  = 0
+				StopMusic()
+				object.state = MENUBUTTON_BLANK
+
+				MenuControl.State = MENUCONTROL_ENTER_TIMEATTACK
+				MenuControl.Fade = 0
+
+				ResetObjectEntity(63, TypeName[Blank Object], 0, 0, 0)
+				ResetObjectEntity(64, TypeName[Blank Object], 0, 0, 0)
+				ResetObjectEntity(65, TypeName[Blank Object], 0, 0, 0)
+				ResetObjectEntity(66, TypeName[Blank Object], 0, 0, 0)
 				break
 
 			case Menu_Soundtrack
@@ -547,6 +547,16 @@ event ObjectUpdate
 
 	case MENUBUTTON_BLANK
 	case MENUBUTTON_BLANK2
+		if object.propertyValue == Menu_Extras
+			if MenuControl.Fade >= 320
+				CallNativeFunction(OpenModMenu)
+			end if
+		end if
+		if object.propertyValue == Menu_Exit
+			if MenuControl.Fade >= 320
+				CallNativeFunction(ExitGame)
+			end if
+		end if
 		//Nothing happens here
 		break
 
@@ -715,7 +725,7 @@ event ObjectStartup
 		temp0++
 	loop
 
-	SpriteFrame(19, -7, 128, 16, 162, 649) // #11 - More Games
+	SpriteFrame(19, -7, 128, 16, 130, 120)
 	// Highlight Text
 	temp0 = 0
 	temp1 = 18
@@ -726,24 +736,21 @@ event ObjectStartup
 		temp0++
 	loop
 
-	temp1 += 17
 	temp0++
 	// (#14 - #16 Standard, #15 - #17 Mobile) - Leaderboards, Help & Options, Extras
-	while temp0 < 6
-		SpriteFrame(19, -7, 128, 16, 130, temp1)
-		temp1 += 17
-		temp0++
-	loop
-	temp0 = 0
-	temp1 = 547
-	// (#17 - #20 Standard, #18 - #21 Mobile) - Remove Ads(Mobile)/Unlock Full Game(Console), Unlock Full Game(Mobile)/Return to Arcade(Xbox), Exit Game, Soundtrack
 	while temp0 < 4
 		SpriteFrame(19, -7, 128, 16, 130, temp1)
 		temp1 += 17
 		temp0++
 	loop
+	SpriteFrame(19, -7, 128, 16, 130, 598)
+	SpriteFrame(19, -7, 128, 16, 130, 86)
+	SpriteFrame(19, -7, 128, 16, 130, 103)
+	SpriteFrame(19, -7, 128, 16, 130, 86)
+	SpriteFrame(19, -7, 128, 16, 130, 86)
+	SpriteFrame(19, -7, 128, 16, 130, 581)
 
-	SpriteFrame(19, -7, 128, 16, 162, 666) // #22 - More Games
+	SpriteFrame(19, -7, 128, 16, 130, 598)
 end event
 
 event RSDKDraw

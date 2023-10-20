@@ -224,6 +224,12 @@ event ObjectUpdate
 			object[40].state = MENUBUTTON_BUTTONS_IN
 			object[41].state = MENUBUTTON_BUTTONS_IN
 			object[42].state = MENUBUTTON_BUTTONS_IN
+			if Options.Soundtrack == OST_JP
+				SetMusicTrack("MainMenu.ogg", 0, 100512)
+			else
+				SetMusicTrack("MainMenuSAGE.ogg", 0, 117382)
+			end if
+			PlayMusic(0)
 			//End
 			MenuHeading.State = MENUHEADING_LEAVE_SCREEN
 			MenuHeading.Header = MAINMENU_HEADER // Set the heading to "MAIN MENU"

@@ -315,6 +315,7 @@ event ObjectStartup
 	//Object.CurrentSelection[0] = 1
 	Options.PhysicalControls = false
 	Object.DragCurrentSelection[0] = 0
+	PlayMusic(0)
 end event
 
 

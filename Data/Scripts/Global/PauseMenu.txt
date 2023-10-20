@@ -11,6 +11,7 @@ private alias object.value3 : Object.BlackBarXPos
 private alias object.value4 : Object.BlackBarYPos
 private alias object.value5 : Object.BlackBarHeight
 private alias object.value6 : Object.BlockRestart
+private alias object.value7 : SDG
 
 // States
 private alias 0 : PAUSEMENU_START_PAUSE
@@ -468,9 +469,9 @@ event ObjectDraw
 		// Pause White BG
 		if Object.BlackBarHeight < 240
 			if Object.BlackBarYPos > Object.BlackBarHeight
-				temp0 = Object.BlackBarYPos
-				temp0 -= Object.BlackBarHeight
-				DrawRect(0, Object.BlackBarHeight, 384, temp0, 6, 6, 10, 128)
+				SDG = Object.BlackBarYPos
+				SDG -= Object.BlackBarHeight
+				DrawRect(0, Object.BlackBarHeight, 384, SDG, 6, 6, 10, 128)
 				Object.BlackBarHeight = Object.BlackBarYPos
 			end if
 		end if

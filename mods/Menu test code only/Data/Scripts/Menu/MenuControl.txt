@@ -305,6 +305,7 @@ end event
 
 event ObjectStartup
 	options.touchControls = false
+	Options.Soundtrack = saveRAM[38]
 	if Options.Soundtrack == OST_JP
 		SetMusicTrack("MainMenu.ogg", 0, 100512)
 	else

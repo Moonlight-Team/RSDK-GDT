@@ -3558,48 +3558,42 @@ public function Player_State_Spindash
 		temp0 = player.abilityTimer
 		temp0 >>= 5
 		player.abilityTimer -= temp0
-	end if
-	
-//#platform: USE_STANDALONE
-	temp1 = player.down
-	
-	CheckEqual(player.releasingDropDash, false)
-	temp2 = checkResult
-	CallFunction(Player_GetDropDashCharge)
-	CheckGreater(temp7, 19)
-	temp2 &= checkResult
-	
-	if temp2 == true
-		temp7 = -1
-		CallFunction(Player_SetDropDashCharge)
-		Sin256(temp0, player.angle)
-		
-		if player.direction == FACING_RIGHT
-			if temp0 >= 0
-				temp0 <<= 12
-			else
-				temp0 <<= 11
-			end if
-		else
-			if temp0 >= 0
-				temp0 <<= 11
-			else
-				temp0 <<= 12
-			end if
-			FlipSign(temp0)
-		end if
-		
-		player.abilityTimer = temp0
-		temp1 = false
-	end if
-	
-	if temp1 == false
-//#endplatform
-
-#platform: USE_STANDALONE
-	if player.down == false
-#endplatform
-		// Release the spindash!
+    end if
+    
+    temp1 = player.down
+    
+    CheckEqual(player.releasingDropDash, false)
+    temp2 = checkResult
+    CallFunction(Player_GetDropDashCharge)
+    CheckGreater(temp7, 19)
+    temp2 &= checkResult
+    
+    if temp2 == true
+        temp7 = -1
+        CallFunction(Player_SetDropDashCharge)
+        Sin256(temp0, player.angle)
+        
+        if player.direction == FACING_RIGHT
+            if temp0 >= 0
+                temp0 <<= 12
+            else
+                temp0 <<= 11
+            end if
+        else
+            if temp0 >= 0
+                temp0 <<= 11
+            else
+                temp0 <<= 12
+            end if
+            FlipSign(temp0)
+        end if
+        
+        player.abilityTimer = temp0
+        temp1 = false
+    end if
+    
+    if temp1 == false
+        // Release the spindash!
 
 		player.timer = 0
 		player.state = Player_State_Roll

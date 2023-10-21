@@ -105,7 +105,6 @@ event ObjectDraw
 		temp1 += 32
 		
 	end if
-		DrawNumbers(0, 91, 11, object[0].angle, 5, 8, 1)
 	
 	// Draw the "Rings" Graphic
 	DrawSpriteScreenXY(12, temp1, 16)

@@ -8,21 +8,24 @@
 // Aliases
 // ========================
 
+private alias arrayPos6 : currentPlayer
+private alias arrayPos7 : playerCount
+
 private alias object.value0 : object.timer
 private alias object.value1 : object.actNamePos
 private alias object.value2 : object.zonePos
 private alias object.value3 : object.blueRectPos
+private alias object.value4 : object.redRibbon.y	// We miss you, Android 8...
 
 // States
 private alias 0 : TITLECARD_SETUP
 private alias 1 : TITLECARD_DELAY
 private alias 2 : TITLECARD_ENTERTITLECARD
 private alias 3 : TITLECARD_SHOWTITLECARD
-private alias 4 : TITLECARD_EXITREDYELLOWRECT
-private alias 5 : TITLECARD_EXITBLUERECT
-private alias 6 : TITLECARD_STARTSTAGE
-private alias 7 : TITLECARD_CREDITSFADEIN
-private alias 8 : TITLECARD_FADETOTITLE
+private alias 4 : TITLECARD_FADEOUT
+private alias 5 : TITLECARD_STARTSTAGE
+private alias 6 : TITLECARD_CREDITSFADEIN
+private alias 7 : TITLECARD_FADETOTITLE
 
 // Types
 private alias 0 : TITLECARD_TYPE_ACTNUM
@@ -46,12 +49,12 @@ private alias object.actNamePos 	 : player.timer
 // Tracks
 private alias 0 : TRACK_STAGE
 
+// Priority
+private alias 2 : PRIORITY_ALWAYS
+
 // ========================
 // Static Values
 // ========================
-
-// We miss you, Android 8...
-public value redribbony = 0
 
 // Stuff, eh
 public value TitleCard_showZoneText = 0
@@ -94,11 +97,12 @@ event ObjectUpdate
 		break
 		
 	case TITLECARD_ENTERTITLECARD
-		if redribbony > 180
-			redribbony = 180
+		// Wait a second. This code seems oddly... familiar. -Nd
+		if object.redRibbon.y > 180
+			object.redRibbon.y = 180
 		end if
-		if redribbony < 180
-			redribbony += 10
+		if object.redRibbon.y < 180
+			object.redRibbon.y += 10
 		end if
 		if object.actNamePos > -0
 			object.actNamePos -= 16
@@ -136,7 +140,7 @@ event ObjectUpdate
 		end if
 		break
 		
-	case TITLECARD_EXITREDYELLOWRECT // This name doesn't makes sense anymore since there's no more red and yellow rects LOL
+	case TITLECARD_FADEOUT
 		if object.alpha > 0
 			object.alpha -= 8
 		else
@@ -146,16 +150,12 @@ event ObjectUpdate
 				object[currentPlayer].controlMode = 0
 				currentPlayer++
 			loop
+			stage.timeEnabled = true
 		end if
 		break
 		
-	case TITLECARD_EXITBLUERECT // Same thing with the case above LOL
-		stage.timeEnabled = 1
-		object.state++
-		break
-		
 	case TITLECARD_STARTSTAGE
-		redribbony -= 20
+		object.redRibbon.y -= 20
 		object.actNamePos += 32
 		object.zonePos += 32
 		object.blueRectPos += 32
@@ -206,29 +206,31 @@ end event
 event ObjectDraw
 	if object.state < TITLECARD_CREDITSFADEIN
 		SetActivePalette(0, 0, screen.ysize)
-		DrawRect(0, 0, screen.xsize, screen.ysize, 8, 8, 11, object.alpha) //Black that fades out
+		DrawRect(0, 0, screen.xsize, screen.ysize, 8, 8, 11, object.alpha) // Black that fades out
 
 		// The red ribbon
 		temp0 = screen.xcenter
 		temp0 -= 109
-		DrawRect(temp0, 0, 12, redribbony, 225, 0, 0, 255)
+		DrawRect(temp0, 0, 12, object.redRibbon.y, 224, 0, 0, 255)	// ...Were these supposed to be different shades of red?
 		temp0 += 12
-		DrawRect(temp0, 0, 8, redribbony, 225, 0, 0, 255)
+		DrawRect(temp0, 0, 8, object.redRibbon.y, 224, 0, 0, 255)
 		temp0 += 8
-		DrawRect(temp0, 0, 10, redribbony, 225, 0, 0, 255)
+		DrawRect(temp0, 0, 10, object.redRibbon.y, 224, 0, 0, 255)
 		temp0 += 10
-		DrawRect(temp0, 0, 8, redribbony, 225, 0, 0, 255)
+		DrawRect(temp0, 0, 8, object.redRibbon.y, 224, 0, 0, 255)
 		temp0 += 8
-		DrawRect(temp0, 0, 11, redribbony, 225, 0, 0, 255)
+		DrawRect(temp0, 0, 11, object.redRibbon.y, 224, 0, 0, 255)
 		temp0 += 11
-		DrawRect(temp0, 0, 7, redribbony, 225, 0, 0, 255)
+		DrawRect(temp0, 0, 7, object.redRibbon.y, 224, 0, 0, 255)
 		temp0 += 7
-		DrawRect(temp0, 0, 12, redribbony, 225, 0, 0, 255)
+		DrawRect(temp0, 0, 12, object.redRibbon.y, 224, 0, 0, 255)
 
-		// the "Project Virtua" text
-		temp0 = screen.xcenter
-		temp0 -= 106
-		DrawSpriteScreenXY(29, temp0, redribbony)
+		if object.redRibbon.y > 8
+			// the "Project Virtua" text
+			temp0 = screen.xcenter
+			temp0 -= 106
+			DrawSpriteScreenXY(29, temp0, object.redRibbon.y)
+		end if
 
 		// Act name
 		temp0 = screen.xcenter
@@ -236,7 +238,7 @@ event ObjectDraw
 		temp0 += object.actNamePos
 		DrawActName(0, temp0, 100, 0, 0, 8, 0)
 
-		//Zone Text
+		// Zone Text
 		if screen.xsize <= 320
 			temp0 = screen.xcenter
 			temp0 += 28
@@ -294,10 +296,10 @@ end event
 
 
 event ObjectStartup
-	redribbony = 0
+	object.redRibbon.y = 0
 	LoadSpriteSheet("Global/TitleCard.gif")
 	
-	//Title Card Letters (0-25)
+	// Title Card Letters (0-25)
 	SpriteFrame(0, -8, 16, 24, 1, 1)		// A
 	SpriteFrame(0, -8, 16, 24, 18, 1)		// B
 	SpriteFrame(0, -8, 16, 24, 35, 1)		// C

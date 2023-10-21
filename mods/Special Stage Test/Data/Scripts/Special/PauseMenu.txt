@@ -47,6 +47,13 @@ private alias Object.Value3 : Object.PauseBarXPos
 // Check out its initial use for more info, but this Object's pretty much a copy of the Global version, where the variable *is* used for actual purpose
 private alias Object.Value6 : Object.RestartDisabled
 
+// And this last value, of course, is objectively the most important of all!
+// I would know, since I'm the one writing the note and all
+private alias Object.Value7 : SDG
+
+// and this one is like, whatever i guess
+private alias Object.Scale : Object.PhysicalControls
+
 // Position of the stuff on the right side (options, black bar, etc.)
 private alias Object.XPos : Object.SelectionBarPos
 
@@ -255,21 +262,23 @@ event Objectupdate
 			
 			Object.State++
 		end if
+
+		// This is here for a reason, trust me
+		Object.PhysicalControls = true
 		break
 		
 	case PAUSEMENU_MAIN
+		if Object.PhysicalControls == true
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult == true
+				Object.PhysicalControls = false
+			end if
 
-	// There's normally a `if Options.PhysicalControls == true` path here, but to keep 2012 Steam datafiles working we gotta do this roundabout way instead
-		// Let's assume the variable doesn't exist, force Physical Controls
-		CheckResult = true
-	
-		
-		if CheckResult == true
 			// Update Physical Controls
 			
 			if KeyPress[0].Up == true
 				
-				PlaySfx(SFX_G_MENUBUTTON, false)
+				PlaySfx(SfxName[Menu Move], false)
 				
 				// Reset all the stuff
 				
@@ -308,7 +317,7 @@ event Objectupdate
 			
 			if KeyPress[0].Down == true
 				
-				PlaySfx(SFX_G_MENUBUTTON, false)
+				PlaySfx(SfxName[Menu Move], false)
 				
 				// Reset some stuff
 				
@@ -346,14 +355,14 @@ event Objectupdate
 			
 			// You can use either Start or A to close a selection, the other two buttons won't do anything though...
 			if KeyPress[0].Start == true
-				PlaySfx(SFX_G_SELECT, false)
+				PlaySfx(SfxName[Menu Select], false)
 				Object.State = PAUSEMENU_FLASH
 				Object.Alpha = 248
 				Object.Timer = 0
 			end if
 			
 			if KeyPress[0].ButtonA == true
-				PlaySfx(SFX_G_SELECT, false)
+				PlaySfx(SfxName[Menu Select], false)
 				Object.State = PAUSEMENU_FLASH
 				Object.Alpha = 248
 				Object.Timer = 0
@@ -390,7 +399,7 @@ event Objectupdate
 					if Object.CurrentSelection == PAUSEMENU_SEL_CONTINUE
 						// The Player's released their finger while on the button, so let's start Continuing now
 						
-						PlaySfx(SFX_G_SELECT, false)
+						PlaySfx(SfxName[Menu Select], false)
 						Object.State = PAUSEMENU_FLASH
 						Object.Alpha = 248
 						Object.Timer = 0
@@ -424,7 +433,7 @@ event Objectupdate
 						if Object.CurrentSelection == PAUSEMENU_SEL_RESTART
 							// The Player released their finger while hovering over Restart, so let's restart then!
 							
-							PlaySfx(SFX_G_SELECT, false)
+							PlaySfx(SfxName[Menu Select], false)
 							Object.State = PAUSEMENU_FLASH
 							Object.Alpha = 248
 							Object.Timer = 0
@@ -458,7 +467,7 @@ event Objectupdate
 					if Object.CurrentSelection == PAUSEMENU_SEL_EXIT
 						// So in that case, if they were on it for at least one frame before, then let's go ahead and Exit
 						
-						PlaySfx(SFX_G_SELECT, false)
+						PlaySfx(SfxName[Menu Select], false)
 						Object.State = PAUSEMENU_FLASH
 						Object.Alpha = 248
 						Object.Timer = 0
@@ -493,7 +502,7 @@ event Objectupdate
 						if Object.CurrentSelection == PAUSEMENU_SEL_DEVMENU
 							// If they were touching the Dev Menu button last frame, then assume a button press
 							
-							PlaySfx(SFX_G_SELECT, false)
+							PlaySfx(SfxName[Menu Select], false)
 							Object.State = PAUSEMENU_FLASH
 							Object.Alpha = 248
 							Object.Timer = 0
@@ -522,6 +531,9 @@ event Objectupdate
 				else
 					Object.CurrentSelection = PAUSEMENU_SEL_EXIT
 				end if
+				
+				// Re-enable the physical controls option
+				Object.PhysicalControls = true
 			end if
 			
 			if KeyPress[0].Down == true
@@ -531,6 +543,8 @@ event Objectupdate
 				
 				Object.CurrentSelection = PAUSEMENU_SEL_CONTINUE
 				
+				// Re-enable the physical controls option
+				Object.PhysicalControls = true
 			end if
 		end if
 		
@@ -701,11 +715,11 @@ event ObjectDraw
 				//    draw only the difference from the previous frame every time instead
 				
 				// Find how tall the tint rectangle should be
-				temp0 = Object.WhiteRectPos
-				temp0 -= Object.PrevWhiteRectPos
+				SDG = Object.WhiteRectPos
+				SDG -= Object.PrevWhiteRectPos
 				
 				// Now, draw it at the previous rect position with the height found from earlier
-				DrawRect(0, Object.PrevWhiteRectPos, 384, temp0, 255, 255, 255, 128)
+				DrawRect(0, Object.PrevWhiteRectPos, 384, SDG, 0, 0, 0, 128)
 				Object.PrevWhiteRectPos = Object.WhiteRectPos
 				
 			end if
@@ -933,12 +947,12 @@ event ObjectDraw
 		// This is the state where the Pause Menu is leaving the screen, after the player chose to resume the game
 		
 		if Object.Alpha < 128
-			// Draw the white fade-in rectangle, around the entire screen
+			// Draw the black fade-in rectangle, around the entire screen
 			
 			// The stage is resumed now, meaning it's drawing again, which is why
 			//  we can do the entire screen at once rather than the old `only difference` system needed before
 			
-			DrawRect(0, 0, Screen.XSize, SCREEN_YSIZE, 255, 255, 255, Object.Alpha)
+			DrawRect(0, 0, Screen.XSize, Screen.YSize, 0, 0, 0, Object.Alpha)
 		end if
 		
 		// On top of that fade rectangle, draw the Pause Menu
@@ -1051,153 +1065,76 @@ end event
 
 
 event ObjectStartup
-	
-	// Load the correct sprites for each language
-	switch Engine.Language
+	switch engine.language
 	case LANG_ENGLISH
 	case LANG_JAPANESE
-		LoadSpriteSheet("Special/ScoreScreen.gif")
+		LoadSpriteSheet("Global/Pause_EN.gif")
 		break
-		
 	case LANG_FRENCH
-		LoadSpriteSheet("Special/ScoreScreen_FR.gif")
+		LoadSpriteSheet("Global/Pause_FR.gif")
 		break
-		
 	case LANG_ITALIAN
-		LoadSpriteSheet("Special/ScoreScreen_IT.gif")
+		LoadSpriteSheet("Global/Pause_IT.gif")
 		break
-		
 	case LANG_DEUTSCH
-		LoadSpriteSheet("Special/ScoreScreen_DE.gif")
+		LoadSpriteSheet("Global/Pause_DE.gif")
 		break
-		
 	case LANG_SPANISH
-		LoadSpriteSheet("Special/ScoreScreen_ES.gif")
+		LoadSpriteSheet("Global/Pause_ES.gif")
 		break
-		
 	end switch
-	
-	// The mini character frames should, of course, be different for each character
-	if Stage.PlayerListPos == PLAYER_SONIC
-		// 0 - Standing Sonic
-		SpriteFrame(-28, -14, 16, 24, 1, 231)
-		
-		// 1-2 - Impatient Sonic
-		SpriteFrame(-28, -14, 16, 24, 18, 231)
-		SpriteFrame(-28, -14, 16, 24, 35, 231)
-	else
-		// 0 - Normal Tails
-		SpriteFrame(-28, -14, 16, 24, 122, 202)
-		
-		// 1-2 - Tapping Tails
-		SpriteFrame(-28, -14, 16, 24, 139, 202)
-		SpriteFrame(-28, -14, 16, 24, 156, 202)
-	end if
-	
-	// 3 - Wave
-	SpriteFrame(0, 0, 128, 32, 0, 128)
-	
-	// 4 - Pause Header
-	SpriteFrame(0, -19, 128, 32, 0, 160)
-	
-	// 5 - Underline
-	SpriteFrame(-6, 7, 128, 3, 0, 193)
-	
-	// All the remaining text Frames are different between languages
-	switch Engine.Language
+
+	SpriteFrame(-28, -14, 16, 24, 1, 103) // #0  - Sonic
+	SpriteFrame(-28, -14, 16, 24, 18, 103) // #1  - Sonic Waiting Frame 0
+	SpriteFrame(-28, -14, 16, 24, 35, 103) // #2  - Sonic Waiting Frame 1
+
+	SpriteFrame(0, 0, 128, 32, 0, 0) // #3  - Menu BG Section
+	SpriteFrame(0, -19, 128, 32, 0, 32) // #4  - Pause
+	SpriteFrame(-6, 7, 128, 3, 0, 65) // #5  - White Bar
+
+	switch engine.language
 	case LANG_ENGLISH
 	case LANG_JAPANESE
-		
-		// 6 - Continue
-		SpriteFrame(0, -5, 65, 11, 0, 197)
-		
-		// 7 - Restart
-		SpriteFrame(0, -5, 55, 11, 66, 197)
-		
-		// 8 - Exit
-		SpriteFrame(0, -5, 30, 11, 0, 209)
-		
-		// 9 - Dev Menu
-		SpriteFrame(0, -5, 64, 11, 31, 209)
-		
-		// 10 - Greyed out Restart
-		SpriteFrame(0, -5, 55, 11, 52, 244)
+		SpriteFrame(0, -5, 65, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 55, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 30, 11, 66, 69) // #8  - Exit
+		SpriteFrame(0, -5, 64, 11, 56, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 55, 11, 0, 92) // #10 - Restart (Greyed out)
 		break
-		
+
 	case LANG_FRENCH
-		
-		// 6 - Continuer
-		SpriteFrame(0, -5, 73, 11, 0, 197)
-		
-		// 7 - Recommencer
-		SpriteFrame(0, -5, 95, 11, 0, 209)
-		
-		// 8 - Quitter
-		SpriteFrame(0, -5, 53, 11, 148, 244)
-		
-		// 9 - Dev
-		SpriteFrame(0, -5, 23, 11, 96, 209)
-		
-		// 10 - Recommencer (grey)
-		SpriteFrame(0, -5, 95, 11, 52, 244)
+		SpriteFrame(0, -5, 73, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 95, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 53, 11, 74, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 96, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 95, 11, 0, 92) // #10 - Restart (Greyed out)
 		break
-		
+
 	case LANG_ITALIAN
-		
-		// 6 - Continua
-		SpriteFrame(0, -5, 65, 11, 0, 197)
-		
-		// 7 - Ricomincia
-		SpriteFrame(0, -5, 78, 11, 0, 209)
-		
-		// 8 - Esci
-		SpriteFrame(0, -5, 28, 11, 66, 197)
-		
-		// 9 - Dev
-		SpriteFrame(0, -5, 23, 11, 79, 209)
-		
-		// 10 - Grey Ricomincia
-		SpriteFrame(0, -5, 78, 11, 52, 244)
+		SpriteFrame(0, -5, 65, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 78, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 28, 11, 66, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 79, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 78, 11, 0, 92) // #10 - Restart (Greyed out)
 		break
-		
+
 	case LANG_DEUTSCH
-		
-		// 6 - Weiter
-		SpriteFrame(0, -5, 48, 11, 0, 197)
-		
-		// 7 - Neustart
-		SpriteFrame(0, -5, 65, 11, 0, 209)
-		
-		// 8 - Verlassen
-		SpriteFrame(0, -5, 71, 11, 49, 197)
-		
-		// 9 - Dev
-		SpriteFrame(0, -5, 23, 11, 66, 209)
-		
-		// 10 - Neustart (grey)
-		SpriteFrame(0, -5, 65, 11, 52, 244)
+		SpriteFrame(0, -5, 48, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 65, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 71, 11, 49, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 66, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 65, 11, 0, 92) // #10 - Restart (Greyed out)
 		break
-		
+
 	case LANG_SPANISH
-		
-		// 6 - Continuar
-		SpriteFrame(0, -5, 73, 11, 0, 197)
-		
-		// 7 - Reiniciar
-		SpriteFrame(0, -5, 67, 11, 0, 209)
-		
-		// 8 - Salir
-		SpriteFrame(0, -5, 36, 11, 74, 197)
-		
-		// 9 - Dev
-		SpriteFrame(0, -5, 23, 11, 68, 209)
-		
-		// 10 - Grey Reiniciar
-		SpriteFrame(0, -5, 67, 11, 52, 244)
+		SpriteFrame(0, -5, 73, 11, 0, 69) // #6  - Continue
+		SpriteFrame(0, -5, 67, 11, 0, 81) // #7  - Restart
+		SpriteFrame(0, -5, 36, 11, 74, 69) // #8  - Exit
+		SpriteFrame(0, -5, 23, 11, 68, 81) // #9  - Dev Menu
+		SpriteFrame(0, -5, 67, 11, 0, 92) // #10 - Restart (Greyed out)
 		break
-		
+
 	end switch
-	
 end event
 
 

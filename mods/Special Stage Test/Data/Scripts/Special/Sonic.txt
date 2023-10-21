@@ -13,7 +13,7 @@ private alias Object.Value0 : SSSonic.ZPos
 private alias Object.Value1 : SSSonic.FrameLoop
 private alias Object.Value2 : SSSonic.FrameEnd
 private alias Object.Value3 : SSSonic.FrameTimer
-private alias Object.Value4 : SSSonic.Unused // Completely unused
+private alias Object.Value4 : SSSonic.SDG	// Completely unused
 private alias Object.Value5 : SSSonic.ScreenDepth // Same use as other Special Stage objects, see Special Setup
 private alias Object.Value6 : SSSonic.Timer
 private alias Object.Value7 : SSSonic.Tilt
@@ -172,17 +172,15 @@ private function Sonic_ProcessPlayer
 					if Options.DevMenuFlag == true
 						
 						// Pause the stage, and all objects in it
-						Stage.State = STAGE_PAUSED
+						stage.state = STAGE_PAUSED
 						
 						// Pause the music too, not fully stopping it so that it can be resumed later
 						PauseMusic()
 						
 						// Play the menu SFX as it pops out from the side
-						PlaySfx(SFX_G_SELECT, false)
-						
-						// And stop the game SFX, as well
-						StopSfx(SFX_G_FLYING)
-						StopSfx(SFX_G_TIRED)
+						PlaySfx(SfxName[Menu Back], false)
+						StopSfx(SfxName[Flying])
+						StopSfx(SfxName[Tired])
 						
 						// Spawn the Pause Menu object in reserved object slot 9
 						Object[9].Type = TypeName[Pause Menu]
@@ -195,7 +193,6 @@ private function Sonic_ProcessPlayer
 						
 						// The floor should already be 3d, this is actually a form of exiting High Quality mode
 						TileLayer[0].Type = LAYER_3DFLOOR
-						
 						
 						// In normal gameplay, call the engine's built-in pause menu
 						// (Although, do note, that with the fan-made engine decompilation of the game,
@@ -236,7 +233,7 @@ private function Sonic_HandlePause
 					if Options.DevMenuFlag == true
 						
 						// Pause the stage, this'll pause all the stage's objects too
-						Stage.State = STAGE_PAUSED
+						stage.State = STAGE_PAUSED
 						
 						// and pause the stage's music, as well
 						PauseMusic()
@@ -1035,7 +1032,7 @@ event ObjectUpdate
 			else
 				SSSonic.ControlMode = CONTROLMODE_NONE
 				SSSonic.State = SSSONIC_FINISHSTAND
-				Stage.TimeEnabled = false
+				stage.TimeEnabled = false
 			end if
 		end if
 		break
@@ -1146,7 +1143,7 @@ event ObjectUpdate
 			else
 				SSSonic.State = SSSONIC_FINISHSTAND
 				SSSonic.ControlMode = CONTROLMODE_NONE
-				Stage.TimeEnabled = false
+				stage.TimeEnabled = false
 			end if
 		end if
 		break
@@ -1355,38 +1352,37 @@ event ObjectUpdate
 	// Enforce stage bounds
 	// These stage size values are set by the stage's BGEffects object on Startup
 	
-	if SSSonic.XPos > Stage.curXBoundary2
-		SSSonic.XPos = Stage.curXBoundary2
+	if SSSonic.XPos > stage.curXBoundary2
+		SSSonic.XPos = stage.curXBoundary2
 	end if
 	
-	if SSSonic.XPos < Stage.curXBoundary1
-		SSSonic.XPos = Stage.curXBoundary1
+	if SSSonic.XPos < stage.curXBoundary1
+		SSSonic.XPos = stage.curXBoundary1
 	end if
 	
 	// The Stage Bounds are setup for a 2d plane, which is why ZPos is being paired with the "Y" Bounds here
-	if SSSonic.ZPos > Stage.curYBoundary2
-		SSSonic.ZPos = Stage.curYBoundary2
+	if SSSonic.ZPos > stage.curYBoundary2
+		SSSonic.ZPos = stage.curYBoundary2
 	end if
 	
-	if SSSonic.ZPos < Stage.curYBoundary1
-		SSSonic.ZPos = Stage.curYBoundary1
+	if SSSonic.ZPos < stage.curYBoundary1
+		SSSonic.ZPos = stage.curYBoundary1
 	end if
 	
 	// So we're kind of not actually moving around a 3d stage - instead, we're moving the entire world around Sonic
 	// So do the calculations for that
 	
-	tileLayer[0].angle = object[0].angle
+	tileLayer[0].angle = SSSonic.angle
 	Sin(tileLayer[0].xpos, tileLayer[0].angle)
 	Cos(tileLayer[0].zpos, tileLayer[0].angle)
-	tileLayer[0].xpos *= -11264
-	tileLayer[0].zpos *= -11264
-
-	tileLayer[0].xpos += object[0].xpos
-	tileLayer[0].zpos += sssonic.zpos
+	TileLayer[0].xpos *= -0x2C00
+	TileLayer[0].zpos *= -0x2C00
+	tileLayer[0].xpos += SSSonic.xpos
+	tileLayer[0].zpos += SSSonic.zpos
 
 	// Y movement is much easier, no complex calcuations needed here
 	// Just take Sonic's Y Position, smooth it out a bit, and offset it by 88 pixels
-	TileLayer[0].YPos = SSSonic.YPos
+	TileLayer[0].YPos = SSSonic.ypos
 	TileLayer[0].YPos /= 3
 	TileLayer[0].YPos += 0x580000
 end event
@@ -1500,7 +1496,7 @@ end event
 event ObjectStartup
 	
 	// Load the correct sprite sheet based on the current player
-	if Stage.PlayerListPos == PLAYER_SONIC
+	if stage.PlayerListPos == PLAYER_SONIC
 		LoadSpriteSheet("Special/Sonic.gif")
 	else
 		LoadSpriteSheet("Special/Tails.gif")
@@ -1623,7 +1619,7 @@ event ObjectStartup
 	SpriteFrame(-20, -48, 40, 48, 51, 344)
 	SpriteFrame(-21, -48, 42, 48, 182, 295)
 	SpriteFrame(-25, -48, 49, 48, 1, 344)
-	if Stage.PlayerListPos == PLAYER_SONIC // A few frames with different boxes for each player
+	if stage.PlayerListPos == PLAYER_SONIC // A few frames with different boxes for each player
 		SpriteFrame(-21, -48, 42, 48, 135, 410)
 		SpriteFrame(-20, -48, 40, 48, 178, 410)
 	else
@@ -1644,7 +1640,7 @@ event ObjectStartup
 	SpriteFrame(-30, -32, 60, 32, 54, 475)
 	
 	// Most Frames in the animation varies between Sonic and Tails
-	if Stage.PlayerListPos == PLAYER_SONIC
+	if stage.PlayerListPos == PLAYER_SONIC
 		SpriteFrame(-29, -32, 58, 32, 149, 344)
 		SpriteFrame(-30, -32, 60, 32, 149, 377)
 		SpriteFrame(-30, -32, 60, 32, 149, 377)

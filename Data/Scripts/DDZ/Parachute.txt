@@ -78,16 +78,12 @@ event ObjectUpdate
 		if Object[0].State == Player_State_Hurt
 			Object.Priority = 1
 			Object.State = 2
-			ArrayPos0 = Object.PlayerNo
-			Object[ArrayPos0].PropertyValue = 0
 			Object.XVel = Object[0].XVel
 		end if
 
 		if Object[0].Gravity == false
 			Object.Priority = 1
 			Object.State = 2
-			ArrayPos0 = Object.PlayerNo
-			Object[ArrayPos0].PropertyValue = 0
 			Object.XVel = Object[0].XVel
 		else
 			Object.YVel = Object[0].YVel
@@ -102,8 +98,6 @@ event ObjectUpdate
 
 			Object.Priority = 1
 			Object.State = 2
-			ArrayPos0 = Object.PlayerNo
-			Object[ArrayPos0].PropertyValue = 0
 			Object.XVel = Object[0].XVel
 		end if
 
@@ -138,8 +132,6 @@ event ObjectUpdate
 			Object.StartY = Object.YPos
 
 			Object.PlayerNo = Object[0].EntityPos
-			ArrayPos0 = Object[0].EntityPos
-			Object[ArrayPos0].PropertyValue = 1
 			Object[0].yvel -= 0x3000
 			Object[0].Animation = ANI_HANGING
 			Object.XPos = Object[0].XPos

@@ -652,16 +652,10 @@ event Objectupdate
 			case PAUSEMENU_SEL_EXIT
 				// Before Exiting, reset everything for the next playthrough
 				
-				Good_Future_Count = 0
-				Good_Future_List = 0
-				
-				Good_Future			  = false
-				Transporter_Destroyed = false
-				MetalSonic_Destroyed  = false
 				
 				Stage.ActiveList = PRESENTATION_STAGE
 				
-				LampPost.Check = 0
+				starPostID = 0
 				
 				// Time Attack should return to the TA Menu, but otherwise go back to the Title Screen
 				if Options.GameMode == MODE_TIMEATTACK

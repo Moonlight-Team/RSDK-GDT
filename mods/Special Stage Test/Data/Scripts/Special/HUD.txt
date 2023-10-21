@@ -105,6 +105,7 @@ event ObjectDraw
 		temp1 += 32
 		
 	end if
+		DrawNumbers(0, 91, 11, object[0].angle, 5, 8, 1)
 	
 	// Draw the "Rings" Graphic
 	DrawSpriteScreenXY(12, temp1, 16)
@@ -148,6 +149,9 @@ event ObjectStartup
 	// (Needs to be set to -1 and not just default 0 because the Rings UFO uses type 0)
 	Object[4].LastUFOType = -1
 	
+	Object[4].TimeSeconds = 30
+	Object[4].TimeFrames = 1800
+
 	// 0-9 - Numbers 0-9
 	SpriteFrame(0, 0, 8, 13, 206, 84)
 	SpriteFrame(0, 0, 8, 13, 215, 84)

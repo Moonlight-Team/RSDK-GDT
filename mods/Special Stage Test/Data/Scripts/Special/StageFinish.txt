@@ -114,7 +114,7 @@ event Objectupdate
 			temp0 = Stage.actnum
 			temp0--
 			
-			SetBit(SpecialStage.TimeStones, temp0, true)
+			SetBit(specialStage.emeralds, temp0, true)
 		else
 			Object.TimeBonus = 0
 		end if
@@ -126,7 +126,7 @@ event Objectupdate
 		Stage.ListPos = SpecialStage.NextZone
 		Stage.ActiveList = REGULAR_STAGE
 		
-		if SpecialStage.TimeStones < 127
+		if specialStage.emeralds < 127
 			temp0 = false
 			while temp0 == false
 				SpecialStage.ListPos++
@@ -134,19 +134,12 @@ event Objectupdate
 					SpecialStage.ListPos = 0
 				end if
 				
-				GetBit(temp1, SpecialStage.TimeStones, SpecialStage.ListPos)
+				GetBit(temp1, specialStage.emeralds, SpecialStage.ListPos)
 				if temp1 == false
 					temp0 = true
 				end if
 			loop
 		else
-			temp0 = Stage.ListPos
-			temp0 %= 10
-			if temp0 == 9
-				Stage.ListPos--
-			end if
-			
-			Good_Future_Count = 2
 			
 			if Stage.PlayerListPos == PLAYER_SONIC
 				// If all Stones are collected, unlock the "Treasure Hunter" achievement
@@ -162,7 +155,7 @@ event Objectupdate
 			Object.State = STAGEFINISH_FADEIN
 			Object.Timer = 256
 			
-			if SpecialStage.TimeStones > 126	// 0b01111110, each '1' bit represents an obtained time stone
+			if specialStage.emeralds > 126	// 0b01111110, each '1' bit represents an obtained time stone
 				// If the player has all Stones, then turn this object into the "Got 'em all!!" variant
 				
 				Object.ResultsType = STAGEFINISH_T_ALLSTONESOBTAINED
@@ -352,18 +345,10 @@ event Objectupdate
 		end if
 		
 		// The different soundtrack jingles have different lenghts, so account for that
-		if Options.Soundtrack == OST_JP
-			Object.Timer++
-			if Object.Timer > 299
-				Object.Timer = 0
-				Object.State = STAGEFINISH_TALLYDOWN
-			end if
-		else
-			Object.Timer++
-			if Object.Timer > 429
-				Object.Timer = 0
-				Object.State = STAGEFINISH_TALLYDOWN
-			end if
+		Object.Timer++
+		if Object.Timer > 299
+			Object.Timer = 0
+			Object.State = STAGEFINISH_TALLYDOWN
 		end if
 		break
 		
@@ -469,7 +454,7 @@ event Objectupdate
 					SaveRAM[ArrayPos1]++
 					
 					ArrayPos1++
-					SaveRAM[ArrayPos1] = SpecialStage.TimeStones
+					SaveRAM[ArrayPos1] = specialStage.emeralds
 					
 					ArrayPos1++
 					SaveRAM[ArrayPos1] = SpecialStage.ListPos
@@ -486,14 +471,14 @@ event Objectupdate
 				// A small Origins tweak - backup the Player's score (again)
 				// So I guess in return for one redundancy loss, we got another one in return...
 				
-				// Write the correct colours to Fade_Colour so that the maingame fades back in with the same white
+				// Write the correct colours to fadeColor so that the maingame fades back in with the same white
 				// (This is setting Fade_Colout to 0xD0FFE0, in hex form)
-				Fade_Colour = 208
-				Fade_Colour <<= 16
+				fadeColor = 208
+				fadeColor <<= 16
 				temp0 = 255
 				temp0 <<= 8
-				Fade_Colour += temp0
-				Fade_Colour += 224
+				fadeColor += temp0
+				fadeColor += 224
 								
 				if Stage.ListPos < Stage.ListSize
 					LoadStage()
@@ -613,7 +598,7 @@ event ObjectDraw
 			while temp0 < 7
 				
 				// See if the Player has the current Time Stone
-				GetBit(temp3, SpecialStage.TimeStones, temp0)
+				GetBit(temp3, specialStage.emeralds, temp0)
 				
 				// Bump up the index, for next loop around
 				temp0++

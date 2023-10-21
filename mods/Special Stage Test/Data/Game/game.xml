@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<game xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <palette />
+  <objects />
+  <variables />
+  <sounds />
+  <players />
+  <presentationStages />
+  <regularStages />
+  <specialStages>
+    <stage name="SPECIAL STAGE 2" folder="SS2" id="1" highlight="true" />
+  </specialStages>
+  <bonusStages />
+</game>

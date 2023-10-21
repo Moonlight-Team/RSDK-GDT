@@ -188,7 +188,6 @@ event ObjectUpdate
 			end if
 		end if
 	end if
-	
 end event
 
 
@@ -233,14 +232,10 @@ event ObjectStartup
 	// Set the ground to the "3d Sky" layer type
 	// -> This way, it'll render in high-quality mode if possible, as opposed to the "3d Floor" type
 	TileLayer[0].Type = LAYER_3DFLOOR
-	
-	if Options.Soundtrack == OST_JP
-		SetMusicTrack("JP/SpecialStage.ogg", 0, true)
-		SetMusicTrack("JP/ZoneComplete.ogg", 1, false)
-	else
-		SetMusicTrack("US/SpecialStage.ogg", 0, 270972)
-		SetMusicTrack("US/ZoneComplete.ogg", 1, false)
-	end if
+
+	SetMusicTrack("SpecialStage.ogg", 0, true)
+	SetMusicTrack("TimeAttack.ogg", 0, true)
+	SetMusicTrack("ActComplete.ogg", 1, false)
 	
 	Stage.PauseEnabled = false
 	

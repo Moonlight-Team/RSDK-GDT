@@ -67,35 +67,54 @@ event ObjectUpdate
 		end if
 		break
 
+	default
+		if object.frame >= 11
+			object.animationTimer++
+			if object.animationTimer >= 2
+				object.frame++
+				if object.frame == 27
+					// Clear the dust
+					ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+				end if
+				object.animationTimer = 0
+			end if
+		end if
+		break
+
 	end switch
 
 end event
 
 
 event ObjectDraw
-	if object.frame > 3
-		// Spindash dust variant
+	if object.frame < 11
+		if object.frame > 3
+			// Spindash dust variant
 
-		// Seek into this object's targeted player
-		currentPlayer = object.targetPlayer
+			// Seek into this object's targeted player
+			currentPlayer = object.targetPlayer
 
-		// Make the values match
-		object.direction = player[currentPlayer].direction
-		object.xpos = player[currentPlayer].xpos
-		object.iypos = player[currentPlayer].collisionBottom
-		object.ypos += player[currentPlayer].ypos
+			// Make the values match
+			object.direction = player[currentPlayer].direction
+			object.xpos = player[currentPlayer].xpos
+			object.iypos = player[currentPlayer].collisionBottom
+			object.ypos += player[currentPlayer].ypos
 
-		// Erase this object if the player isn't spindashing
-		if player[currentPlayer].animation != ANI_SPINDASH
-			object.type = TypeName[Blank Object]
+			// Erase this object if the player isn't spindashing
+			if player[currentPlayer].animation != ANI_SPINDASH
+				object.type = TypeName[Blank Object]
+			else
+				DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)
+			end if
 		else
+			// Dust Puff variant (from skidding and etc.)
 			DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)
 		end if
 	else
+		// Dropdash dust variant
 
-		// Dust Puff variant (from skidding and etc.)
+		// Just draw the sprite
 		DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)
-
 	end if
 end event
 
@@ -104,11 +123,13 @@ event ObjectStartup
 
 	LoadSpriteSheet("Global/Items.gif")
 
-	// Dust frames
+	// Regular Dust frames
 	SpriteFrame(-7, -11, 13, 14, 85, 143)
 	SpriteFrame(-7, -11, 13, 14, 99, 143)
 	SpriteFrame(-6, -11, 13, 14, 113, 143)
 	SpriteFrame(-7, -11, 13, 14, 127, 143)
+
+	// Spindash Dust frames
 	SpriteFrame(-32, -10, 32, 10, 58, 245)
 	SpriteFrame(-32, -12, 32, 12, 91, 243)
 	SpriteFrame(-32, -16, 32, 16, 124, 239)
@@ -116,6 +137,25 @@ event ObjectStartup
 	SpriteFrame(-32, -20, 32, 20, 190, 235)
 	SpriteFrame(-32, -21, 32, 21, 223, 210)
 	SpriteFrame(-32, -23, 32, 23, 223, 232)
+
+	// Dropdash Dust frames
+	SpriteFrame(-12, -14, 32, 25, 1, 256)
+	SpriteFrame(-12, -14, 32, 25, 34, 256)
+	SpriteFrame(-12, -14, 32, 25, 67, 256)
+	SpriteFrame(-12, -14, 32, 25, 100, 256)
+	SpriteFrame(-12, -14, 32, 25, 133, 256)
+	SpriteFrame(-12, -14, 32, 25, 166, 256)
+	SpriteFrame(-12, -14, 32, 25, 199, 256)
+	SpriteFrame(-12, -14, 32, 25, 232, 256)
+	SpriteFrame(-12, -14, 32, 25, 1, 282)
+	SpriteFrame(-12, -14, 32, 25, 34, 282)
+	SpriteFrame(-12, -14, 32, 25, 67, 282)
+	SpriteFrame(-12, -14, 32, 25, 100, 282)
+	SpriteFrame(-12, -14, 32, 25, 133, 282)
+	SpriteFrame(-12, -14, 32, 25, 166, 282)
+	SpriteFrame(-12, -14, 32, 25, 199, 282)
+	SpriteFrame(-12, -14, 32, 25, 232, 282)
+	SpriteFrame(0, 0, 0, 0, 0, 0)
 end event
 
 

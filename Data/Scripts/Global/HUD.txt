@@ -1,5 +1,5 @@
 // ----------------------------------
-// RSDK Project: Sonic 2
+// RSDK Project: RSDK-GDT
 // Script Description: HUD Object
 // Script Author: Christian Whitehead/Simon Thomley
 // Unpacked by Rubberduckycooly's script unpacker
@@ -12,12 +12,18 @@
 private alias object.value0 : object.drawFunction
 private alias object.value1 : object.flashingTimer
 private alias object.value2 : object.timeOver
+private alias object.value3 : object.fade
+private alias object.value4 : superoffset
+private alias object.value5 : pboffset
 
 // Player Aliases
 private alias object.type   : player.type
 private alias object.xpos   : player.xpos
 private alias object.ypos   : player.ypos
 private alias object.value0 : player.rings
+
+//Ink
+private alias 2 : INK_ALPHA
 
 // Game Mode Aliases
 private alias 2 : MODE_TIMEATTACK
@@ -26,13 +32,13 @@ private alias 2 : MODE_TIMEATTACK
 private alias 22 : GLOBAL_PLAYERSCORE
 private alias 25 : GLOBAL_PLAYERLIVES
 
-
 // ========================
 // Function Declarations
 // ========================
 
 reserve function HUD_Draw_Standard
 reserve function HUD_Draw_Mobile
+reserve function Touch_Controls
 
 
 // ========================
@@ -110,7 +116,7 @@ private function HUD_Draw_Standard
 			DrawNumbers(0, 109, 13, global[arrayPos0], 6, 8, false)
 #endplatform
 
-			if options.gameMode < MODE_TIMEATTACK
+			//if options.gameMode < MODE_TIMEATTACK
 			//if you want to recover the system of one layout for the normal game and one for the time attack
 				// Normal game - only minutes and seconds are shown
 				//DrawSpriteScreenXY(14, 67, 29)
@@ -120,20 +126,16 @@ private function HUD_Draw_Standard
 				//DrawNumbers(0, 104, 29, stage.milliSeconds, 2, 8, true)//CD/time attack
 				DrawSpriteScreenXY(13, 71, 29)//mania
 				DrawNumbers(0, 109, 29, stage.milliSeconds, 2, 8, true)//mania
-			end if
+			//end if
 
 			// Rest of the time display
 #platform: USE_STANDALONE
 			//DrawNumbers(0, 80, 29, stage.seconds, 2, 8, true) //CD/time attack
 			//DrawNumbers(0, 56, 29, stage.minutes, 1, 8, true) //CD/time attack
 			//DrawNumbers(0, 80, 45, player[0].rings, 3, 8, false) //CD/time attack
-// How did we genuinely forget about putting the milliseconds thing here too? this is probably the thing that's causing time attack to only load the seconds & minutes!
-			DrawNumbers(0, 109, 29, stage.milliSeconds, 2, 8, true) // Mania
-// Oh boy...you gotta be kidding that we also forgot about the colons not loading correctly...
-			DrawSpriteScreenXY(13, 71, 29) // Mania
-			DrawNumbers(0, 84, 29, stage.seconds, 2, 8, true) // Mania
-			DrawNumbers(0, 59, 29, stage.minutes, 1, 8, true) // Mania
-			DrawNumbers(0, 109, 45, player[0].rings, 3, 8, false) // Mania
+			DrawNumbers(0, 84, 29, stage.seconds, 2, 8, true) //mania
+			DrawNumbers(0, 59, 29, stage.minutes, 1, 8, true) //mania
+			DrawNumbers(0, 109, 45, player[0].rings, 3, 8, false) //mania
 #endplatform
 #platform: USE_ORIGINS
 			//DrawNumbers(0, 80, 29, temp3, 2, 8, true) //CD/time attack
@@ -204,7 +206,12 @@ private function HUD_Draw_Standard
 			// Lives icon	
 			switch stage.playerListPos
 				case PLAYER_SONIC_ALONE
+				//super life icon
+				if Player_superState == true
+					DrawSpriteScreenXY(42, 16, 213)
+				else
 					DrawSpriteScreenXY(15, 16, 213)
+				end if
 					break
 				case PLAYER_TAILS_ALONE
 					DrawSpriteScreenXY(16, 16, 213)
@@ -282,6 +289,117 @@ private function HUD_Draw_Standard
 #endplatform
 end function
 
+private function Touch_Controls
+//todo esto es practicamente un port de forever porfavor no me funen XD
+	object.inkEffect = INK_ALPHA
+	if touchfade.enabled == true
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult > -1
+			object.fade = 0
+		else
+			object.fade++
+		end if
+	end if
+	if object[30].type == TypeName[Act Finish])
+		if object.alpha > 0
+   			 object.alpha -= 15
+		end if
+	else
+		if object.fade >= 400
+			if object.alpha > 0
+   				 object.alpha -= 15
+			end if
+		else
+			object.alpha = 191
+		end if
+	end if
+	temp0 = screen.xsize
+	temp0 -= 44
+	DrawSpriteScreenFX(44, FX_INK, 26,1 49) //dpad
+	temp0 -= 39
+	if object[30].type == TypeName[Act Finish])
+		if pboffset > -20
+			pboffset -= 8
+		end if
+		if pboffset <= -20
+			pboffset = -20
+		end if
+	else
+		if pboffset < 8
+			pboffset += 2
+		end if
+		if pboffset >= 8
+			pboffset = 8
+		end if
+	end if
+	DrawSpriteScreenFX(51, 0, temp0, pboffset) //pause
+	temp0 -= 34
+	if superbutton.type == true
+		temp2 = screen.xsize
+		temp2 -= 82
+		temp1 = stage.timeEnabled
+		CheckEqual(specialStage.emeralds, 127)
+		temp1 &= checkResult
+		CheckGreater(object[0].value0, 49)
+		temp1 &= checkResult
+		CheckNotEqual(Player_superState, 1)
+		temp1 &= checkResult
+		CheckNotEqual(object[30].type, TypeName[Act Finish])
+		temp1 &= checkResult			
+		if temp1 == true
+			if keyDown[1].buttonY == true
+				DrawSpriteScreenFX(54, FX_INK, temp2, 171)
+			else
+				DrawSpriteScreenFX(53, FX_INK, temp2, 171)
+			end if
+		end if
+	else
+		temp1 = stage.timeEnabled
+		CheckEqual(specialStage.emeralds, 127)
+		temp1 &= checkResult
+		CheckGreater(object[0].value0, 49)
+		temp1 &= checkResult
+		CheckNotEqual(Player_superState, 1)
+		temp1 &= checkResult
+		CheckNotEqual(object[30].type, TypeName[Act Finish])
+		temp1 &= checkResult			
+		if temp1 == true
+			if superoffset < 8
+				superoffset += 2
+			end if
+			if superoffset >= 8
+				superoffset = 8
+			end if
+		else
+			if superoffset > -20
+				superoffset -= 8
+			end if
+			if superoffset <= -20
+				superoffset = -20
+			end if
+		end if
+		DrawSpriteScreenXY(43, temp0, superoffset)
+	end if
+	temp0 -= 10
+	if keyDown[1].left == true
+		DrawSpriteScreenFX(47, FX_INK, 26, 151)
+	end if
+	if keyDown[1].down == true
+		DrawSpriteScreenFX(46, FX_INK, 26, 189)
+	end if
+	if keyDown[1].right == true
+		DrawSpriteScreenFX(48, FX_INK, 64, 151)
+	end if
+	if keyDown[1].up == true
+		DrawSpriteScreenFX(45, FX_INK, 26, 151)
+	end if
+	temp0 += 45 
+	if touchJump == true
+		DrawSpriteScreenFX(50, FX_INK, temp0, 163)	
+	else
+		DrawSpriteScreenFX(49, FX_INK, temp0, 163)
+	end if		
+end function
 
 private function HUD_Draw_Mobile
 	// Although this is still there in Origins, none of it was updated for all the cool new additions
@@ -301,13 +419,13 @@ private function HUD_Draw_Mobile
 
 	DrawNumbers(0, 109, 13, player.score, 6, 8, false)
 
-	if options.gameMode < MODE_TIMEATTACK
+	//if options.gameMode < MODE_TIMEATTACK
 	//to recover the classic huds on mobile, get inspired by the standalone mode above, I'm not going to repeat the code 3 times again XD
 		//DrawSpriteScreenXY(14, 67, 25)
 	//else
 		DrawSpriteScreenXY(13, 71, 29)
 		DrawNumbers(0, 109, 29, stage.milliSeconds, 2, 8, true)
-	end if
+	//end if
 
 	DrawNumbers(0, 84, 29, stage.seconds, 2, 8, true)
 	DrawNumbers(0, 59, 29, stage.minutes, 1, 8, true)
@@ -349,7 +467,11 @@ private function HUD_Draw_Mobile
 	temp1 -= 64
 	switch stage.playerListPos
 		case PLAYER_SONIC_ALONE
+		if Player_superState == true
+			DrawSpriteScreenXY(42, temp1, 8)
+		else
 			DrawSpriteScreenXY(15, temp1, 8)
+		end if
 			break
 		case PLAYER_TAILS_ALONE
 			DrawSpriteScreenXY(16, temp1, 8)
@@ -364,7 +486,6 @@ private function HUD_Draw_Mobile
 			DrawSpriteScreenXY(40, temp1, 8)
 			break
 	end switch
-	
 	temp1 += 17
 	temp0 += 6
 	switch stage.playerListPos
@@ -389,8 +510,11 @@ private function HUD_Draw_Mobile
 
 	temp1 += 18
 	DrawNumbers(24, temp1, 16, player.lives, 2, 8, false)
+	
+	if options.attractMode == false
+		CallFunction(Touch_Controls)
+	end if
 end function
-
 
 // ========================
 // Events
@@ -498,6 +622,21 @@ event ObjectStartup
 	
 	SpriteFrame(0, 0, 16, 16, 137, 47)  // #40 - MSonic life icon
 	SpriteFrame(0, 0, 36, 7, 185, 42) 	// #41 - MSonic name tag
+	
+	SpriteFrame(0, 0, 16, 16, 154, 47) // #42 SuperSonic Life Icon
+	
+	SpriteFrame(0, 0, 16, 16, 329, 129) // #43 Super Button - Mobile
+	SpriteFrame(0, 0, 64, 66, 257, 1) // #44 DPAD
+	SpriteFrame(26, 0, 12, 25, 373, 65) // #45 DPAD up press
+	SpriteFrame(26, 0, 12, 26, 373, 103) // #46 DPAD down press
+	SpriteFrame(0, 25, 26, 13, 346, 102) // #47 DPAD left press
+	SpriteFrame(0, 25, 26, 13, 346, 116) // #48 DPAD right press
+	SpriteFrame(0, 0, 48, 48, 322, 1) // #49 A button
+	SpriteFrame(0, 0, 48, 48, 322, 50) // #50 A button down
+	SpriteFrame(0, 0, 16, 16, 329, 112) // #51 Pause Button
+	SpriteFrame(0, 0, 16, 16, 171, 50) // #52 Super Button - PC
+	SpriteFrame(-56, 0, 32, 32, 289, 69) // #53 Super Button - Mobile 2
+	SpriteFrame(-56, 0, 32, 32, 256, 69) // #54 Super Button - Mobile 2 down
 	
 #platform: USE_ORIGINS
 	SpriteFrame(0, 0, 16, 16, 179, 180)	// #38 - Coins life icon

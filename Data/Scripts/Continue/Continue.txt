@@ -147,6 +147,13 @@ event ObjectStartup
 		// #12 - #13 - Amy tapping her foot	
 		SpriteFrame(-8, -11, 17, 22, 103, 18)
 		SpriteFrame(-8, -11, 17, 22, 103, 41)		
+		break
+		
+	case PLAYER_METAL_ALONE
+		// #14 - #15 - Metal tapping her foot	
+		SpriteFrame(-8, -11, 16, 23, 1, 64)
+		SpriteFrame(-8, -11, 16, 23, 18, 64)
+		break		
 	end switch
 
 	foreach (TypeName[Continue Screen], arrayPos0, ALL_ENTITIES)

@@ -31,8 +31,13 @@ private alias 12 : MONITOR_EGGMAN
 private alias 13 : MONITOR_TELEPORT
 private alias 14 : MONITOR_RANDOM
 private alias 15 : MONITOR_DEBUG_SHIELD
-private alias 16 : MONITOR_COUNT
+private alias 16 : MONITOR_DEBUG_EMERALDS
 private alias 17 : MONITOR_1UP_AMY
+private alias 18 : MONITOR_1UP_METAL
+
+private alias 17 : MONITOR_COUNT
+
+
 // Monitor states
 private alias 0 : MONITOR_STATE_IDLE
 private alias 1 : MONITOR_STATE_FALL
@@ -352,6 +357,7 @@ event ObjectStartup
 	SpriteFrame(-8, -9, 16, 14, 18, 171) // 17 - MONITOR_DEBUG_SHIELD - Debug Shields
 	SpriteFrame(-8, -9, 16, 14, 35, 171) // 18 - Debug Emeralds
 	SpriteFrame(-8, -9, 16, 14, 18, 201) // 19 - MONITOR_1UP_AMY
+	SpriteFrame(-8, -9, 16, 14, 35, 201) // 20 - MONITOR_1UP_METAL
 	// (The Mania monitor introduced in Origins is unused btw)
 	
 	Monitor_startDebugID = DebugMode_ObjCount
@@ -392,7 +398,6 @@ event ObjectStartup
 			end if
 		next
 	end if
-	
 	if stage.playerListPos == PLAYER_KNUX_ALONE
 		foreach (TypeName[Monitor], arrayPos0, ALL_ENTITIES)
 			if object[arrayPos0].propertyValue == MONITOR_1UP_SONIC
@@ -404,6 +409,13 @@ event ObjectStartup
 		foreach (TypeName[Monitor], arrayPos0, ALL_ENTITIES)
 			if object[arrayPos0].propertyValue == MONITOR_1UP_SONIC
 				object[arrayPos0].propertyValue = MONITOR_1UP_AMY
+			end if
+		next
+	end if
+	if stage.playerListPos == PLAYER_METAL_ALONE
+		foreach (TypeName[Monitor], arrayPos0, ALL_ENTITIES)
+			if object[arrayPos0].propertyValue == MONITOR_1UP_SONIC
+				object[arrayPos0].propertyValue = MONITOR_1UP_METAL
 			end if
 		next
 	end if	

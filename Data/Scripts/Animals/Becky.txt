@@ -1,8 +1,8 @@
 // ----------------------------------
-// RSDK Project: Sonic 2
+// RSDK Project: RSDK-GDT
 // Script Description: Becky Object
 // Script Author: Christian Whitehead/Simon Thomley
-// Unpacked by Rubberduckycooly's script unpacker
+// Original S2 Script Unpacked by Rubberduckycooly's script unpacker
 // ----------------------------------
 
 // ========================

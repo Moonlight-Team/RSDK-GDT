@@ -82,10 +82,6 @@ event ObjectUpdate
 				ResetObjectEntity(object.entityPos, TypeName[ST Screen], 0, object.xpos, object.ypos)
 				SetScreenFade(0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
 			end if
-			#endplatform
-			#platform: USE_ORIGINS
-			LoadPalette("errorscreen.act", 0, 0, 0, 256)
-			#endplatform
 			break
 			
 		end switch
@@ -93,26 +89,20 @@ end event
 
 
 event ObjectDraw
-	DrawSprite(0)
+	temp0 = screen.xcenter
+	if screen.xsize <= 424
+		temp0 -= 37
+	end if
+	if screen.xsize >= 425
+		temp0 -= 35
+	end if
+	DrawSpriteScreenXY(0, temp0, screen.ycenter)
 end event
 
 
 event ObjectStartup
-switch engine.deviceType
-case STANDARD
-	LoadSpriteSheet("Title/RetroLogo.gif")
-	SpriteFrame(-215, -120, 424, 240, 0, 0) // #1 - The Logo itself
-	break
-case MOBILE
-    LoadSpriteSheet("Title/RetroLogoMobile.gif")
-	SpriteFrame(-215, -120, 624, 240, 0, 0) // #2 - The Logo itself (mobile)
-     break
-end switch
-
-if screen.xsize == 320
-  LoadSpriteSheet("Title/RetroLogoClassic.gif")
-  SpriteFrame(-215, -120, 324, 240, 0, 0) // #3 - The Logo itself (classic) 
-end if
+    LoadSpriteSheet("Title/RetroLogo.gif")
+	SpriteFrame(-215, -120, 624, 240, 0, 0) // #0 - The Logo itself
 
 	//Setup any Retro Logo
 	//Objects that are present in the level
@@ -142,22 +132,7 @@ end event
 
 
 event RSDKLoad
-switch engine.deviceType
-case STANDARD
-	LoadSpriteSheet("Title/RetroLogo.gif")
-	SpriteFrame(0, 0, 424, 240, 0, 0) // #1 - The Logo itself
-	break
-	case MOBILE
-    LoadSpriteSheet("Title/RetroLogoMobile.gif")
-    SpriteFrame(-0, 0, 624, 240, 0, 0) // #2 - The Logo itself (mobile)
-    break
-end switch
-
-if screen.xsize == 320
-  LoadSpriteSheet("Title/RetroLogoClassic.gif")
-  SpriteFrame(0, 0, 0, 320, 240, 0, 0)	// #3 - The Logo itself (classic) 
-end if
-  
-  
+    LoadSpriteSheet("Title/RetroLogo.gif")
+	SpriteFrame(-215, -120, 624, 240, 0, 0)
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

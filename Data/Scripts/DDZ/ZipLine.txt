@@ -1,5 +1,5 @@
 // ----------------------------------
-// RSDK Project: RSDK: Game Development Template
+// RSDK Project: RSDK-GDT
 // Script Description: Zip Line Object
 // Script Author: Christian Whitehead/Geared
 // ----------------------------------
@@ -232,7 +232,7 @@ end event
 
 
 event ObjectStartup
-	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
 
 	// Zip Line Frames
 	SpriteFrame(-4, -4, 8, 8, 35, 150)
@@ -258,7 +258,7 @@ end event
 
 
 event RSDKLoad
-	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
 	SpriteFrame(-4, -4, 8, 8, 35, 150)
 	
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")

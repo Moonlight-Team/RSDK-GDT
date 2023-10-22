@@ -532,8 +532,12 @@ end event
 
 event ObjectStartup
 	LoadSpriteSheet("Title/Title.gif")
-	SetMusicTrack("Titlescreen.ogg", 0, false)
-
+	Options.Soundtrack = saveRAM[38]
+	if Options.Soundtrack == false
+		SetMusicTrack("Titlescreen.ogg", 0, false)
+	else
+		SetMusicTrack("TitlescreenSAGE.ogg", 0, false)
+	end if
 	arrayPos0 = 0x100
 	while arrayPos0 < 0x240
 		arrayPos1 = arrayPos0
@@ -547,6 +551,7 @@ event ObjectStartup
 		stage.deformationData2[arrayPos0] = stage.deformationData2[arrayPos1]
 		arrayPos0++
 	loop
+    //SpriteFrame(-116,-26, 318, 61, 190, 1)	// Emblem (Top) 			- #0
     SpriteFrame(-117,-26, 325, 61, 183, 1)	// Emblem (Top) 			- #0
 	SpriteFrame(0, 0, 0, 0, 0, 0)	// Emblem (Bottom) 			- #1
 	SpriteFrame(0, -19, 72, 40, 1, 66)		// Sonic - Frame 1 			- #2

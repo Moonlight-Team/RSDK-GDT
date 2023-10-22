@@ -1,5 +1,5 @@
 // ----------------------------------
-// RSDK Project: RSDK: Game Development Template
+// RSDK Project: RSDK-GDT
 // Script Description: Fan Object
 // Script Author: Christian Whitehead/Geared
 // ----------------------------------
@@ -27,7 +27,7 @@ event ObjectUpdate
 		arrayPos0 = player[currentPlayer].entityPos
 		if object[arrayPos0].propertyValue == FAN_ACTIVATED
 			BoxCollisionTest(C_TOUCH, object.entityPos, -32, -480, 32, 8, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
-			if checkResult == 1
+			if checkResult == true
 				if player[currentPlayer].yvel > -262144
 					player[currentPlayer].yvel -= 12288
 				end if
@@ -52,7 +52,7 @@ end event
 
 
 event ObjectStartup
-	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
 	
 	// Fan Frames
 	SpriteFrame(-14, -8, 26, 16, 99, 62)
@@ -81,7 +81,7 @@ end event
 
 
 event RSDKLoad
-	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
 	SpriteFrame(-14, -8, 26, 16, 99, 62)
 	
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")

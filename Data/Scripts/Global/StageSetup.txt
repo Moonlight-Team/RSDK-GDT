@@ -343,7 +343,7 @@ event ObjectUpdate
 
 #platform: USE_STANDALONE
 	// Show/hide touch controls based on whether the player's control is locked or not
-	if options.attractMode == false
+	if options.attractMode == false //esto puede servir para algo lol
 		if player[0].controlMode > CONTROLMODE_NONE
 			options.touchControls = true
 		else
@@ -391,15 +391,20 @@ end event
 
 
 event ObjectStartup
-	SetMusicTrack("ActComplete.ogg", TRACK_ACTFINISH, false)
-	SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, 139263)
-	//SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, 38679)
+	Options.Soundtrack = saveRAM[38]
+	if Options.Soundtrack == false
+		SetMusicTrack("Super.ogg", TRACK_SUPER, 164449)
+		SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, 139263)
+		SetMusicTrack("ActComplete.ogg", TRACK_ACTFINISH, false)
+	else
+		SetMusicTrack("SuperSAGE.ogg", TRACK_SUPER, 164449)
+		SetMusicTrack("InvincibilitySAGE.ogg", TRACK_INVINCIBLE, 139263)
+		SetMusicTrack("ActCompleteSAGE.ogg", TRACK_ACTFINISH, false)
+	end if
 	SetMusicTrack("Continue.ogg", TRACK_CONTINUE, false)
 	SetMusicTrack("Boss.ogg", TRACK_BOSS, true)
 	SetMusicTrack("GameOver.ogg", TRACK_GAMEOVER, false)
 	SetMusicTrack("Drowning.ogg", TRACK_DROWNING, false)
-	SetMusicTrack("Super.ogg", TRACK_SUPER, 164449)
-	//SetMusicTrack("Super.ogg", TRACK_SUPER, true) //original super track code lol
 
 	stage.timeOver = false
 

@@ -167,8 +167,8 @@ event ObjectUpdate
 					player[currentPlayer].yvel = -0xA0000
 
 					if object.propertyValue >= 0x80
-						player[currentPlayer].animation = ANI_TWIRL
-						player[currentPlayer].prevAnimation = ANI_TWIRL
+						player[currentPlayer].animation = ANI_CDBOUNCING//ANI_TWIRL
+						player[currentPlayer].prevAnimation = ANI_CDBOUNCING//ANI_TWIRL
 						player[currentPlayer].frame = 0
 						player[currentPlayer].animationSpeed = 40
 					else
@@ -202,8 +202,8 @@ event ObjectUpdate
 						player[currentPlayer].yvel -= player[currentPlayer].gravityStrength
 
 						if object.propertyValue >= 0x80
-							player[currentPlayer].animation = ANI_TWIRL
-							player[currentPlayer].prevAnimation = ANI_TWIRL
+							player[currentPlayer].animation = ANI_CDBOUNCING//ANI_TWIRL
+							player[currentPlayer].prevAnimation = ANI_CDBOUNCING//ANI_TWIRL
 							player[currentPlayer].frame = 0
 							player[currentPlayer].animationSpeed = 40
 						else
@@ -412,7 +412,7 @@ event ObjectUpdate
 					player[currentPlayer].direction = FACING_RIGHT
 
 					if object.propertyValue >= 0x80
-						player[currentPlayer].animation = ANI_TWIRL
+						player[currentPlayer].animation = ANI_CDBOUNCING//ANI_TWIRL
 					else
 						player[currentPlayer].animation = ANI_BOUNCING
 					end if
@@ -495,7 +495,7 @@ event ObjectUpdate
 					player[currentPlayer].direction = FACING_LEFT
 
 					if object.propertyValue >= 0x80
-						player[currentPlayer].animation = ANI_TWIRL
+						player[currentPlayer].animation = ANI_CDBOUNCING//ANI_TWIRL
 					else
 						player[currentPlayer].animation = ANI_BOUNCING
 					end if

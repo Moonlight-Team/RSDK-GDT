@@ -1,7 +1,8 @@
 // ----------------------------------
-// RSDK Project:Sonic-T
-// Script Description: Virtua Studio Splash
-// Script Author: Geared/Klashicola
+// RSDK Project: RSDK-GDT
+// Script Description: ST Screen Object
+// Script Author: OG by Christian Whitehead/Simon Thomley/ Edited by Klashicola/Geared
+// Unpacked by Rubberduckycooly's script unpacker
 // ----------------------------------
 
 // ========================
@@ -89,30 +90,20 @@ end event
 
 
 event ObjectDraw
-	DrawSprite(0)
+	temp0 = screen.xcenter
+	if screen.xsize <= 424
+		temp0 -= 37
+	end if
+	if screen.xsize >= 425
+		temp0 -= 35
+	end if
+	DrawSpriteScreenXY(0, temp0, screen.ycenter)
 end event
 
 
 event ObjectStartup
-switch engine.deviceType
-case STANDARD
-    LoadSpriteSheet("Splash/VirtuaStudio.gif")
-	SpriteFrame(-215, -120, 426, 240, 0, 0) // #1 - The Logo itself
-	break
-case MOBILE
-    LoadSpriteSheet("Splash/VirtuaStudioMobile.gif")
-	SpriteFrame(-215, -120, 500, 240, 0, 0) // #2 - The Logo itself (mobile)
-     break
-end switch
-
-if screen.xsize == 320
-    LoadSpriteSheet("Splash/VirtuaStudio43.gif")
-	SpriteFrame(-215, -120, 320, 240, 0, 0) //  #3 - The Logo itself (classic) 
-end if
-
-	//Setup any Retro Logo
-	//Objects that are present in the level
-	
+    LoadSpriteSheet("Title/VirtuaStudio.gif")
+	SpriteFrame(-215, -120, 500, 240, 0, 0) // #0 - The Logo itself
 	arrayPos0 = 32
 	while ArrayPos0<1056
 		if logo[arrayPos0].type == TYPE_RETROLOGO
@@ -138,22 +129,7 @@ end event
 
 
 event RSDKLoad
-switch engine.deviceType
-case STANDARD
-	LoadSpriteSheet("Title/RetroLogo.gif")
-	SpriteFrame(-215, -120, 424, 240, 0, 0) // #1 - The Logo itself
-	break
-	case MOBILE
-    LoadSpriteSheet("Title/RetroLogoMobile.gif")
-    SpriteFrame(-215, -120, 624, 240, 0, 0) // #2 - The Logo itself (mobile)
-    break
-end switch
-
-if screen.xsize == 320
-  LoadSpriteSheet("Title/RetroLogoClassic.gif")
-  SpriteFrame(0, -160, -120, 320, 240, 0, 0)	// #3 - The Logo itself (classic) 
-end if
-  
-  
+    LoadSpriteSheet("Title/VirtuaStudio.gif")
+    SpriteFrame(-215, -120, 624, 240, 0, 0) // #0 - The Logo itself
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

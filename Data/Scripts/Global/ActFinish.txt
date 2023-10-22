@@ -37,6 +37,7 @@ private alias  8 : ACTFINISH_SETSCREENFADE
 
 // Player Aliases
 private alias object.value0 : player.rings
+private alias object.value42 : player.prevGravity
 
 // Game Modes
 private alias 0 : MODE_NOSAVE
@@ -46,6 +47,28 @@ private alias 2 : MODE_TIMEATTACK
 // Achievement Aliases
 private alias 6 : ACHIEVEMENT_PERFECTIONIST
 
+// Function Declarations
+reserve function ActFinish_CheckPlayerVictory
+
+private function ActFinish_CheckPlayerVictory
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		CheckNotEqual(object[currentPlayer].state, Player2_State_FlyToPlayer)
+		temp0 = checkResult
+		CheckNotEqual(object[currentPlayer].state, Player_State_Victory)
+		temp0 &= checkResult
+		CheckEqual(player[currentPlayer].prevGravity, GRAVITY_GROUND)
+		temp0 &= checkResult
+
+        if temp0 == true
+            object[currentPlayer].state			= Player_State_Victory
+            object[currentPlayer].controlMode	= CONTROLMODE_NONE
+			object[currentPlayer].speed			= 0
+			object[currentPlayer].xvel			= 0
+			object[currentPlayer].yvel			= 0
+			object[currentPlayer].animation		= ANI_VICTORY
+        end if
+	next
+end function
 
 // ========================
 // Events
@@ -190,6 +213,7 @@ event ObjectUpdate
 #platform: USE_STANDALONE
 		object.state++
 #endplatform
+		CallFunction(ActFinish_CheckPlayerVictory)
 		break
 
 	case ACTFINISH_ENTERTEXT
@@ -218,6 +242,8 @@ event ObjectUpdate
 		else
 			object.state++
 		end if
+
+		CallFunction(ActFinish_CheckPlayerVictory)
 		break
 		
 	case ACTFINISH_ACTFINISHJINGLE
@@ -226,6 +252,8 @@ event ObjectUpdate
 			object.timer = 0
 			object.state++
 		end if
+
+		CallFunction(ActFinish_CheckPlayerVictory)
 		break
 		
 	case ACTFINISH_TALLYSCORE
@@ -273,6 +301,8 @@ event ObjectUpdate
 			object.timer = 0
 			PlaySfx(SfxName[Score Total], false)
 		end if
+
+		CallFunction(ActFinish_CheckPlayerVictory)
 		break
 		
 	case ACTFINISH_GOTCONTINUE
@@ -293,6 +323,8 @@ event ObjectUpdate
 			PlaySfx(SfxName[Continue], false)
 			object.state = ACTFINISH_SHOWRESULTS
 		end if
+
+		CallFunction(ActFinish_CheckPlayerVictory)
 		break
 
 	case ACTFINISH_SHOWRESULTS
@@ -313,6 +345,8 @@ event ObjectUpdate
 			object.state++
 #endplatform
 		end if
+
+		CallFunction(ActFinish_CheckPlayerVictory)
 		break
 
 	case ACTFINISH_LOADNEXTSTAGE
@@ -553,9 +587,16 @@ event ObjectStartup
 		SpriteFrame(-94, 0, 128, 16, 34, 188)		// 0  - "KNUCKLES" large text
 		SpriteFrame(40, 0, 48, 16, 1, 205)			// 1  - "GOT" large text, note its different offset from the other two
 		break
+		
 	case PLAYER_AMY_ALONE
 		SpriteFrame(-50, 0, 54, 16, 188, 239)
 		SpriteFrame(16, 0, 48, 16, 1, 205)	
+		break
+		
+	case PLAYER_METAL_ALONE
+		SpriteFrame(-71, 0, 79, 16, 163, 188)
+		SpriteFrame(16, 0, 48, 16, 1, 205)	
+		break	
 	end switch
 
 	// Frames that are the same for everyone
@@ -602,6 +643,10 @@ event ObjectStartup
 		SpriteFrame(-8, -11, 17, 22, 212, 138)
 		SpriteFrame(-8, -11, 17, 22, 230, 138)
 		break
+	case PLAYER_METAL_ALONE
+		SpriteFrame(-8, -11, 16, 23, 178, 89)		// 28 - Metal continue frame 1
+		SpriteFrame(-8, -11, 16, 23, 195, 89)      // 29 - Metal continue frame 2
+		break	
 	end switch
 
 #platform: USE_ORIGINS

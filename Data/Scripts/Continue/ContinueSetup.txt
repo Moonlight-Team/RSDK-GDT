@@ -206,7 +206,12 @@ event ObjectStartup
 	case PLAYER_AMY_ALONE
 		// Also 172 pixels, still separate from the above for whatever reason
 		player[0].ypos = 0xAC0000
-		break		
+		break
+	
+	case PLAYER_METAL_ALONE
+		// 172 pixels
+		player[0].ypos = 0xAC0000
+		break
 	end switch
 
 	// Set the proper P1 animation here

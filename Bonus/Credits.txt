@@ -7,6 +7,9 @@ Geared - Extended Camera and  title card
 SS - For the Sleeping Sonic Team Sprite.
 
 Creators of various sprites:
+
+LegoLoco7 - Creator of various sonic sprites
+
 Sonic 1 expanded credits
 Rosabelle
 Creator of the spritesheet "Sonic 1 expanded"
@@ -57,6 +60,15 @@ E-122-Ps1
 Team forever: creators of sonic 1 forever which was used as a basis to make the Touch controls and probably several other things that I forgot.
 
 S3'14 team: part of the code for the victory pose was taken
+
+Music creators:
+Sega/Sonic Team
+John Tay
+The sonic ATS team
+The Red panda
+DonZombpepoGames
+Dischu
+Pedro Games2
 
 If any of those mentioned here do not want their work to be in GDT, please contact zero242 so that it can be removed peacefully and if it is not credited correctly as well.
 

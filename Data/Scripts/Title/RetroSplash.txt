@@ -101,7 +101,7 @@ end event
 
 
 event ObjectStartup
-    LoadSpriteSheet("Title/RetroLogo.gif")
+    LoadSpriteSheet("Title/RetroEngine.gif")
 	SpriteFrame(-215, -120, 624, 240, 0, 0) // #0 - The Logo itself
 
 	//Setup any Retro Logo
@@ -132,7 +132,7 @@ end event
 
 
 event RSDKLoad
-    LoadSpriteSheet("Title/RetroLogo.gif")
+    LoadSpriteSheet("Title/RetroEngine.gif")
 	SpriteFrame(-215, -120, 624, 240, 0, 0)
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

@@ -102,7 +102,7 @@ end event
 
 
 event ObjectStartup
-    LoadSpriteSheet("Title/VirtuaStudio.gif")
+    LoadSpriteSheet("Title/VirtuaTeam.gif")
 	SpriteFrame(-215, -120, 500, 240, 0, 0) // #0 - The Logo itself
 	arrayPos0 = 32
 	while ArrayPos0<1056

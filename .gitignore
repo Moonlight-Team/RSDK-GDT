@@ -2,11 +2,9 @@
 *.exe
 *.dll
 SData.bin
-SDL2.dll
 UData.bin
-settings.ini
 SonLVL.ini
 SonLVL-RSDK.log
 settings.ini
-settings.ini
+log.txt
 mods/modconfig.ini

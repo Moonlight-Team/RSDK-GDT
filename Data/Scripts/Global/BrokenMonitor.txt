@@ -86,6 +86,8 @@ private alias 2 : TRACK_INVINCIBLE
 // Global Variable ID Aliases
 private alias 25 : GLOBAL_PLAYERLIVES
 
+// Soundtrack
+private alias 0 : OST_JP
 
 // ========================
 // Function Declarations

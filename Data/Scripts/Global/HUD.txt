@@ -586,7 +586,7 @@ event ObjectStartup
 	SpriteFrame(0, 0, 3, 11, 37, 50) 	// #14 - Timer colon
 	SpriteFrame(0, 0, 16, 16, 83, 18) 	// #15 - Sonic life icon
 	SpriteFrame(0, 0, 16, 16, 100, 18) 	// #16 - Tails life icon
-	SpriteFrame(0, 0, 16, 16, 117, 18) 	// #17 - Knuckles life icon
+	SpriteFrame(-2 , 0, 17, 16, 178, 67) 	// #17 - Knuckles life icon
 	SpriteFrame(0, 0, 8, 8, 1, 98) 		// #18 - Yellow X Debug Icon
 	SpriteFrame(0, 0, 8, 8, 10, 98) 	// #19 - Yellow Y Debug Icon
 	SpriteFrame(0, 0, 6, 6, 19, 98) 	// #20 - Small white x Debug Icon

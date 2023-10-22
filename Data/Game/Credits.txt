@@ -1,0 +1,75 @@
+Klashicola - Level desgin (its rough but it works) and the Idea.
+
+Twanvanb1 - Parallax, Script Generator and additional Help
+
+Geared - Extended Camera and  title card
+
+SS - For the Sleeping Sonic Team Sprite.
+
+Creators of various sprites:
+Sonic 1 expanded credits
+Rosabelle
+Creator of the spritesheet "Sonic 1 expanded"
+With the help of:
+Deacon
+Nerples
+Nighty
+Krebbit
+Bennascar
+T.G.K.
+Hortinus
+Drawbits
+Kris
+Void
+Pacmanfan64
+S.T.P.
+T.T.H.8888
+
+MR.HTUBER and UNKNOWNEXE
+Spritesheet creators: "Super Sonic Sonic 1 CD-Style"
+
+The Sonic the hedgehog project
+Contributors
+Void/Executor
+Kris/Deno
+Gamejoshx9
+wiztoad
+"and more from someone I forgot along the way" said by the original creators of the spritesheet
+
+True Metal Sonic Master Sheet
+By Darkon360
+
+Credits
+CS - Half of Sonic CD Spring Frames + half of sonic 1 walking frames (Body proportions).
+Sega - Sonic CD Metal Sonic.
+
+Megamix - Knuckles Runs Fast
+someguyonline, Megamix Team
+
+Sega 
+Sonic Origins Plus
+Sonic CD 2011
+Sonic 1 2013
+
+Amy in sonic 2/CD/3
+E-122-Ps1
+
+Team forever: creators of sonic 1 forever which was used as a basis to make the Touch controls and probably several other things that I forgot.
+
+S3'14 team: part of the code for the victory pose was taken
+
+If any of those mentioned here do not want their work to be in GDT, please contact zero242 so that it can be removed peacefully and if it is not credited correctly as well.
+
+At virtua studio we don't want to affect anyone so this is a project with the purpose of helping people so we don't want problems either :D
+
+REMS - For existing. 
+
+RubberDuckyCooly - For Making The RSDK Decomps, without they're Work GDT wouldent Be possible.
+
+SEGA/The Taxman/and Headcannon (Simon Thomley) - For Making the Sonic 1 and 2 Retro Engine Ports. 
+
+This Project Was made With Love and I hope it becomes a great learning tool for People who want to get started in RetroScript.
+
+Thank you, and Happy Coding!
+
+-KC (Klashicola)

@@ -47,7 +47,8 @@ private alias 0 : CONFIGSCREEN_PLAYER_ST
 private alias 1 : CONFIGSCREEN_PLAYER_S
 private alias 2 : CONFIGSCREEN_PLAYER_T
 private alias 3 : CONFIGSCREEN_PLAYER_K
-private alias 4 : CONFIGSCREEN_PLAYER_AMY
+private alias 4 : CONFIGSCREEN_PLAYER_A
+private alias 5 : CONFIGSCREEN_PLAYER_M
 
 // Shield Types Aliases
 private alias 0 : SHIELDTYPE_S2
@@ -61,6 +62,7 @@ private alias 1 : PLAYER_TAILS_ALONE
 private alias 2 : PLAYER_KNUX_ALONE
 private alias 3 : PLAYER_SONIC_AND_TAILS
 private alias 4 : PLAYER_AMY_ALONE
+private alias 5 : PLAYER_METAL_ALONE
 
 // ========================
 // Events
@@ -130,14 +132,14 @@ event ObjectUpdate
 				if keyPress[0].left == true
 					object.playerID--
 					if object.playerID < CONFIGSCREEN_PLAYER_ST
-						object.playerID = CONFIGSCREEN_PLAYER_AMY
+						object.playerID = CONFIGSCREEN_PLAYER_M
 					end if
 					PlaySfx(SfxName[Menu Move], false)
 				end if
 
 				if keyPress[0].right == true
 					object.playerID++
-					if object.playerID > CONFIGSCREEN_PLAYER_AMY
+					if object.playerID > CONFIGSCREEN_PLAYER_M
 						object.playerID = CONFIGSCREEN_PLAYER_ST
 					end if
 					PlaySfx(SfxName[Menu Move], false)
@@ -164,8 +166,13 @@ event ObjectUpdate
 					stage.player2Enabled = false
 					break
 
-				case CONFIGSCREEN_PLAYER_AMY
+				case CONFIGSCREEN_PLAYER_A
 					stage.playerListPos  = PLAYER_AMY_ALONE
+					stage.player2Enabled = false
+					break
+					
+				case CONFIGSCREEN_PLAYER_M
+					stage.playerListPos  = PLAYER_METAL_ALONE
 					stage.player2Enabled = false
 					break
 				end switch
@@ -333,7 +340,7 @@ event ObjectUpdate
 					object.prevPlayerSelected = false
 					object.playerID--
 					if object.playerID < CONFIGSCREEN_PLAYER_ST
-						object.playerID = CONFIGSCREEN_PLAYER_AMY
+						object.playerID = CONFIGSCREEN_PLAYER_M
 					end if
 
 					switch object.playerID
@@ -357,8 +364,13 @@ event ObjectUpdate
 						stage.player2Enabled = false
 						break
 
-					case CONFIGSCREEN_PLAYER_AMY
+					case CONFIGSCREEN_PLAYER_A
 						stage.playerListPos  = PLAYER_AMY_ALONE
+						stage.player2Enabled = false
+						break
+
+					case CONFIGSCREEN_PLAYER_M
+						stage.playerListPos  = PLAYER_METAL_ALONE
 						stage.player2Enabled = false
 						break
 					end switch
@@ -378,7 +390,7 @@ event ObjectUpdate
 				if object.nextPlayerSelected == true
 					object.nextPlayerSelected = false
 					object.playerID++
-					if object.playerID > CONFIGSCREEN_PLAYER_AMY
+					if object.playerID > CONFIGSCREEN_PLAYER_M
 						object.playerID = CONFIGSCREEN_PLAYER_ST
 					end if
 
@@ -403,8 +415,13 @@ event ObjectUpdate
 						stage.player2Enabled = false
 						break
 
-					case CONFIGSCREEN_PLAYER_AMY
+					case CONFIGSCREEN_PLAYER_A
 						stage.playerListPos  = PLAYER_AMY_ALONE
+						stage.player2Enabled = false
+						break
+						
+					case CONFIGSCREEN_PLAYER_M
+						stage.playerListPos  = PLAYER_METAL_ALONE
 						stage.player2Enabled = false
 						break
 					end switch
@@ -650,8 +667,12 @@ event ObjectDraw
 		DrawSpriteScreenFX(26, FX_INK, screen.xcenter, 41)
 		break
 
-	case CONFIGSCREEN_PLAYER_AMY
+	case CONFIGSCREEN_PLAYER_A
 		DrawSpriteScreenFX(33, FX_INK, screen.xcenter, 41)
+		break
+	
+	case CONFIGSCREEN_PLAYER_M
+		DrawSpriteScreenFX(34, FX_INK, screen.xcenter, 41)
 		break
 		
 	end switch
@@ -718,7 +739,9 @@ event ObjectStartup
 	SpriteFrame(17, 0, 34, 30, 207, 314)	// Shields (S3)	- #30
 	SpriteFrame(26, 0, 16, 14, 228, 299)	// Random (S2)	- #31
 	SpriteFrame(17, 0, 16, 14, 228, 299)	// Random (S3)	- #32
-	SpriteFrame(26, 0, 17, 22, 83, 410)	//Amy		- #33
+	SpriteFrame(26, 0, 17, 22, 83, 410)	    //Amy		- #33
+	SpriteFrame(26, 0, 16, 22, 83, 433)	    //Metal		- #34
+	
 end event
 
 

@@ -98,7 +98,6 @@ private function SignPost_DebugSpawn
 	end if
 end function
 
-
 // ========================
 // Events
 // ========================
@@ -135,9 +134,14 @@ event ObjectUpdate
 				case PLAYER_KNUX_ALONE
 					EditFrame(5, -24, -16, 48, 32, 34, 67)
 					break
+					
 				case PLAYER_AMY_ALONE
 					EditFrame(5, -24, -16, 48, 32, 34, 149)
-					break			
+					break
+
+				case PLAYER_METAL_ALONE
+					EditFrame(5, -24, -16, 48, 32, 101, 165)
+					break					
 				end switch
 
 				// No achievements in debug mode!
@@ -203,9 +207,9 @@ event ObjectUpdate
 				
 				object.spinCount--
 				if object.spinCount == 0
-					SetBit(object.activePlayers, 0, true)
+					//SetBit(object.activePlayers, 0, true)
 					if stage.player2Enabled == true
-						SetBit(object.activePlayers, 1, true)
+						//SetBit(object.activePlayers, 1, true)
 					end if
 					object.state = SIGNPOST_EXITPLAYER
 				end if
@@ -214,16 +218,16 @@ event ObjectUpdate
 		break
 
 	case SIGNPOST_EXITPLAYER
-		temp0 = screen.xcenter
-		temp0 <<= 16
-		temp0 += object.xpos
-		if player[0].xpos > temp0
+		//temp0 = screen.xcenter
+		//temp0 <<= 16
+		//temp0 += object.xpos
+		//if player[0].xpos > temp0
 			PlayMusic(TRACK_ACTFINISH)
 			object.state = SIGNPOST_FINISHED
 			object[30].type = TypeName[Act Finish]
 			object[30].drawOrder = 6
 			object[30].priority = PRIORITY_ACTIVE
-		end if
+		//end if
 		break
 
 	case SIGNPOST_IDLE_VS

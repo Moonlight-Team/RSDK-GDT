@@ -30,6 +30,10 @@ private alias object.interaction : player.interaction
 private alias object.tileCollisions : player.tileCollisions
 private alias object.visible : player.visible
 
+// Pause Menu Aliases
+private alias object[10].drawOrder : PauseMenu.DrawOrder
+private alias object[10].priority : PauseMenu.Priority
+
 private alias -1 : DRAWORDER_PLAYER
 
 
@@ -187,6 +191,8 @@ event ObjectUpdate
 				end switch
 			end if
 
+			temp0 = false
+			
 			temp0 = screen.xsize
 			temp0 -= 88
 
@@ -201,15 +207,24 @@ event ObjectUpdate
 					stage.state = STAGE_FROZEN
 				else
 					// Pause the game
-					PlaySfx(SfxName[Menu Back], false)
-					engine.state = 5
+					temp0 = true
 				end if
 			end if
 
 			if keyPress[0].start == true
+				temp0 = true
+			end if
+			if temp0 == true
 				// Pause the game
-				PlaySfx(SfxName[Menu Back], false)
-				engine.state = 5
+				if object[10].value7 == 0
+					stage.state = STAGE_FROZEN
+					PlaySfx(SfxName[Menu Back], false)
+					StopSfx(SfxName[Flying])
+					StopSfx(SfxName[Tired])
+					object[10].type = TypeName[Pause Menu]
+					PauseMenu.DrawOrder = 6
+					PauseMenu.Priority = PRIORITY_ALWAYS
+				end if
 			end if
 		end if
 

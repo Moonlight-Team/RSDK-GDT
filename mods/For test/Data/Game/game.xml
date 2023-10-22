@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<game xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <palette />
+  <objects />
+  <variables>
+    <variable name="Options.DAGardenFlag" value="0" />
+    <variable name="Options.VisualModeFlag" value="0" />
+    <variable name="Options.SoundTestFlag" value="0" />
+    <variable name="Options.StageSelectFlag" value="0" />
+    <variable name="Options.TailsUnlocked" value="0" />
+    <variable name="Options.Soundtrack" value="0" />
+    <variable name="Options.OriginalControls" value="0" />
+    <variable name="TimeAttack.Round" value="0" />
+    <variable name="OpenModMenu" value="0" />
+    <variable name="ExitGame" value="0" />
+  </variables>
+  <sounds />
+  <players />
+  <presentationStages>
+    <stage name="MENU" folder="Menu" id="1" highlight="true" />
+    <stage name="CREDITS" folder="Credits" id="1" highlight="true" />
+    <stage name="TIME ATTACK" folder="TAttack" id="1" highlight="true" />
+  </presentationStages>
+  <regularStages />
+  <specialStages>
+    <stage name="SPECIAL STAGE 1" folder="SS1" id="1" highlight="true" />
+    <stage name="2" folder="SS2" id="1" highlight="true" />
+  </specialStages>
+  <bonusStages />
+</game>

@@ -891,9 +891,22 @@ event ObjectDraw
 		case 21 // ANI_HANGING
 		case 36 // ANI_CONTINUE
 		case 37 // ANI_CONTINUE_UP
+		case 44 // ANI_VICTORY
 			temp0 = player.tailFrame
 			temp0 >>= 3
 			if player.visible == true
+				temp1 = object.xpos
+				temp2 = object.ypos
+				if player.tailAnim == ANI_VICTORY
+					if player.frame > 0
+						if object.direction == FACING_RIGHT
+							temp1 += 0x20000
+						else
+							temp1 -= 0x20000
+						end if
+						temp2 -= 0x20000
+					end if
+				end if
 				DrawSpriteFX(temp0, FX_FLIP, player.xpos, player.ypos)
 			end if
 			break

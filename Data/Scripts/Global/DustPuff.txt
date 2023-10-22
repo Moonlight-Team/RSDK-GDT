@@ -66,8 +66,7 @@ event ObjectUpdate
 			object.animationTimer = 0
 		end if
 		break
-
-	default
+		default
 		if object.frame >= 11
 			object.animationTimer++
 			if object.animationTimer >= 2
@@ -112,7 +111,6 @@ event ObjectDraw
 		end if
 	else
 		// Dropdash dust variant
-
 		// Just draw the sprite
 		DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)
 	end if

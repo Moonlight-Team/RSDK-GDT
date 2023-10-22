@@ -1,0 +1,335 @@
+// ----------------------------------
+// RSDK Project: RSDK-GDT 
+// Script Description: CD Menu Control
+// Script Author: Christian Whitehead adapted with the RSDK Script Converter to v4 and with manual modifications by Zero242
+// Original v3/CD Script Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+// Aliases
+private alias object.value0 : Object.Fade
+private alias object.value1 : Object.ButtonYOffset
+private alias object.value2 : Object.DragCurrentSelection
+private alias object.value3 : Object.CurrentSelection
+private alias object.value4 : Object.ButtonScroll
+private alias object.value5 : Object.DragEnabled
+private alias object.value6 : Object.DragYOffset
+private alias object.value7 : Object.DragSmooth
+private alias object.direction : Object.YOffsetCorrection
+
+// Object[1] is a blank object only used to share values across the menu objects
+private alias object[1].value0 : Object.DragPos
+private alias object[1].value1 : Object.RecenterValue
+private alias object[1].value2 : Object.MaxButtonCount
+private alias object[1].value3 : Object.DragLimit
+private alias object[1].value4 : Object.YOffSet1 //in other scripts this is used to check inputs
+private alias object[1].value5 : Object.YOffSet2
+private alias object[1].value6 : Object.YOffSet3
+
+// Menu Button Aliases
+private alias object[34].state : MenuButton.State
+
+// States
+private alias 0 : MENUCONTROL_SETUP
+private alias 1 : MENUCONTROL_BUTTONS_MOVEIN
+private alias 2 : MENUCONTROL_CONTROLS
+private alias 3 : MENUCONTROL_BLANK
+private alias 4 : MENUCONTROL_ENTER_TIMEATTACK
+private alias 5 : MENUCONTROL_ENTER_DEMO
+private alias 6 : MENUCONTROL_MENUBUTTON_CHECK
+private alias 7 : MENUCONTROL_ENTER_TROPHIES
+private alias 8 : MENUCONTROL_ENTER_LEADERBOARDS
+private alias 9 : MENUCONTROL_ENTER_LEVELSELECT
+
+// MenuButton States
+private alias 2 : MENUBUTTON_CONFIRM_SELECTION
+
+// Presentation Stages
+private alias 2 : STAGE_P_TATTACK
+private alias 9 : STAGE_P_THROPIES
+private alias 10 : STAGE_P_LEADERBOARDS
+
+// Regular Stages
+private alias 0 : STAGE_R_PPZ1A
+
+// Global SFX
+private alias 23 : SFX_G_MENUBUTTON
+private alias 27 : SFX_G_SELECT
+
+// Soundtrack
+private alias 0 : OST_JP
+
+// Engine & CallBacks
+private alias 2 : MESSAGE_LOSTFOCUS
+
+// Device Type
+private alias 0 : RETRO_STANDARD
+
+
+event ObjectUpdate
+
+	switch object.state
+	case MENUCONTROL_SETUP
+		object.state = MENUCONTROL_BUTTONS_MOVEIN
+		Object.Fade = 384
+		SetScreenFade(0, 0, 0, 255)
+		break
+
+	case MENUCONTROL_BUTTONS_MOVEIN
+		if Object.Fade > 0
+			Object.Fade -= 8
+		else
+			object.state = MENUCONTROL_MENUBUTTON_CHECK
+		end if
+		SetScreenFade(0, 0, 0, Object.Fade)
+		break
+
+	case MENUCONTROL_CONTROLS
+		CheckEqual(Options.PhysicalControls, true)
+		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
+		if checkResult == true
+			if keyPress.up == true
+				Object.CurrentSelection--
+				if Object.CurrentSelection < 1
+					Object.CurrentSelection = 1
+				else
+					PlaySfx(SfxName[Menu Move], false)
+				end if
+			end if
+
+			if keyPress.down == true
+				Object.CurrentSelection++
+				if Object.CurrentSelection > Object.MaxButtonCount
+					Object.CurrentSelection = Object.MaxButtonCount
+				else
+					PlaySfx(SfxName[Menu Move], false)
+				end if
+			end if
+
+			temp0 = Object.CurrentSelection
+			temp0 -= Object.ButtonScroll
+			if temp0 < 1
+				Object.ButtonScroll--
+				Object.YOffsetCorrection = 3
+			end if
+
+			if temp0 > 4
+				Object.ButtonScroll++
+				Object.YOffsetCorrection = 0
+			end if
+
+			//Button Movement across the screen 
+			temp0 = Object.ButtonYOffset
+			temp0 -= 32
+
+			temp1 = Object.ButtonScroll
+			temp1 *= -60
+			temp1 -= temp0
+			temp1 += Object.YOffsetCorrection
+			temp1 >>= 2
+			Object.ButtonYOffset += temp1
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult > -1
+				Options.PhysicalControls = false
+				Object.CurrentSelection = 0
+				Object.DragCurrentSelection = 0
+			end if
+		else
+			if Object.DragCurrentSelection > 0
+				Object.CurrentSelection = Object.DragCurrentSelection
+			else
+				Object.CurrentSelection = 0
+			end if
+
+			if Object.MaxButtonCount > 4
+				CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+				if checkResult > -1
+					arrayPos0 = checkResult
+					if Object.DragEnabled == false
+						Object.DragEnabled = true
+						Object.DragPos = Object.ButtonYOffset
+						Object.DragYOffset = touchscreen[arrayPos0].ypos
+					else
+						//Dragging of buttons based on input
+						temp0 = touchscreen[arrayPos0].ypos
+						temp0 -= Object.DragYOffset
+						temp0 += Object.DragPos
+
+						Object.YOffSet3 = Object.YOffSet2
+						Object.YOffSet2 = Object.YOffSet1
+						Object.YOffSet1 = Object.DragSmooth
+
+						Object.DragSmooth = temp0
+						Object.DragSmooth -= Object.ButtonYOffset
+						Object.ButtonYOffset = temp0
+					end if
+
+					temp0 = Object.DragSmooth
+					temp0 >>= 2
+					if temp0 != 0
+						Object.CurrentSelection = 0
+						Object.DragCurrentSelection = 0
+					end if
+				else
+					if Object.DragEnabled == true
+						//Sets the position to where the buttons will go post-drag
+						Object.DragEnabled = false
+						Object.DragYOffset = Object.ButtonYOffset
+						Object.DragYOffset <<= 8
+
+						Object.DragSmooth += Object.YOffSet1
+						Object.DragSmooth += Object.YOffSet2
+						Object.DragSmooth += Object.YOffSet3
+						Object.DragSmooth >>= 2
+						Object.DragSmooth <<= 7
+
+						if Object.DragSmooth == 0
+							if Object.CurrentSelection == 0
+								Object.DragSmooth = 1 //Forces movement
+							end if
+						end if
+					end if
+
+					if Object.DragSmooth != 0
+						//Centers to whatever button is closer to the center + offset up or down depending of to where did you drag
+						Object.DragYOffset += Object.DragSmooth
+						if Object.DragYOffset < Object.DragLimit
+							Object.DragYOffset = Object.DragLimit
+							Object.DragSmooth = 0
+						end if
+						if Object.DragYOffset > 0x5A00
+							Object.DragYOffset = 0x5A00
+							Object.DragSmooth = 0
+						end if
+
+						if Object.DragSmooth > 0
+							Object.DragSmooth -= 32
+							if Object.DragSmooth < 0
+								Object.DragSmooth = 0
+							end if
+						else
+							Object.DragSmooth += 32
+							if Object.DragSmooth > 0
+								Object.DragSmooth = 0
+							end if
+						end if
+
+						Object.ButtonYOffset = Object.DragYOffset
+						Object.ButtonYOffset >>= 8
+						if Object.DragSmooth == 0
+							Object.ButtonScroll = Object.ButtonYOffset
+							Object.ButtonScroll -= 32
+							Object.ButtonScroll /= -60
+							if Object.ButtonScroll < 0
+								Object.ButtonScroll = 0
+							end if
+
+							temp0 = Object.MaxButtonCount
+							temp0 -= 4
+							if Object.ButtonScroll > temp0
+								Object.ButtonScroll = temp0
+							end if
+						end if
+					else
+						//Drag screen re-centering
+						temp0 = Object.ButtonYOffset
+						temp0 -= 32
+						Object.RecenterValue = Object.ButtonScroll
+						Object.RecenterValue *= -60
+						Object.RecenterValue -= temp0
+						Object.RecenterValue >>= 2
+						if Object.RecenterValue < -4
+							Object.RecenterValue = -4
+						end if
+						if Object.RecenterValue > 4
+							Object.RecenterValue = 4
+						end if
+						Object.ButtonYOffset += Object.RecenterValue
+					end if
+				end if
+			end if
+			if keyPress[0].up == true
+				Object.CurrentSelection = Object.MaxButtonCount
+				Options.PhysicalControls = true
+			end if
+
+			if keyPress[0].down == true
+				Object.CurrentSelection = 1
+				Options.PhysicalControls = true
+			end if
+		end if
+
+		break
+
+	case MENUCONTROL_BLANK //Used to stop the controls temporarily
+		break
+
+	case MENUCONTROL_ENTER_TIMEATTACK
+		if Object.Fade < 320
+			Object.Fade += 8
+		else
+			stage.listPos = STAGE_P_TATTACK
+			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, Object.Fade)
+		break
+
+	case MENUCONTROL_MENUBUTTON_CHECK
+		if MenuButton.State == MENUBUTTON_CONFIRM_SELECTION
+			object.state = MENUCONTROL_CONTROLS
+		end if
+		break
+
+	case MENUCONTROL_ENTER_TROPHIES //Mobile Only
+		if Object.Fade < 320
+			Object.Fade += 8
+		else
+			stage.listPos = STAGE_P_THROPIES
+			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, Object.Fade)
+
+		break
+		
+	case MENUCONTROL_ENTER_LEVELSELECT
+		if Object.Fade < 320
+			Object.Fade += 8
+		else
+			stage.listPos = 2
+			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, Object.Fade)
+		break
+
+	end switch
+end event
+
+
+event ObjectStartup
+	options.touchControls = false
+	Options.Soundtrack = saveRAM[38]
+	if Options.Soundtrack == OST_JP
+		SetMusicTrack("MainMenu.ogg", 0, 100512)
+	else
+		SetMusicTrack("MainMenuSAGE.ogg", 0, 117382)
+	end if
+	object[0].type = TypeName[Menu Control]
+	Object.ButtonYOffset[0] = 32
+	Options.PhysicalControls = false
+	PlayMusic(0)
+	Object.DragCurrentSelection[0] = 0
+end event
+
+
+// ========================
+// Editor Subs
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143) // #0 - "Script" Icon
+end event

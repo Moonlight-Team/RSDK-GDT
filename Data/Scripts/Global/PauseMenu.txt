@@ -1,6 +1,9 @@
-//-----------------Sonic CD Pause Menu Script-----------------//
-//--------Scripted by Christian Whitehead 'The Taxman'--------//
-//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+// ----------------------------------
+// RSDK Project: RSDK-GDT 
+// Script Description: CD Pause Menu
+// Script Author: Christian Whitehead adapted with the RSDK Script Converter to v4 and with manual modifications by Virtua Studio
+// Original v3/CD Script Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
 
 // Aliases
 private alias object.propertyValue : object.timerThreshold
@@ -59,6 +62,7 @@ private alias 8 : CALLBACK_BUY_FULL_GAME_SELECTED
 
 // HUD Aliases
 private alias object.value1 : object.flashingTimer
+
 
 event ObjectUpdate
 	if stage.state == STAGE_FROZEN
@@ -154,11 +158,8 @@ event ObjectUpdate
 			if checkResult == true
 				options.physicalControls = false
 			end if
-
 			if keyPress[0].up == true
-				//PlaySfx(SFX_G_MENUBUTTON, false)
 				PlaySfx(SfxName[Menu Move], false)
-
 				object.timer = 0
 				object.animationTimer = 0
 				object.frame = 0
@@ -187,9 +188,7 @@ event ObjectUpdate
 			end if
 
 			if keyPress[0].down == true
-				//PlaySfx(SFX_G_MENUBUTTON, false)
 				PlaySfx(SfxName[Menu Move], false)
-
 				object.timer = 0
 				object.animationTimer = 0
 				object.frame = 0
@@ -220,7 +219,6 @@ event ObjectUpdate
 			end if
 
 			if keyPress[0].start == true
-				//PlaySfx(SFX_G_SELECT, false)
 				PlaySfx(SfxName[Menu Select], false)
 
 				object.state = PAUSEMENU_CONFIRMED
@@ -229,7 +227,6 @@ event ObjectUpdate
 			end if
 
 			if keyPress[0].buttonA == true
-				//PlaySfx(SFX_G_SELECT, false)
 				PlaySfx(SfxName[Menu Select], false)
 				object.state = PAUSEMENU_CONFIRMED
 				object.alpha = 248
@@ -238,10 +235,8 @@ event ObjectUpdate
 
 			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
 			if checkResult > -1
-
 				options.physicalControls = false
 				object.selectedButton = -1
-
 			end if
 		else
 			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
@@ -252,9 +247,7 @@ event ObjectUpdate
 			else
 				if temp3 < 0
 					if object.selectedButton == 0
-						//PlaySfx(SFX_G_SELECT, false)
 						PlaySfx(SfxName[Menu Select], false)
-
 						object.state = PAUSEMENU_CONFIRMED
 						object.alpha = 248
 						object.timer = 0
@@ -273,9 +266,7 @@ event ObjectUpdate
 				else
 					if temp3 < 0
 						if object.selectedButton == 1
-							//PlaySfx(SFX_G_SELECT, false)
 							PlaySfx(SfxName[Menu Select], false)
-
 							object.state = PAUSEMENU_CONFIRMED
 							object.alpha = 248
 							object.timer = 0
@@ -294,9 +285,7 @@ event ObjectUpdate
 			else
 				if temp3 < 0
 					if object.selectedButton == 2
-						//PlaySfx(SFX_G_SELECT, false)
 						PlaySfx(SfxName[Menu Select], false)
-
 						object.state = PAUSEMENU_CONFIRMED
 						object.alpha = 248
 						object.timer = 0
@@ -315,9 +304,7 @@ event ObjectUpdate
 				else
 					if temp3 < 0
 						if object.selectedButton == 3
-							//PlaySfx(SFX_G_SELECT, false)
 							PlaySfx(SfxName[Menu Select], false)
-
 							object.state = PAUSEMENU_CONFIRMED
 							object.alpha = 248
 							object.timer = 0
@@ -337,9 +324,7 @@ event ObjectUpdate
 				else
 					if temp3 < 0
 						if object.selectedButton == 3
-							//PlaySfx(SFX_G_SELECT, false)
 							PlaySfx(SfxName[Menu Select], false)
-
 							object.state = PAUSEMENU_CONFIRMED
 							object.alpha = 248
 							object.timer = 0
@@ -358,7 +343,7 @@ event ObjectUpdate
 				else
 					object.selectedButton = 2
 				end if
-				options.physicalControls = true
+				options.physicalcontrols = true
 			end if
 
 			if keyPress[0].down == true
@@ -757,9 +742,9 @@ event ObjectStartup
 		break
 	end switch
 
-	SpriteFrame(-28, -14, 16, 24, 1, 103) // #0  - Sonic
-	SpriteFrame(-28, -14, 16, 24, 18, 103) // #1  - Sonic Waiting Frame 0
-	SpriteFrame(-28, -14, 16, 24, 35, 103) // #2  - Sonic Waiting Frame 1
+	SpriteFrame(-28, -14, 16, 24, 1, 103) // #0  - Shoe
+	SpriteFrame(-28, -14, 16, 24, 18, 103) // #1  - Shoe Waiting Frame 0
+	SpriteFrame(-28, -14, 16, 24, 35, 103) // #2  - Shoe Waiting Frame 1
 
 	SpriteFrame(0, 0, 128, 32, 0, 0) // #3  - Menu BG Section
 	SpriteFrame(0, -19, 128, 32, 0, 32) // #4  - Pause

@@ -1,7 +1,7 @@
 // ----------------------------------
-// RSDK Project:          Sonic Nexus v4
-// Script Description:    Parachute Object 
-// Script Author:         Twanvanb1
+// RSDK Project: RSDK-GDT
+// Script Description: Parachute Object 
+// Script Author: Christian Whitehead/Twanvanb1
 // ----------------------------------
 
 
@@ -66,8 +66,9 @@ event ObjectUpdate
 		Object[0].XVel = Object[0].Speed
 		Object.XPos = Object[0].XPos
 		Object.YPos = Object[0].YPos
+		Object.DrawOrder = 5 // first part of the fix of Sonic not holding correctly the glider/parachute
 		temp0 = Object[0].CollisionTop
-		temp0 -= 22
+		temp0 -= 19 // second part of the fix :star_struck:
 		temp0 <<= 16
 		Object.YPos += temp0
 
@@ -90,7 +91,7 @@ event ObjectUpdate
 		end if
 
 		if Object[0].JumpPress == true
-			PlaySfx(0, false)
+			PlaySfx(SfxName[Jump], false)
 			Object[0].State = Player_State_Air
 			Object[0].Animation = ANI_JUMPING
 			Object[0].YVel = -262144
@@ -136,15 +137,16 @@ event ObjectUpdate
 			Object[0].Animation = ANI_HANGING
 			Object.XPos = Object[0].XPos
 			Object.YPos = Object[0].YPos
+			Object.DrawOrder = 5 // looks like we also need to put the code here huh?
 			temp0 = Object[0].CollisionTop
-			temp0 -= 22
+			temp0 -= 19
 			temp0 <<= 16
 			Object[0].Speed = Object[0].XVel
 			Object.YPos += temp0
 			Object.State = 1
 			Object[0].YVel = 0
 			Object[0].Gravity = true
-			PlaySfx(16, false)
+			PlaySfx(SfxName[Catch], false)
 	    end if
 	end if
 	
@@ -173,9 +175,9 @@ end event
 
 event ObjectStartup
 	
-	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
 	
-	// Parachute Frames
+	//Parachute Frames
 	SpriteFrame(-24, -20, 48, 43, 50, 62)
 	SpriteFrame(-19, -20, 48, 43, 1, 106)
 	SpriteFrame(-15, -20, 48, 43, 50, 106)
@@ -193,7 +195,7 @@ end event
 
 
 event RSDKLoad
-	LoadSpriteSheet("SSZ/Gimmicks.gif")
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
 	
 	//Parachute Frames
 SpriteFrame(-24, -20, 48, 43, 50, 62)

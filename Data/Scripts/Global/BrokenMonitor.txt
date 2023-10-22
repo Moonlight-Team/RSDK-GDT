@@ -33,8 +33,11 @@ private alias 14 : MONITOR_RANDOM
 private alias 14 : MONITOR_DEBUG_SPIKES // This is strange... spikes shouldn't be here... yet is is.
 private alias 15 : MONITOR_DEBUG_SHIELD
 private alias 16 : MONITOR_DEBUG_EMERALDS
-private alias 17 : MONITOR_COUNT
 private alias 17 : MONITOR_1UP_AMY
+private alias 18 : MONITOR_1UP_METAL
+
+private alias 17 : MONITOR_COUNT
+
 // Monitor states
 private alias 0 : MONITOR_STATE_RISE
 private alias 1 : MONITOR_STATE_FADE
@@ -197,10 +200,10 @@ event ObjectUpdate
 				break
 
 			case MONITOR_SPEEDSHOES
-				if SpeedUpMusic != 0
-					if player[currentPlayer].speedShoesTimer == 0
+				if Player_superState != SUPERSTATE_SUPER
+					if SpeedUpMusic != 0
 						SetMusicTrack("SpeedShoes.ogg",0,0)
-							PlayMusic(0)
+						PlayMusic(0)
 					end if
 				end if
 
@@ -212,6 +215,7 @@ event ObjectUpdate
 			case MONITOR_1UP_TAILS
 			case MONITOR_1UP_KNUX
 			case MONITOR_1UP_AMY
+			case MONITOR_1UP_METAL
 #platform: USE_ORIGINS
 				if game.coinMode == false
 #endplatform
@@ -482,6 +486,9 @@ event ObjectStartup
 	
 	//17 - Amy Life Icon
 	SpriteFrame(-8, -9, 16, 14, 18, 201)
+	
+	//18 - Metal Life Icon
+	SpriteFrame(-8, -9, 16, 14, 35, 201) //MONITOR_1UP_METAL
 	// (The Spring Icon is unused, and so is the Mania monitor added in Origins)
 	
 	// By default, assume there isn't any water in the stage and assign a dummy function for resetting drown music

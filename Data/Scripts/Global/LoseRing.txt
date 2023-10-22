@@ -51,6 +51,41 @@ event ObjectUpdate
 				object.yvel = -0x10000
 			end if
 		end if
+	else
+		ObjectTileCollision(CSIDE_ROOF, 0, -8, PATH_A)
+		if checkResult == true
+			temp0 = object.yvel
+			temp0 >>= 2
+			object.yvel -= temp0
+			FlipSign(object.yvel)
+			if object.yvel < 0x10000
+				object.yvel = 0x10000
+			end if
+		end if
+	end if
+	
+	if object.xvel >= 0
+		ObjectTileCollision(CSIDE_LWALL, 8, 0, PATH_A)
+		if checkResult == true
+			temp0 = object.xvel
+			temp0 >>= 2
+			object.yvel -= temp0
+			FlipSign(object.xvel)
+			if object.xvel > -0x10000
+				object.xvel = -0x10000
+			end if
+		end if
+	else
+		ObjectTileCollision(CSIDE_LWALL, -8, 0, PATH_A)
+		if checkResult == true
+			temp0 = object.xvel
+			temp0 >>= 2
+			object.yvel -= temp0
+			FlipSign(object.xvel)
+			if object.xvel > 0x10000
+				object.xvel = 0x10000
+			end if
+		end if
 	end if
 
 	object.timer++

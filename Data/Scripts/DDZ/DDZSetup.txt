@@ -1,5 +1,5 @@
 // ----------------------------------
-// RSDK Project:  RSDKGDT
+// RSDK Project:  RSDK-GDT
 // Script Description: Desert Dazzle Setup Object 
 // Script Author: Twanvanb1
 // ----------------------------------
@@ -48,9 +48,13 @@ private alias 2 : MUSICEVENT_FLAG_SLOWDOWN
 
 private alias 1 : MUSIC_LOOP_DDZ
 private alias 1 : MUSIC_LOOP_DDZ_F
+private alias 176402 : MUSIC_LOOP_DDZ_SAGE //it's not the best loop in the world but it works lol
 
 private alias 38679  : MUSIC_LOOP_INV
 private alias 30897  : MUSIC_LOOP_INV_F
+
+// Soundtrack
+private alias 0 : OST_JP
 
 // ========================
 // Function Declarations
@@ -82,18 +86,30 @@ private function DDZSetup_SpeedUpMusic
 		switch music.currentTrack
 		case TRACK_STAGE
 			SetMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F)
-			SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000)
+			end if
 			break
 
 		case TRACK_INVINCIBLE
-			SetMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000)
+			end if
 			SwapMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F, 8000)
 			break
 
 		case TRACK_BOSS
 		case TRACK_DROWNING
 		case TRACK_SUPER
-			SetMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000)
+			end if
 			SetMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F)
 			break
 
@@ -114,18 +130,30 @@ private function DDZSetup_SlowDownMusic
 		switch music.currentTrack
 		case TRACK_STAGE
 			SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV)
-			SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
+			end if
 			break
 
 		case TRACK_INVINCIBLE
-			SetMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
+			end if
 			SwapMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV, 12500)
 			break
 
 		case TRACK_BOSS
 		case TRACK_DROWNING
 		case TRACK_SUPER
-			SetMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
+			end if
 			SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV)
 			break
 
@@ -146,7 +174,12 @@ event ObjectDraw
 end event
 
 event ObjectStartup
-	SetMusicTrack("DDZ.ogg", 0, MUSIC_LOOP_DDZ)
+	Options.Soundtrack = saveRAM[38]
+	if Options.Soundtrack == OST_JP
+		SetMusicTrack("DDZ.ogg", 0, MUSIC_LOOP_DDZ)
+	else
+		SetMusicTrack("DDZAlt.ogg", 0, MUSIC_LOOP_DDZ_SAGE)
+	end if
 	SpeedUpMusic = DDZSetup_SpeedUpMusic
 	SlowDownMusic = DDZSetup_SlowDownMusic
 

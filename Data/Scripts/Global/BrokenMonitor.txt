@@ -86,8 +86,6 @@ private alias 2 : TRACK_INVINCIBLE
 // Global Variable ID Aliases
 private alias 25 : GLOBAL_PLAYERLIVES
 
-// Soundtrack
-private alias 0 : OST_JP
 
 // ========================
 // Function Declarations
@@ -204,7 +202,11 @@ event ObjectUpdate
 			case MONITOR_SPEEDSHOES
 				if Player_superState != SUPERSTATE_SUPER
 					if SpeedUpMusic != 0
-						SetMusicTrack("SpeedShoes.ogg",0,0)
+						if Options.Soundtrack == false
+							SetMusicTrack("SpeedShoes.ogg",0,0)
+						else
+							SetMusicTrack("SpeedShoesSAGE.ogg",0,0)
+						end if
 						PlayMusic(0)
 					end if
 				end if
@@ -421,6 +423,7 @@ end event
 
 
 event ObjectStartup
+	Options.Soundtrack = saveRAM[38]
 	LoadSpriteSheet("Global/Items.gif")
 	
 	// 0 - Broken Monitor Frame

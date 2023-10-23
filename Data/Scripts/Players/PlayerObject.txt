@@ -2546,10 +2546,9 @@ public function Player_State_Peelout
 	end if
 	// Cancels the Peel Out, keeps the camera
 	if player.gravity == GRAVITY_AIR
-
-		player.state = Player_State_Air
-
+		player.state = Player_State_Air_NoDropDash
 		player.speed = 0
+		screen.camerastyle = CAMERASTYLE_EXTENDED
 	end if
 	
 	// Charge
@@ -3816,11 +3815,22 @@ end function
 
 
 public function Player_State_Spindash
-	if player.gravity == GRAVITY_AIR
-		player.state = Player_State_Air_NoDropDash
-		player.speed = 0
+	if player.direction == FACING_RIGHT
+		screen.camerastyle = CAMERASTYLE_EXTENDED_OFFSET_L
+	else
+		screen.camerastyle = CAMERASTYLE_EXTENDED_OFFSET_R
 	end if
-
+	// start spindash air fix - Tracker_TD
+	if player.gravity == GRAVITY_AIR
+		player.down = true
+		player.jumpPress = false
+		CallFunction(Player_State_Air)
+		CallFunction(Player_HandleGroundMovement)
+		screen.camerastyle = CAMERASTYLE_EXTENDED
+	else
+		player.speed = 0
+	end if //porteado directamente de Tracker tweaks gracias Tracker_TD :D
+	// end spindash air fix - Tracker_TD
 	if player.jumpPress == true
 		if player.abilityTimer < 0x90000
 			player.abilityTimer += 0x20000

@@ -17,6 +17,7 @@ private alias object.ypos : player.ypos
 private alias object.direction : player.direction
 private alias object.animation : player.animation
 private alias object.collisionBottom : player.collisionBottom
+private alias object.gravity: player.gravity
 
 
 // ========================
@@ -87,24 +88,27 @@ end event
 
 event ObjectDraw
 	if object.frame < 11
+		currentPlayer = object.propertyValue //Thanks tracker_td for the spindash fix :D start
 		if object.frame > 3
-			// Spindash dust variant
+			if player[currentPlayer].gravity == GRAVITY_GROUND //No dust in the air
+				// Spindash dust variant
 
-			// Seek into this object's targeted player
-			currentPlayer = object.targetPlayer
+				// Seek into this object's targeted player
+				currentPlayer = object.targetPlayer
 
-			// Make the values match
-			object.direction = player[currentPlayer].direction
-			object.xpos = player[currentPlayer].xpos
-			object.iypos = player[currentPlayer].collisionBottom
-			object.ypos += player[currentPlayer].ypos
+				// Make the values match
+				object.direction = player[currentPlayer].direction
+				object.xpos = player[currentPlayer].xpos
+				object.iypos = player[currentPlayer].collisionBottom
+				object.ypos += player[currentPlayer].ypos
 
-			// Erase this object if the player isn't spindashing
-			if player[currentPlayer].animation != ANI_SPINDASH
-				object.type = TypeName[Blank Object]
-			else
-				DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)
-			end if
+				// Erase this object if the player isn't spindashing
+				if player[currentPlayer].animation != ANI_SPINDASH
+					object.type = TypeName[Blank Object]
+				else
+					DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)
+				end if
+			end if //end of fix
 		else
 			// Dust Puff variant (from skidding and etc.)
 			DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)

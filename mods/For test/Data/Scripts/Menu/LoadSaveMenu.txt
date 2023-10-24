@@ -9,6 +9,7 @@
 private alias object.value0 : Object.FadeValue
 private alias object.value1 : Object.SelectedOption
 private alias object.direction : Object.ShowDeleteButton
+private alias object[447].direction : Object.ShowNoSaveButton
 private alias object[+4].rotation : Object.SaveMode
 private alias object[+4].value1 : DeleteConfirm.Highlight
 
@@ -42,6 +43,7 @@ private alias object.value7 : Object.GoodFutureList
 // Delete Button
 private alias object[+1].xpos : Delete.XPos
 private alias object[+1].ypos : Delete.YPos
+private alias object[+1].value47 : NoSave.YPos
 
 // States
 private alias 0 : STATE_INITIALIZE
@@ -82,6 +84,7 @@ private alias 1 : MENUBUTTON_BUTTONS_IN
 private alias 0 : OST_JP
 
 // Game Mode Aliases
+private alias 0 : MODE_NOSAVE
 private alias 1 : MODE_SAVEGAME
 
 // Save Modes
@@ -96,7 +99,8 @@ private alias 0 : BUTTON_SAVE_ONE
 private alias 1 : BUTTON_SAVE_TWO
 private alias 2 : BUTTON_SAVE_THREE
 private alias 3 : BUTTON_SAVE_FOUR
-private alias 4 : BUTTON_DELETE
+private alias 4 : BUTTON_NOSAVE
+private alias 5 : BUTTON_DELETE
 
 // Save Statuses
 private alias 0 : SAVE_NORMAL
@@ -108,7 +112,11 @@ private alias 3 : SAVE_DELETE_SELECTED
 private alias -1 : PLAYER_NONE // Touching nothing on mobile
 private alias 0 : PLAYER_SONIC
 private alias 1 : PLAYER_TAILS
-private alias 2 : PLAYER_BACK
+private alias 2 : PLAYER_KNUX
+private alias 3 : PLAYER_AMY
+private alias 4 : PLAYER_METAL
+private alias 5 : PLAYER_SONIC_TAILS
+private alias 6 : PLAYER_BACK
 
 // Delete Confirm Options
 private alias -1 : DELETE_NONE // Touching nothing on mobile
@@ -182,6 +190,13 @@ public function LoadSaveMenu_DrawSaveFiles
 				DrawSpriteScreenFX(temp1, FX_INK, object.xpos, object.ypos)
 			else
 				temp0 += 20
+			end if
+			if object.SelectedOption == BUTTON_NOSAVE
+				if object.state >= STATE_NEW_GAME_SELECTED
+					if object.state <= STATE_FADEOUT_CHARACTERSELECT
+						temp0 = 102
+					end if
+				end if
 			end if
 			DrawSpriteScreenFX(temp0, FX_INK, object.xpos, object.ypos)
 		else
@@ -260,6 +275,22 @@ public function LoadSaveMenu_DrawSaveFiles
 		temp0 <<= 1
 		temp0 += 4
 
+		if temp0 == 8
+			temp0 = 82
+		end if
+
+		if temp0 == 10
+			temp0 = 87
+		end if
+
+		if temp0 == 12
+			temp0 = 92
+		end if
+
+		if temp0 == 14
+			temp0 = 97
+		end if
+
 		temp1 = object.animationTimer
 		temp1 >>= 5
 		temp0 += temp1
@@ -278,7 +309,15 @@ public function LoadSaveMenu_DrawSaveFiles
 			temp0++
 		loop
 	else
-		DrawSpriteScreenFX(arrayPos0, FX_INK, object.xpos, object.ypos)
+		temp0 = arrayPos0
+		if object.SelectedOption == BUTTON_NOSAVE
+			if object.state >= STATE_NEW_GAME_SELECTED
+				if object.state <= STATE_FADEOUT_CHARACTERSELECT
+					temp0 = 101
+				end if
+			end if
+		end if
+		DrawSpriteScreenFX(temp0, FX_INK, object.xpos, object.ypos)
 	end if
 end function
 
@@ -299,6 +338,15 @@ public function LoadSaveMenu_DrawDeleteNoSave
 		end if
 	end if
 
+	// Draw the No Save button
+	temp6 = Delete.XPos
+	temp6 -= 66
+	if Object.SelectedOption == BUTTON_NOSAVE
+		DrawSpriteScreenXY(100, temp6, NoSave.YPos)
+	else
+		DrawSpriteScreenXY(99, temp6, NoSave.YPos)
+	end if
+
 	// Slide the Delete button in or out
 	if Object.ShowDeleteButton == true
 		if Delete.YPos > 14
@@ -310,6 +358,21 @@ public function LoadSaveMenu_DrawDeleteNoSave
 			Delete.YPos += 2
 		end if
 		DrawRect(Delete.XPos, 32, 64, 18, 96, 96, 128, 255)
+	end if
+
+	temp6 = Delete.XPos
+	temp6 -= 66
+	// Slide the No Save button in or out
+	if Object.ShowNoSaveButton == true
+		if NoSave.YPos > 14
+			NoSave.YPos -= 2
+			DrawRect(temp6, 32, 64, 18, 96, 96, 128, 255)
+		end if
+	else
+		if NoSave.YPos < 32
+			NoSave.YPos += 2
+		end if
+		DrawRect(temp6, 32, 64, 18, 96, 96, 128, 255)
 	end if
 end function
 
@@ -329,6 +392,7 @@ end function
 
 public function LoadSaveMenu_SetShowDelete
 	Object.ShowDeleteButton = false
+	Object.ShowNoSaveButton = true
 
 	// Read save files
 	arrayPos0 = 0
@@ -384,7 +448,9 @@ event ObjectUpdate
 
 		Delete.XPos = screen.xcenter
 		Delete.XPos -= 120
+		Delete.XPos += 60
 		Delete.YPos = 32
+		NoSave.YPos = 32
 
 		if Object.FadeValue < 256
 			object.alpha = Object.FadeValue
@@ -408,35 +474,35 @@ event ObjectUpdate
 		CheckEqual(Options.PhysicalControls, true)
 		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
 		if checkResult == true
-			if Object.ShowDeleteButton == false
+			if Object.SelectedOption < BUTTON_NOSAVE
 				if keyPress[0].up == true
 					Object.SelectedOption--
 					PlaySfx(SfxName[Menu Move], false)
 					if Object.SelectedOption < BUTTON_SAVE_ONE
-						Object.SelectedOption = BUTTON_SAVE_FOUR
+						Object.SelectedOption = BUTTON_NOSAVE
 					end if
 				end if
 				if keyPress[0].down == true
 					Object.SelectedOption++
 					PlaySfx(SfxName[Menu Move], false)
-					if Object.SelectedOption > BUTTON_SAVE_FOUR
+					if Object.SelectedOption > BUTTON_NOSAVE
 						Object.SelectedOption = BUTTON_SAVE_ONE
 					end if
 				end if
 			else
-				if keyPress[0].up == true
-					Object.SelectedOption--
-					PlaySfx(SfxName[Menu Move], false)
-					if Object.SelectedOption < BUTTON_SAVE_ONE
-						Object.SelectedOption = BUTTON_DELETE
-					end if
-				end if
 				if keyPress[0].down == true
-					Object.SelectedOption++
+					Object.SelectedOption = BUTTON_SAVE_ONE
 					PlaySfx(SfxName[Menu Move], false)
-					if Object.SelectedOption > BUTTON_DELETE
-						Object.SelectedOption = BUTTON_SAVE_ONE
-					end if
+				end if
+				CheckEqual(keyPress[0].left, true)
+				temp0 = checkResult
+				CheckEqual(keyPress[0].right, true)
+				temp0 |= checkResult
+				CheckEqual(object.showDeleteButton, true)
+				temp0 &= checkResult
+				if temp0 == true
+					Object.SelectedOption ^= 1
+					PlaySfx(SfxName[Menu Move], false)
 				end if
 			end if
 			// Enable touch controls if the screen is touched
@@ -472,6 +538,31 @@ event ObjectUpdate
 					end if
 				else
 					if Object.SelectedOption == BUTTON_DELETE
+						Object.SelectedOption = BUTTON_NONE
+					end if
+				end if
+			end if
+
+			// Check if the no save button is touched
+			if Object.ShowNoSaveButton == true
+				temp0 = Delete.XPos
+				temp0 -= 70
+				temp1 = temp0
+				temp1 += 72
+				CheckTouchRect(temp0, 0, temp1, 32)
+			else
+				checkResult = -1
+			end if
+
+			if checkResult > -1
+				Object.SelectedOption = BUTTON_NOSAVE
+			else
+				if temp3 < 0
+					if Object.SelectedOption == BUTTON_NOSAVE
+						keyPress[0].start = true
+					end if
+				else
+					if Object.SelectedOption == BUTTON_NOSAVE
 						Object.SelectedOption = BUTTON_NONE
 					end if
 				end if
@@ -555,11 +646,7 @@ event ObjectUpdate
 			end if
 
 			if keyPress[0].down == true
-				if Object.ShowDeleteButton == false
-					Object.SelectedOption = BUTTON_SAVE_ONE
-				else
-					Object.SelectedOption = BUTTON_DELETE
-				end if
+				Object.SelectedOption = BUTTON_NOSAVE
 				Options.PhysicalControls = true
 			end if
 		end if
@@ -580,16 +667,13 @@ event ObjectUpdate
 				switch Object.SaveMode
 				case SAVEMODE_NORMAL
 					Object.ShowDeleteButton = false
+					Object.ShowNoSaveButton = false
 					arrayPos0 = Object.SelectedOption
 					Object.SaveStatus[+ArrayPos0] = SAVE_NORMAL_SELECTED
 					object.state = STATE_SAVE_SELECTED
 					PlaySfx(SfxName[Menu Select], false)
 					if Object.StageListPos[+ArrayPos0] > 0 // Is this save used?
 						StopMusic()
-					else
-						if Options.TailsUnlocked == 2 // I have no idea what this means, this will always be false
-							StopMusic()
-						end if
 					end if
 					break
 
@@ -597,6 +681,7 @@ event ObjectUpdate
 					arrayPos0 = Object.SelectedOption
 					if Object.StageListPos[+ArrayPos0] > 0 // Is this save used?
 						Object.ShowDeleteButton = false
+						Object.ShowNoSaveButton = false
 						object.state = STATE_SAVE_SELECTED_DELETE
 						Object.SaveOneStatus = SAVE_NORMAL
 						Object.SaveTwoStatus = SAVE_NORMAL
@@ -628,6 +713,7 @@ event ObjectUpdate
 
 		if keyPress[0].buttonB == true
 			Object.ShowDeleteButton = false
+			Object.ShowNoSaveButton = false
 			Object.FadeValue = 248
 
 			object.state = STATE_EXIT
@@ -641,19 +727,21 @@ event ObjectUpdate
 			Object.FadeValue = 0
 			arrayPos0 = Object.SelectedOption
 			Object.SaveStatus[+ArrayPos0] = SAVE_NORMAL
+			if Object.SelectedOption == BUTTON_NOSAVE
+				Object.StageListPos[+ArrayPos0] = 0
+			end if
 			if Object.StageListPos[+ArrayPos0] > 0 // Is this save used?
 				object.state = STATE_LOAD_SAVE
 			else
-				if Options.TailsUnlocked < 2 // I have no idea what this means, this will always be true
-					object.state = STATE_NEW_GAME_SELECTED
+				object.state = STATE_NEW_GAME_SELECTED
 
+				object.ypos = 0
+				if Object.SelectedOption != BUTTON_NOSAVE
 					object.ypos = 40
 					object.ypos *= Object.SelectedOption
-					object.ypos += screen.ycenter
-					object.ypos -= 87
-				else
-					object.state = STATE_LOAD_NEW_GAME
 				end if
+				object.ypos += screen.ycenter
+				object.ypos -= 87
 			end if
 		end if
 		break
@@ -664,22 +752,19 @@ event ObjectUpdate
 		else
 			arrayPos0 = Object.SelectedOption
 
-			Options.GameMode = MODE_SAVEGAME
-			Options.SaveSlot = Object.SelectedOption
+			if Object.SelectedOption != BUTTON_NOSAVE
+				Options.GameMode = MODE_SAVEGAME
+				Options.SaveSlot = Object.SelectedOption
+			else
+				Options.GameMode = MODE_NOSAVE
+				Options.SaveSlot = 0
+			end if
 
 			Player.Lives = Object.Lives[+ArrayPos0]
 			Player.Score = Object.Score[+ArrayPos0]
 			Player.ScoreBonus = Object.ScoreBonus[+ArrayPos0]
 
-			//Good_Future_List = Object.GoodFutureList[+ArrayPos0]
-			//Good_Future_List &= 0xFFFF // 0b1111111111111111
-			//Good_Future_Count = 0
-			//Good_Future = false
-
-			//MetalSonic_List = Object.GoodFutureList[+ArrayPos0]
-			//MetalSonic_List >>= 16
-
-			//SpecialStage.TimeStones = Object.TimeStones[+ArrayPos0]
+			SpecialStage.Emeralds = Object.TimeStones[+ArrayPos0]
 			SpecialStage.ListPos = Object.SpecialListPos[+ArrayPos0]
 
 			LampPost.Check = 0
@@ -698,30 +783,16 @@ event ObjectUpdate
 				SpecialStage.NextZone -= 80
 				stage.activeList = SPECIAL_STAGE
 				stage.listPos = SpecialStage.ListPos
-
-				temp0 = SpecialStage.NextZone
-				temp0 %= 10
-				temp0 >>= 2
-				if temp0 == 1
-					temp1 = SpecialStage.NextZone
-					temp1 /= 10
-					temp1 <<= 1
-					//GetBit(temp0, Good_Future_List, temp1)
-					//Good_Future_Count += temp0
-				end if
-			else
-				temp0 = stage.listPos
-				temp0 %= 10
-				temp0 >>= 2
-				if temp0 == 1
-					temp1 = stage.listPos
-					temp1 /= 10
-					temp1 <<= 1
-					//GetBit(temp0, Good_Future_List, temp1)
-					//Good_Future_Count += temp0
-				end if
 			end if
 			stage.playerListPos = Object.PlayerListPos[+ArrayPos0]
+
+			if stage.playerListPos != PLAYER_SONIC_TAILS
+				if stage.playerListPos >= PLAYER_AMY
+					stage.playerListPos++
+				end if
+			else
+				stage.playerListPos = 3
+			end if
 			LoadStage()
 		end if
 		SetScreenFade(0, 0, 0, Object.FadeValue)
@@ -763,18 +834,34 @@ event ObjectUpdate
 		// 2011 Steam lacks Options.PhysicalControls, so we force it here first and the other platforms can override it
 		if checkResult == true
 			if keyPress[0].left == true
-				Object.PlayerListPos[+ArrayPos0]--
-				PlaySfx(SfxName[Menu Move], false)
-				if Object.PlayerListPos[+ArrayPos0] < PLAYER_SONIC
-					Object.PlayerListPos[+ArrayPos0] = PLAYER_TAILS
+				if Object.PlayerListPos[+ArrayPos0] != PLAYER_TAILS
+					if Object.PlayerListPos[+ArrayPos0] != PLAYER_SONIC_TAILS
+						Object.PlayerListPos[+ArrayPos0]--
+						if Object.PlayerListPos[+ArrayPos0] < PLAYER_SONIC
+							Object.PlayerListPos[+ArrayPos0] = PLAYER_METAL
+						end if
+					else
+						Object.PlayerListPos[+ArrayPos0] = PLAYER_SONIC
+					end if
+				else
+					Object.PlayerListPos[+ArrayPos0] = PLAYER_SONIC_TAILS
 				end if
+				PlaySfx(SfxName[Menu Move], false)
 			end if
 			if keyPress[0].right == true
-				Object.PlayerListPos[+ArrayPos0]++
-				PlaySfx(SfxName[Menu Move], false)
-				if Object.PlayerListPos[+ArrayPos0] > PLAYER_TAILS
-					Object.PlayerListPos[+ArrayPos0] = PLAYER_SONIC
+				if Object.PlayerListPos[+ArrayPos0] != PLAYER_SONIC
+					if Object.PlayerListPos[+ArrayPos0] != PLAYER_SONIC_TAILS
+						Object.PlayerListPos[+ArrayPos0]++
+						if Object.PlayerListPos[+ArrayPos0] > PLAYER_METAL
+							Object.PlayerListPos[+ArrayPos0] = PLAYER_SONIC
+						end if
+					else
+						Object.PlayerListPos[+ArrayPos0] = PLAYER_TAILS
+					end if
+				else
+					Object.PlayerListPos[+ArrayPos0] = PLAYER_SONIC_TAILS
 				end if
+				PlaySfx(SfxName[Menu Move], false)
 			end if
 
 			// Enable touch controls if the screen is touched
@@ -790,11 +877,11 @@ event ObjectUpdate
 			temp3 = checkResult
 
 			temp0 = screen.xcenter
-			temp0 -= 56
+			temp0 -= 120
 
-			temp1 = screen.xcenter
-			temp1 -= 8
-			CheckTouchRect(temp0, 126, temp1, 184)
+			temp1 = temp0
+			temp1 += 48
+			CheckTouchRect(temp0, 126, temp1, 170)
 			if checkResult > -1
 				Object.PlayerListPos[+ArrayPos0] = PLAYER_SONIC
 			else
@@ -810,11 +897,10 @@ event ObjectUpdate
 			end if
 
 			// Check if Tails is pressed
-			temp0 = screen.xcenter
-			temp0 += 8
-			temp1 = screen.xcenter
-			temp1 += 56
-			CheckTouchRect(temp0, 126, temp1, 184)
+			temp0 += 48
+			temp1 = temp0
+			temp1 += 48
+			CheckTouchRect(temp0, 126, temp1, 170)
 			if checkResult > -1
 				Object.PlayerListPos[+ArrayPos0] = PLAYER_TAILS
 			else
@@ -824,6 +910,85 @@ event ObjectUpdate
 					end if
 				else
 					if Object.PlayerListPos[+ArrayPos0] == PLAYER_TAILS
+						Object.PlayerListPos[+ArrayPos0] = PLAYER_NONE
+					end if
+				end if
+			end if
+
+			// Check if Knuckles is pressed
+			temp0 += 48
+			temp1 = temp0
+			temp1 += 48
+			CheckTouchRect(temp0, 126, temp1, 184)
+			if checkResult > -1
+				Object.PlayerListPos[+ArrayPos0] = PLAYER_KNUX
+			else
+				if temp3 < 0
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_KNUX
+						keyPress[0].start = true
+					end if
+				else
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_KNUX
+						Object.PlayerListPos[+ArrayPos0] = PLAYER_NONE
+					end if
+				end if
+			end if
+
+			// Check if Amy is pressed
+			temp0 += 48
+			temp1 = temp0
+			temp1 += 48
+			CheckTouchRect(temp0, 126, temp1, 184)
+			if checkResult > -1
+				Object.PlayerListPos[+ArrayPos0] = PLAYER_AMY
+			else
+				if temp3 < 0
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_AMY
+						keyPress[0].start = true
+					end if
+				else
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_AMY
+						Object.PlayerListPos[+ArrayPos0] = PLAYER_NONE
+					end if
+				end if
+			end if
+
+			// Check if Metal Sonic is pressed
+			temp0 += 48
+			temp1 = temp0
+			temp1 += 48
+			CheckTouchRect(temp0, 126, temp1, 184)
+			if checkResult > -1
+				Object.PlayerListPos[+ArrayPos0] = PLAYER_METAL
+			else
+				if temp3 < 0
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_METAL
+						keyPress[0].start = true
+					end if
+				else
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_METAL
+						Object.PlayerListPos[+ArrayPos0] = PLAYER_NONE
+					end if
+				end if
+			end if
+
+			// Now go ALL THE WAY back to Sonic
+			temp0 = screen.xcenter
+			temp0 -= 120
+
+			// And check if Sonic & Tails is being pressed
+			temp1 = temp0
+			temp1 += 96
+			CheckTouchRect(temp0, 170, temp1, 184)
+			if checkResult > -1
+				Object.PlayerListPos[+ArrayPos0] = PLAYER_SONIC_TAILS
+			else
+				if temp3 < 0
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_SONIC_TAILS
+						keyPress[0].start = true
+					end if
+				else
+					if Object.PlayerListPos[+ArrayPos0] == PLAYER_SONIC_TAILS
 						Object.PlayerListPos[+ArrayPos0] = PLAYER_NONE
 					end if
 				end if
@@ -851,7 +1016,7 @@ event ObjectUpdate
 
 			// Enable physical controls if a button is pressed
 			if keyPress[0].left == true
-				Object.PlayerListPos[+ArrayPos0] = PLAYER_TAILS
+				Object.PlayerListPos[+ArrayPos0] = PLAYER_METAL
 				Options.PhysicalControls = true
 			end if
 
@@ -869,26 +1034,15 @@ event ObjectUpdate
 			checkResult = true
 		end if
 		if checkResult == true
-			if Options.TailsUnlocked == true
-				PlaySfx(SfxName[Menu Select], false)
-				StopMusic()
-				object.state = STATE_CHARACTER_SELECTED
-			else
-				if Object.PlayerListPos[+ArrayPos0] == PLAYER_SONIC
-					PlaySfx(SfxName[Menu Select], false)
-					StopMusic()
-					object.state = STATE_CHARACTER_SELECTED
-				else
-					Object.PlayerListPos[+ArrayPos0] = PLAYER_NONE
-				end if
-			end if
+			PlaySfx(SfxName[Menu Select], false)
+			StopMusic()
+			object.state = STATE_CHARACTER_SELECTED
 		end if
 
 		if keyPress[0].buttonB == true
 			object.state = STATE_FADEOUT_CHARACTERSELECT
 			Object.FadeValue = 248
 			PlaySfx(SfxName[Menu Back], false)
-
 		end if
 		break
 
@@ -932,15 +1086,6 @@ event ObjectUpdate
 			Player.Score = 0
 			Player.ScoreBonus = 50000
 
-			//Good_Future_List = 0
-			//Good_Future_Count = 0
-			//Good_Future = false
-
-			//Transporter_Destroyed = false
-			//MetalSonic_Destroyed = false
-			//MetalSonic_List = 0
-
-			//SpecialStage.TimeStones = 0
 			SpecialStage.ListPos = STAGE_S_SS1
 
 			LampPost.Check = 0
@@ -955,6 +1100,14 @@ event ObjectUpdate
 			end if
 
 			stage.playerListPos = Object.PlayerListPos[+ArrayPos0]
+
+			if stage.playerListPos != PLAYER_SONIC_TAILS
+				if stage.playerListPos >= PLAYER_AMY
+					stage.playerListPos++
+				end if
+			else
+				stage.playerListPos = 3
+			end if
 			LoadStage()
 		end if
 		SetScreenFade(0, 0, 0, Object.FadeValue)
@@ -971,8 +1124,11 @@ event ObjectUpdate
 		break
 
 	case STATE_RETURN_TO_SAVESEL
-		temp0 = Object.SelectedOption
-		temp0 *= 40
+		temp0 = 0
+		if Object.SelectedOption != BUTTON_NOSAVE
+			temp0 = 40
+			temp0 *= Object.SelectedOption
+		end if
 		temp0 += screen.ycenter
 		temp0 -= 87
 		if object.ypos < temp0
@@ -1333,9 +1489,13 @@ event ObjectDraw
 	case STATE_RETURN_TO_SAVESEL
 		DrawSpriteScreenFX(30, FX_INK, screen.xcenter, 84)
 		temp0 = screen.xcenter
-		temp0 -= 32
+		temp0 -= 96
 		arrayPos0 = Object.SelectedOption
-		if Object.PlayerListPos[+ArrayPos0] == PLAYER_SONIC
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_SONIC)
+		temp2 = checkResult
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_SONIC_TAILS)
+		temp2 |= checkResult
+		if temp2 == true
 			DrawSpriteScreenFX(31, FX_INK, temp0, 136)
 			DrawSpriteScreenFX(36, FX_INK, temp0, 164)
 			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
@@ -1343,14 +1503,52 @@ event ObjectDraw
 			DrawSpriteScreenFX(31, FX_INK, temp0, 136)
 			DrawSpriteScreenFX(34, FX_INK, temp0, 164)
 		end if
-		temp0 += 64
-		if Object.PlayerListPos[+ArrayPos0] == PLAYER_TAILS
+		temp0 += 24
+		DrawSpriteScreenFX(96, FX_INK, temp0, 178)
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_SONIC_TAILS
+			DrawSpriteScreenFX(95, FX_INK, temp0, 178)
+		else
+			DrawSpriteScreenFX(94, FX_INK, temp0, 178)
+		end if
+		temp0 += 24
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_TAILS)
+		temp2 = checkResult
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_SONIC_TAILS)
+		temp2 |= checkResult
+		if temp2 == true
 			DrawSpriteScreenFX(32, FX_INK, temp0, 136)
 			DrawSpriteScreenFX(37, FX_INK, temp0, 164)
 			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
 		else
 			DrawSpriteScreenFX(32, FX_INK, temp0, 136)
 			DrawSpriteScreenFX(35, FX_INK, temp0, 164)
+		end if
+		temp0 += 48
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_KNUX
+			DrawSpriteScreenFX(79, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(81, FX_INK, temp0, 164)
+			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
+		else
+			DrawSpriteScreenFX(79, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(80, FX_INK, temp0, 164)
+		end if
+		temp0 += 48
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_AMY
+			DrawSpriteScreenFX(84, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(86, FX_INK, temp0, 164)
+			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
+		else
+			DrawSpriteScreenFX(84, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(85, FX_INK, temp0, 164)
+		end if
+		temp0 += 48
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_METAL
+			DrawSpriteScreenFX(89, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(91, FX_INK, temp0, 164)
+			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
+		else
+			DrawSpriteScreenFX(89, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(90, FX_INK, temp0, 164)
 		end if
 		object.alpha = 255
 		CallFunction(LoadSaveMenu_DrawSaveFiles)
@@ -1359,7 +1557,7 @@ event ObjectDraw
 	case STATE_CHARACTER_SELECTED
 		DrawSpriteScreenFX(30, FX_INK, screen.xcenter, 84)
 		temp0 = screen.xcenter
-		temp0 -= 32
+		temp0 -= 96
 		arrayPos0 = Object.SelectedOption
 
 		// Flash the border for the selected character
@@ -1367,7 +1565,11 @@ event ObjectDraw
 		temp1 &= 3
 		temp1 >>= 1
 
-		if Object.PlayerListPos[+ArrayPos0] == PLAYER_SONIC
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_SONIC)
+		temp2 = checkResult
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_SONIC_TAILS)
+		temp2 |= checkResult
+		if temp2 == true
 			if temp1 == 0
 				DrawSpriteScreenFX(31, FX_INK, temp0, 136)
 			end if
@@ -1377,8 +1579,19 @@ event ObjectDraw
 			DrawSpriteScreenFX(31, FX_INK, temp0, 136)
 			DrawSpriteScreenFX(34, FX_INK, temp0, 164)
 		end if
-		temp0 += 64
-		if Object.PlayerListPos[+ArrayPos0] == PLAYER_TAILS
+		temp0 += 24
+		DrawSpriteScreenFX(96, FX_INK, temp0, 178)
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_SONIC_TAILS
+			DrawSpriteScreenFX(95, FX_INK, temp0, 178)
+		else
+			DrawSpriteScreenFX(94, FX_INK, temp0, 178)
+		end if
+		temp0 += 24
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_TAILS)
+		temp2 = checkResult
+		CheckEqual(Object.PlayerListPos[+ArrayPos0], PLAYER_SONIC_TAILS)
+		temp2 |= checkResult
+		if temp2 == true
 			if temp1 == 0
 				DrawSpriteScreenFX(32, FX_INK, temp0, 136)
 			end if
@@ -1387,6 +1600,39 @@ event ObjectDraw
 		else
 			DrawSpriteScreenFX(32, FX_INK, temp0, 136)
 			DrawSpriteScreenFX(35, FX_INK, temp0, 164)
+		end if
+		temp0 += 48
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_KNUX
+			if temp1 == 0
+				DrawSpriteScreenFX(79, FX_INK, temp0, 136)
+			end if
+			DrawSpriteScreenFX(81, FX_INK, temp0, 164)
+			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
+		else
+			DrawSpriteScreenFX(79, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(80, FX_INK, temp0, 164)
+		end if
+		temp0 += 48
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_AMY
+			if temp1 == 0
+				DrawSpriteScreenFX(84, FX_INK, temp0, 136)
+			end if
+			DrawSpriteScreenFX(86, FX_INK, temp0, 164)
+			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
+		else
+			DrawSpriteScreenFX(84, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(85, FX_INK, temp0, 164)
+		end if
+		temp0 += 48
+		if Object.PlayerListPos[+ArrayPos0] == PLAYER_METAL
+			if temp1 == 0
+				DrawSpriteScreenFX(89, FX_INK, temp0, 136)
+			end if
+			DrawSpriteScreenFX(91, FX_INK, temp0, 164)
+			DrawSpriteScreenFX(33, FX_INK, temp0, 136)
+		else
+			DrawSpriteScreenFX(89, FX_INK, temp0, 136)
+			DrawSpriteScreenFX(90, FX_INK, temp0, 164)
 		end if
 		object.alpha = 255
 		CallFunction(LoadSaveMenu_DrawSaveFiles)
@@ -1411,6 +1657,10 @@ event ObjectDraw
 				DrawSpriteScreenXY(52, Delete.XPos, Delete.YPos)
 			end if
 		end if
+
+		temp0 = Delete.XPos
+		temp0 -= 66
+		DrawSpriteScreenXY(99, temp0, Delete.YPos)
 
 		object.ypos = screen.ycenter
 		object.ypos -= 87
@@ -1535,30 +1785,15 @@ event ObjectStartup
 
 	ReadSaveRAM()
 	Options.Soundtrack = saveRAM[38]
-	if saveRAM[36] == true
-		Options.TailsUnlocked = true
-	end if
 
 	SpriteFrame(-112, 0, 224, 16, 1, 477) // #30 - Player Select
 	SpriteFrame(-16, -20, 32, 40, 26, 357) // #31 - Sonic
-	if Options.TailsUnlocked == true
-		SpriteFrame(-16, -12, 32, 32, 59, 365) // #32 - Tails
-	else
-		SpriteFrame(-16, -12, 32, 32, 72, 332) // #32 - Locked Tails
-	end if
+	SpriteFrame(-16, -12, 32, 32, 59, 365) // #32 - Tails
 	SpriteFrame(-24, -24, 48, 48, 405, 88) // #33 - Character Border
 	SpriteFrame(-14, 0, 27, 8, 454, 88) // #34 - Sonic Name
-	if Options.TailsUnlocked == true
-		SpriteFrame(-12, 0, 24, 8, 482, 88) // #35 - Tails Name
-	else
-		SpriteFrame(-12, 0, 24, 8, 92, 365) // #35 - Tails Name Locked
-	end if
+	SpriteFrame(-12, 0, 24, 8, 482, 88) // #35 - Tails Name
 	SpriteFrame(-14, 0, 27, 8, 454, 97) // #36 - Sonic Name Highlight
-	if Options.TailsUnlocked == true
-		SpriteFrame(-12, 0, 24, 8, 482, 97) // #37 - Tails Name Highlight
-	else
-		SpriteFrame(-12, 0, 24, 8, 92, 374) // #37 - Tails Name Locked
-	end if
+	SpriteFrame(-12, 0, 24, 8, 482, 97) // #37 - Tails Name Highlight
 	SpriteFrame(224, 7, 8, 8, 404, 137) // #38 - Green Time Stone
 	SpriteFrame(232, 7, 8, 8, 413, 137) // #39 - Orange Time Stone
 	SpriteFrame(220, 15, 8, 8, 422, 137) // #40 - Yellow Time Stone
@@ -1605,6 +1840,35 @@ event ObjectStartup
 	SpriteFrame(-32, 0, 64, 21, 404, 341) // #76 - Yes Highlight
 	SpriteFrame(-32, 0, 64, 21, 404, 363) // #77 - No
 	SpriteFrame(-32, 0, 64, 21, 404, 385) // #78 - No Highlight
+
+	SpriteFrame(-13, -20, 27, 40, 1, 803) // #79 - Knuckles
+	SpriteFrame(-14, 0, 27, 8, 83, 803) // #80 - Knuckles Name
+	SpriteFrame(-14, 0, 27, 8, 83, 812) // #81 - Knuckles Name Highlight
+	SpriteFrame(3, 2, 40, 32, 131, 770) // #82 - Mini Knuckles Gear
+	SpriteFrame(3, 2, 64, 32, 131, 770) // #83 - Mini Knuckles + Hey
+
+	SpriteFrame(-10, -15, 21, 35, 29, 803) // #84 - Amy
+	SpriteFrame(-12, 0, 24, 8, 111, 803) // #85 - Amy Name
+	SpriteFrame(-12, 0, 24, 8, 111, 812) // #86 - Amy Name Highlight
+	SpriteFrame(3, 2, 40, 32, 66, 770) // #87 - Mini Amy Gear
+	SpriteFrame(3, 2, 64, 32, 66, 770) // #88 - Mini Amy + Hey
+
+	SpriteFrame(-15, -20, 31, 40, 51, 803) // #89 - Metal Sonic
+	SpriteFrame(-14, 0, 28, 8, 136, 803) // #90 - Metal Name
+	SpriteFrame(-14, 0, 28, 8, 136, 812) // #91 - Metal Name Highlight
+	SpriteFrame(3, 2, 40, 32, 1, 770) // #92 - Mini Metal Gear
+	SpriteFrame(3, 2, 64, 32, 1, 770) // #93 - Mini Metal + Hey
+
+	SpriteFrame(-8, -6, 17, 12, 83, 821) // #94 - Unselected Plus Button
+	SpriteFrame(-8, -6, 17, 12, 83, 834) // #95 - Selected Plus Button
+	SpriteFrame(-24, -8, 48, 14, 101, 821) // #96 - S/T/Plus Connector
+	SpriteFrame(3, 2, 40, 32, 196, 770) // #97 - Mini S+T Gear
+	SpriteFrame(3, 2, 64, 32, 196, 770) // #98 - Mini S+T + Hey
+
+	SpriteFrame(0, 0, 64, 18, 430, 525) // #99 - No Save (Button)
+	SpriteFrame(0, 0, 64, 18, 430, 544) // #100 - No Save Highlight
+	SpriteFrame(4, 2, 32, 32, 261, 770) // #101 - No Save Gear
+	SpriteFrame(64, 12, 55, 13, 294, 770) // #102 - No Save (Text)
 end event
 
 

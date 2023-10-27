@@ -317,7 +317,7 @@ event ObjectDraw
 	temp0 -= 0x20000
 	temp0 >>= 16
 	temp2 = 2
-	DrawRect(temp0, temp1, temp2, temp3, 0, 0, 0, 255)
+	DrawRect(temp0, temp1, temp2, temp3, 96, 96, 128, 255)
 
 	object.inkEffect = INK_ALPHA
 	switch object.state

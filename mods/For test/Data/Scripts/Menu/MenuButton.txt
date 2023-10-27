@@ -673,12 +673,12 @@ event ObjectStartup
 	Object.DragLimit = Object.ButtonCount
 	Object.DragLimit *= -30
 	Object.DragLimit <<= 8
-	SpriteFrame(0, -10, 144, 21, 259, 71) // #0 - Button
+	SpriteFrame(0, -10, 158, 21, 149, 712) // #0 - Button
 	temp0 = 0
 	temp1 = 18
 	// (#1 - #2) - Start Game, Time Attack
 	while temp0 < 2
-		SpriteFrame(19, -7, 128, 16, 1, temp1)
+		SpriteFrame(19, -6, 128, 16, 1, temp1)
 		temp1 += 17
 		temp0++
 	loop
@@ -688,12 +688,12 @@ event ObjectStartup
 		case LANG_FRENCH
 		case LANG_SPANISH
 		case LANG_JAPANESE
-			SpriteFrame(19, -7, 128, 16, 1, temp1)
+			SpriteFrame(19, -6, 128, 16, 1, temp1)
 			break
 
 		case LANG_ITALIAN
 		case LANG_DEUTSCH
-			SpriteFrame(19, -7, 128, 16, 1, 770)
+			SpriteFrame(19, -6, 128, 16, 1, 770)
 			break
 
 		end switch
@@ -702,15 +702,15 @@ event ObjectStartup
 	temp0++
 	// #4 - Leaderboards
 	if engine.onlineActive == false
-		SpriteFrame(19, -7, 128, 16, 130, 460)
+		SpriteFrame(19, -6, 128, 16, 130, 460)
 	else
-		SpriteFrame(19, -7, 128, 16, 1, temp1)
+		SpriteFrame(19, -6, 128, 16, 1, temp1)
 	end if
 	temp1 += 17
 	temp0++
 	// (#5 - #6) - Help & Options, Extras
 	while temp0 < 6
-		SpriteFrame(19, -7, 128, 16, 1, temp1)
+		SpriteFrame(19, -6, 128, 16, 1, temp1)
 		temp1 += 17
 		temp0++
 	loop
@@ -718,18 +718,18 @@ event ObjectStartup
 	temp1 = 547
 	// (#7 - #10) - Remove Ads(Mobile)/Unlock Full Game(Console), Unlock Full Game(Mobile)/Return to Arcade(Xbox), Exit Game, Soundtrack
 	while temp0 < 4
-		SpriteFrame(19, -7, 128, 16, 1, temp1)
+		SpriteFrame(19, -6, 128, 16, 1, temp1)
 		temp1 += 17
 		temp0++
 	loop
 
-	SpriteFrame(19, -7, 128, 16, 130, 120)
+	SpriteFrame(19, -6, 128, 16, 130, 120)
 	// Highlight Text
 	temp0 = 0
 	temp1 = 18
 	// (#11 - #12 Standard, #12 - #13 Mobile) - Start Game, Time Attack
 	while temp0 < 2
-		SpriteFrame(19, -7, 128, 16, 130, temp1)
+		SpriteFrame(19, -6, 128, 16, 130, temp1)
 		temp1 += 17
 		temp0++
 	loop
@@ -737,19 +737,19 @@ event ObjectStartup
 	temp0++
 	// (#14 - #16 Standard, #15 - #17 Mobile) - Leaderboards, Help & Options, Extras
 	while temp0 < 4
-		SpriteFrame(19, -7, 128, 16, 130, temp1)
+		SpriteFrame(19, -6, 128, 16, 130, temp1)
 		temp1 += 17
 		temp0++
 	loop
 
-	SpriteFrame(19, -7, 128, 16, 130, 598)
-	SpriteFrame(19, -7, 128, 16, 130, 86)
-	SpriteFrame(19, -7, 128, 16, 130, 103)
-	SpriteFrame(19, -7, 128, 16, 130, 86)
-	SpriteFrame(19, -7, 128, 16, 130, 86)
-	SpriteFrame(19, -7, 128, 16, 130, 581)
+	SpriteFrame(19, -6, 128, 16, 130, 598)
+	SpriteFrame(19, -6, 128, 16, 130, 86)
+	SpriteFrame(19, -6, 128, 16, 130, 103)
+	SpriteFrame(19, -6, 128, 16, 130, 86)
+	SpriteFrame(19, -6, 128, 16, 130, 86)
+	SpriteFrame(19, -6, 128, 16, 130, 581)
 
-	SpriteFrame(19, -7, 128, 16, 130, 598)
+	SpriteFrame(19, -6, 128, 16, 130, 598)
 end event
 
 event RSDKDraw

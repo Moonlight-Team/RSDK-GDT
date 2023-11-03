@@ -63,8 +63,6 @@ public function TailsObject_ProcessTailSprite
 	case 0 // ANI_STOPPED
 		if player.frame == 0
 			player.tailFrame++
-		if player.frame == 0
-			player.tailFrame++
 			player.tailFrame %= 40
 		end if
 		break

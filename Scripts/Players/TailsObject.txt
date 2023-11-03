@@ -1,8 +1,8 @@
 // ----------------------------------
-// RSDK Project: Sonic 2
+// RSDK Project: RSDK-GDT
 // Script Description: Tails Object Object
-// Script Author: Christian Whitehead/Simon Thomley
-// Unpacked by Rubberduckycooly's script unpacker
+// Script Author: Christian Whitehead, Nd, Geared, Klashicola, Twanvanb1, Zombstech, Zero242, Megadeglitcher
+// Original S2 Script Unpacked by Rubberduckycooly's script unpacker
 // ----------------------------------
 
 // ========================
@@ -73,9 +73,15 @@ public function TailsObject_ProcessTailSprite
 	case 21 // ANI_HANGING
 	case 36 // ANI_CONTINUE
 	case 37 // ANI_CONTINUE_UP
-	case 44 // ANi_VICTORY
+	case 44 // ANI_VICTORY
+	// Bug Details: The victory anim is a weird case, even if it's set, it somehow still doesn't makes the tails appear alongside Miles when doing his victory anim, it could be two things: 1. The anim number that's set here is incorrect. 2. We're going to need to do more coding in somewhere else on the script. For now the bug cause is unknown, while we don't find out, take this placeholder fix
 		player.tailFrame++
 		player.tailFrame %= 40
+
+		if player[1].animation == ANI_VICTORY // The placeholder fix starts here, also sorry if this breaks something in-game, i swear i'm doing the best i can for fixing this while a proper fix isn't found LOL
+			player.tailFrame++
+			player.tailFrame %= 40
+		end if
 		break
 
 	case 7 // ANI_SKIDDING

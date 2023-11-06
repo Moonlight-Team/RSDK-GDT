@@ -1,0 +1,53 @@
+// ----------------------------------
+// RSDK Project: Sonic 1 Mixed PV Port
+// Script Description: Credits
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+// ========================
+// Function Declarations
+// ========================
+
+reserve function Rock_DebugDraw
+reserve function Rock_DebugSpawn
+
+
+// ========================
+// Function Definitions
+// ========================
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+end event
+
+
+event ObjectDraw
+	DrawSprite(0)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("DDZ/Objects1.gif")
+	SpriteFrame(0, 0, 123, 93, 2, 1)
+end event
+
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("DDZ/Objects1.gif")
+	SpriteFrame(0, 0, 123, 93, 2, 1)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

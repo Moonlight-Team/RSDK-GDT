@@ -15,18 +15,20 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 * Roll Jump Lock removed
 * Pause Menu From CD
 * Main Menu From CD (work in progress)
+* 3D Special Stage
 
 # Planned Features
-* 3D Special Stage
 * Boss battle
 * DDZ Act 2
 * Badnik overhaul
 * Improved test level design
 
 # How to run
-* Get the RSDK Decomp
-* Download the Build
-* run and play!
+* Get the RSDK Decomp (Check Compat Versions)
+* Install the Code (the Releases is Outdated)
+* In Settings.ini Set ``SkipMainMenu`` To True and ``DisableFocusPause`` to 1
+* Enable the ``for Test`` Mod
+* you're ready to go!
 
 # How to Setup For making Games?
 * theres a doc included in source for your needs, but we are planning to make a wiki for GDT soon. 

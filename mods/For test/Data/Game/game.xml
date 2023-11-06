@@ -21,12 +21,13 @@
     <stage name="CREDITS" folder="Credits" id="1" highlight="true" />
     <stage name="TIME ATTACK" folder="TAttack" id="1" highlight="true" />
   </presentationStages>
-  <regularStages />
+  <regularStages>
+    <stage name="DESERT DAZZLE ZONE 2" folder="Zone01" id="2" highlight="true" />
+    <stage name="BLUEPRINT BREEZE" folder="Blueprint" id="1" highlight="true" />
+  </regularStages>
   <specialStages>
     <stage name="SPECIAL STAGE 1" folder="SS1" id="1" highlight="true" />
     <stage name="2" folder="SS2" id="1" highlight="true" />
   </specialStages>
-  <bonusStages>
-    <stage name="BLUEPRINT" folder="Blueprint" id="1" highlight="true" />
-  </bonusStages>
+  <bonusStages />
 </game>

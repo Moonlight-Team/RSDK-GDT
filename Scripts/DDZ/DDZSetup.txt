@@ -131,9 +131,14 @@ private function DDZSetup_SlowDownMusic
 		case TRACK_STAGE
 			SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV)
 			if Options.Soundtrack == OST_JP
+			if stage.actNum == 1
 				SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
 			else
 				SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
+			if stage.actNum == 2
+				SwapMusicTrack("DDZ2.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZAlt2.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
 			end if
 			break
 
@@ -176,6 +181,7 @@ end event
 event ObjectStartup
 	Options.Soundtrack = saveRAM[38]
 	if Options.Soundtrack == OST_JP
+	if stage.actNum == 1
 		SetMusicTrack("DDZ.ogg", 0, MUSIC_LOOP_DDZ)
 	else
 		SetMusicTrack("DDZAlt.ogg", 0, MUSIC_LOOP_DDZ_SAGE)

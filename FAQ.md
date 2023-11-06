@@ -20,8 +20,9 @@ A: Yes, you can make extentions for GDT to add more to the framework
 you can also you any part of the project in your own Non-GDT projects.
 We dont mind, We just want credit. 
 
-### Q: Why is it one Zone?
-A: This is a Framework, Not a game, we made the zones as a quick tech demo.
+~~### Q: Why is it one Zone?~~
+~~A: This is a Framework, Not a game, we made the zones as a quick tech demo.~~
+This is now outdated, we added a new zone in.
 
 ### Q: Does it work on Mobile
 A: yes. but if your using V4 use [RSDK VT](https://github.com/Sonic-Geared/RSDK-VT)

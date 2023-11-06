@@ -26,5 +26,7 @@
     <stage name="SPECIAL STAGE 1" folder="SS1" id="1" highlight="true" />
     <stage name="2" folder="SS2" id="1" highlight="true" />
   </specialStages>
-  <bonusStages />
+  <bonusStages>
+    <stage name="BLUEPRINT" folder="Blueprint" id="1" highlight="true" />
+  </bonusStages>
 </game>

@@ -1,0 +1,206 @@
+// ----------------------------------
+// RSDK Project:  RSDK-GDT
+// Script Description: Desert Dazzle Setup Object 
+// Script Author: Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias object.value0 	:
+private alias object.value1 	:
+private alias object.value2 	:
+private alias object.value3 	:
+private alias object.value4 	:
+private alias object.value5 	:
+private alias object.value6 	:
+private alias object.value7 	:
+private alias object.value8 	:
+private alias object.value9 	:
+private alias object.value10 	:
+
+// Tracks
+private alias 0 : TRACK_STAGE
+private alias 1 : TRACK_ACTFINISH
+private alias 2 : TRACK_INVINCIBLE
+private alias 3 : TRACK_CONTINUE
+private alias 4 : TRACK_BOSS
+private alias 5 : TRACK_GAMEOVER
+private alias 6 : TRACK_DROWNING
+private alias 7 : TRACK_SUPER
+
+// Reserved Object Slots Aliases
+private alias 10 : SLOT_ZONESETUP
+private alias 25 : SLOT_MUSICEVENT_CHANGE
+private alias 26 : SLOT_MUSICEVENT_BOSS
+
+// Music Events
+private alias 0 : MUSICEVENT_FADETOBOSS
+private alias 1 : MUSICEVENT_FADETOSTAGE
+private alias 2 : MUSICEVENT_TRANSITION
+
+private alias 0 : MUSICEVENT_FLAG_NOCHANGE
+private alias 1 : MUSICEVENT_FLAG_SPEEDUP
+private alias 2 : MUSICEVENT_FLAG_SLOWDOWN
+
+// Music Loops
+
+private alias 1 : MUSIC_LOOP_DDZ
+private alias 1 : MUSIC_LOOP_DDZ_F
+private alias 176402 : MUSIC_LOOP_DDZ_SAGE //it's not the best loop in the world but it works lol
+
+private alias 38679  : MUSIC_LOOP_INV
+private alias 30897  : MUSIC_LOOP_INV_F
+
+// Soundtrack
+private alias 0 : OST_JP
+
+// ========================
+// Function Declarations
+// ========================
+
+reserve function DDZSetup_SpeedUpMusic
+reserve function DDZSetup_SlowDownMusic
+
+// ========================
+// Static Values
+// ========================
+
+// ========================
+// Tables
+// ========================
+
+// ========================
+// Function Definitions
+// ========================
+
+private function DDZSetup_SpeedUpMusic
+	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].type, TypeName[Music Event])
+	temp0 = checkResult
+	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].propertyValue, MUSICEVENT_TRANSITION)
+	temp0 &= checkResult
+	CheckEqual(stage.musicFlag, MUSICEVENT_FLAG_NOCHANGE)
+	temp0 &= checkResult
+	if temp0 == 0
+		switch music.currentTrack
+		case TRACK_STAGE
+			SetMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000)
+			end if
+			break
+
+		case TRACK_INVINCIBLE
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000)
+			end if
+			SwapMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F, 8000)
+			break
+
+		case TRACK_BOSS
+		case TRACK_DROWNING
+		case TRACK_SUPER
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000)
+			end if
+			SetMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F)
+			break
+
+		end switch
+	else
+		stage.musicFlag = MUSICEVENT_FLAG_SPEEDUP
+	end if
+end function
+
+private function DDZSetup_SlowDownMusic
+	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].type, TypeName[Music Event])
+	temp0 = checkResult
+	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].propertyValue, MUSICEVENT_TRANSITION)
+	temp0 &= checkResult
+	CheckEqual(stage.musicFlag, MUSICEVENT_FLAG_NOCHANGE)
+	temp0 &= checkResult
+	if temp0 == 0
+		switch music.currentTrack
+		case TRACK_STAGE
+			SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
+			end if
+			break
+
+		case TRACK_INVINCIBLE
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
+			end if
+			SwapMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV, 12500)
+			break
+
+		case TRACK_BOSS
+		case TRACK_DROWNING
+		case TRACK_SUPER
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("DDZ.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_SAGE, 12500)
+			end if
+			SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV)
+			break
+
+		end switch
+	else
+		stage.musicFlag = MUSICEVENT_FLAG_SLOWDOWN
+	end if
+end function
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+end event
+
+event ObjectDraw
+end event
+
+event ObjectStartup
+	Options.Soundtrack = saveRAM[38]
+	if Options.Soundtrack == OST_JP
+		SetMusicTrack("BZ.ogg", 0, MUSIC_LOOP_DDZ)
+	else
+		SetMusicTrack("BZSAGE.ogg", 0, MUSIC_LOOP_DDZ_SAGE)
+	end if
+	SpeedUpMusic = DDZSetup_SpeedUpMusic
+	SlowDownMusic = DDZSetup_SlowDownMusic
+
+	animalType1 = TypeName[Flicky]
+	animalType2 = TypeName[Cucky]
+	object[SLOT_ZONESETUP].type = TypeName[BlueprintSetup]
+	object[SLOT_ZONESETUP].priority = PRIORITY_ACTIVE
+
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+  DrawSprite(0)
+end event
+
+event RSDKLoad
+  LoadSpriteSheet(Global/Display.gif)
+  SpriteFrame(-16, -16, 32, 32, 1, 143)
+
+  SetVariableAlias(ALIAS_VAR_PROPVAL, unused)
+end event

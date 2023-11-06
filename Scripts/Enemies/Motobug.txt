@@ -174,8 +174,6 @@ end event
 
 event ObjectStartup
 	// Check which sprites to load based on current folder
-	CheckCurrentStageFolder("Zone01")
-	if checkResult == true
 		LoadSpriteSheet("DDZ/Objects1.gif")
 		SpriteFrame(-21, -13, 40, 28, 98, 127)
 		SpriteFrame(-20, -14, 39, 29, 139, 127)

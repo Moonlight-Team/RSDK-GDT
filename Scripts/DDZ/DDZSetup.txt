@@ -180,17 +180,21 @@ end event
 
 event ObjectStartup
 	Options.Soundtrack = saveRAM[38]
+	
 	if Options.Soundtrack == OST_JP
-	if stage.actNum == 1
-		SetMusicTrack("DDZ.ogg", 0, MUSIC_LOOP_DDZ)
-	else
-		SetMusicTrack("DDZAlt.ogg", 0, MUSIC_LOOP_DDZ_SAGE)
+		if stage.actNum == 1
+			SetMusicTrack("DDZ.ogg", 0, MUSIC_LOOP_DDZ)
+		else
+			SetMusicTrack("DDZAlt.ogg", 0, MUSIC_LOOP_DDZ_SAGE)
+		end if
 	end if
+	
 	SpeedUpMusic = DDZSetup_SpeedUpMusic
 	SlowDownMusic = DDZSetup_SlowDownMusic
 
 	animalType1 = TypeName[Flicky]
 	animalType2 = TypeName[Cucky]
+	
 	object[SLOT_ZONESETUP].type = TypeName[DDZ Setup]
 	object[SLOT_ZONESETUP].priority = PRIORITY_ACTIVE
 

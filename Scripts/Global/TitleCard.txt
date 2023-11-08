@@ -258,7 +258,7 @@ event ObjectDraw
 			// the "Project Virtua" text
 			temp0 = screen.xcenter
 			temp0 -= 106
-			DrawSpriteScreenXY(29, temp0, object.redRibbon.y)
+			DrawSpriteScreenXY(30, temp0, object.redRibbon.y)
 		end if
 
 		// Act name
@@ -307,7 +307,7 @@ event ObjectDraw
 
 			// add the actnum customization from S2
 			if object.displayedActNo > 0
-				temp1 = 27
+				temp1 = 26
 				temp1 += object.displayedActNo
 				if temp1 > 30
 					temp1 = 30
@@ -353,6 +353,7 @@ event ObjectStartup
 	SpriteFrame(18, 30, 72, 24, 176, 60)	// ZONE
 	SpriteFrame(68, 60, 49, 32, 120, 26)	// ACT 1
 	SpriteFrame(68, 60, 49, 32, 170, 26)	// ACT 2
+	SpriteFrame(68, 60, 49, 32, 170, 26)	// ACT 3?
 	SpriteFrame(-3, -21, 68, 39, 107, 60)    // PROJECT VIRTUA TEXT
 
 	arrayPos0 = 32

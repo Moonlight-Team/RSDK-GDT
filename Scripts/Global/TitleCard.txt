@@ -312,7 +312,7 @@ event ObjectDraw
 				if temp1 > 30
 					temp1 = 30
 				end if
-				DrawSpriteScreenXY(temp1, temp0, 88)
+				DrawSpriteScreenXY(temp1, temp0, 102)
 			end if
 		end if
 	end if

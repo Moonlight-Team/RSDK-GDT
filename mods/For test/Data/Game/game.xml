@@ -24,6 +24,7 @@
   <regularStages>
     <stage name="DESERT DAZZLE ZONE 2" folder="Zone01" id="2" highlight="true" />
     <stage name="BLUEPRINT BREEZE" folder="Blueprint" id="1" highlight="true" />
+    <stage name="TEST ZONE  " folder="Test" id="1" highlight="true" />
   </regularStages>
   <specialStages>
     <stage name="SPECIAL STAGE 1" folder="SS1" id="1" highlight="true" />

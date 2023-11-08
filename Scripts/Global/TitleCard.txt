@@ -1,7 +1,7 @@
 // ----------------------------------
 // RSDK Project: RSDK-GDT
 // Script Description: Title Card Object
-// Script Author: Geared
+// Script Author: Geared/Twanvanb1
 // ----------------------------------
 
 // ========================
@@ -16,6 +16,7 @@ private alias object.value1 : object.actNamePos
 private alias object.value2 : object.zonePos
 private alias object.value3 : object.blueRectPos
 private alias object.value4 : object.redRibbon.y	// We miss you, Android 8...
+private alias object.value5 : object.displayedActNo
 
 // States
 private alias 0 : TITLECARD_SETUP
@@ -34,6 +35,7 @@ private alias 2 : TITLECARD_TYPE_ACT2
 private alias 3 : TITLECARD_TYPE_ACT3
 private alias 4 : TITLECARD_TYPE_ZONE
 private alias 5 : TITLECARD_TYPE_ZONE_MBZ
+
 private alias 25 : TYPE_TITLECARD
 
 // Player Aliases
@@ -76,6 +78,33 @@ event ObjectUpdate
 		object.zonePos += 160
 		object.blueRectPos = screen.xcenter
 		object.blueRectPos += 32
+		
+		//Twanvanb1 was here
+		switch object.propertyValue
+		case TITLECARD_TYPE_ACTNUM
+			object.displayedActNo  = stage.actNum
+			TitleCard_showZoneText = false
+			break
+
+		case TITLECARD_TYPE_ACT1
+			object.displayedActNo 	= 1
+			TitleCard_showZoneText 	= false
+			break
+
+		case TITLECARD_TYPE_ACT2
+			object.displayedActNo 	= 2
+			TitleCard_showZoneText 	= false
+			break
+
+		case TITLECARD_TYPE_ACT3
+			object.displayedActNo 	= 3
+			TitleCard_showZoneText 	= false
+			break
+
+		default
+			TitleCard_showZoneText = true
+			break
+		end switch
 		if credits.screen > 0
 			object.state = TITLECARD_CREDITSFADEIN
 			object.timer = 272
@@ -276,19 +305,14 @@ event ObjectDraw
 			temp0 += object.blueRectPos
 			temp0 += object.propertyValue
 
-			if stage.actNum < 4
-				temp1 = 26
-				temp1 += stage.actNum
+			// add the actnum customization from S2
+			if object.displayedActNo > 0
+				temp1 = 27
+				temp1 += object.displayedActNo
 				if temp1 > 30
 					temp1 = 30
 				end if
-				if stage.actnum == 0
-					DrawSpriteScreenXY(30, temp0, 102)
-				else
-				DrawSpriteScreenXY(temp1, temp0, 102)
-				end if
-
-
+				DrawSpriteScreenXY(temp1, temp0, 88)
 			end if
 		end if
 	end if

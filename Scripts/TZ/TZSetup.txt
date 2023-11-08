@@ -1,5 +1,5 @@
 // ----------------------------------
-// RSDK Project:  RSDKGDT
+// RSDK Project:  RSDK-GDT
 // Script Description: Desert Dazzle Setup Object 
 // Script Author: Twanvanb1
 // ----------------------------------
@@ -46,18 +46,22 @@ private alias 2 : MUSICEVENT_FLAG_SLOWDOWN
 
 // Music Loops
 
-private alias 176402 : MUSIC_LOOP_DDZ //it's not the best loop in the world but it works lol
-private alias 1 : MUSIC_LOOP_DDZ_F
+private alias 1 : MUSIC_LOOP_TZ
+private alias 1 : MUSIC_LOOP_TZ_F
+private alias 176402 : MUSIC_LOOP_TZ_SAGE //it's not the best loop in the world but it works lol
 
 private alias 38679  : MUSIC_LOOP_INV
 private alias 30897  : MUSIC_LOOP_INV_F
+
+// Soundtrack
+private alias 0 : OST_JP
 
 // ========================
 // Function Declarations
 // ========================
 
-reserve function DDZSetup_SpeedUpMusic
-reserve function DDZSetup_SlowDownMusic
+reserve function TZSetup_SpeedUpMusic
+reserve function TZSetup_SlowDownMusic
 
 // ========================
 // Static Values
@@ -71,7 +75,7 @@ reserve function DDZSetup_SlowDownMusic
 // Function Definitions
 // ========================
 
-private function DDZSetup_SpeedUpMusic
+private function TZSetup_SpeedUpMusic
 	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].type, TypeName[Music Event])
 	temp0 = checkResult
 	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].propertyValue, MUSICEVENT_TRANSITION)
@@ -82,18 +86,30 @@ private function DDZSetup_SpeedUpMusic
 		switch music.currentTrack
 		case TRACK_STAGE
 			SetMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F)
-			SwapMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F, 8000) //This doesn't really matter much lol
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("TCZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("TCZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_F, 8000)
+			end if
 			break
 
 		case TRACK_INVINCIBLE
-			SetMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("TCZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("TCZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_F, 8000)
+			end if
 			SwapMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F, 8000)
 			break
 
 		case TRACK_BOSS
 		case TRACK_DROWNING
 		case TRACK_SUPER
-			SetMusicTrack("DDZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ_F)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("TZ_F.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_F, 8000) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("TZ_F_Alt.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_F, 8000)
+			end if
 			SetMusicTrack("Invincibility_F.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV_F)
 			break
 
@@ -103,7 +119,7 @@ private function DDZSetup_SpeedUpMusic
 	end if
 end function
 
-private function DDZSetup_SlowDownMusic
+private function TZSetup_SlowDownMusic
 	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].type, TypeName[Music Event])
 	temp0 = checkResult
 	CheckEqual(object[SLOT_MUSICEVENT_CHANGE].propertyValue, MUSICEVENT_TRANSITION)
@@ -114,18 +130,30 @@ private function DDZSetup_SlowDownMusic
 		switch music.currentTrack
 		case TRACK_STAGE
 			SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV)
-			SwapMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ, 12500)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("TZ.ogg", TRACK_STAGE, MUSIC_LOOP_TZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("TZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_SAGE, 12500)
+			end if
 			break
 
 		case TRACK_INVINCIBLE
-			SetMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("TZ.ogg", TRACK_STAGE, MUSIC_LOOP_TZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("TZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_SAGE, 12500)
+			end if
 			SwapMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV, 12500)
 			break
 
 		case TRACK_BOSS
 		case TRACK_DROWNING
 		case TRACK_SUPER
-			SetMusicTrack("DDZAlt.ogg", TRACK_STAGE, MUSIC_LOOP_DDZ)
+			if Options.Soundtrack == OST_JP
+				SwapMusicTrack("TCZ.ogg", TRACK_STAGE, MUSIC_LOOP_TZ, 12500) //This doesn't really matter much lol
+			else
+				SwapMusicTrack("TCZSAGE.ogg", TRACK_STAGE, MUSIC_LOOP_TZ_SAGE, 12500)
+			end if
 			SetMusicTrack("Invincibility.ogg", TRACK_INVINCIBLE, MUSIC_LOOP_INV)
 			break
 
@@ -146,13 +174,18 @@ event ObjectDraw
 end event
 
 event ObjectStartup
-	SetMusicTrack("DDZAlt.ogg", 0, MUSIC_LOOP_DDZ)
-	SpeedUpMusic = DDZSetup_SpeedUpMusic
-	SlowDownMusic = DDZSetup_SlowDownMusic
+	Options.Soundtrack = saveRAM[38]
+	if Options.Soundtrack == OST_JP
+		SetMusicTrack("TCZ.ogg", 0, MUSIC_LOOP_TZ)
+	else
+		SetMusicTrack("TCZSAGE.ogg", 0, MUSIC_LOOP_TZ_SAGE)
+	end if
+	SpeedUpMusic = TZSetup_SpeedUpMusic
+	SlowDownMusic = TZSetup_SlowDownMusic
 
 	animalType1 = TypeName[Flicky]
 	animalType2 = TypeName[Cucky]
-	object[SLOT_ZONESETUP].type = TypeName[DDZ Setup]
+	object[SLOT_ZONESETUP].type = TypeName[TestSetup]
 	object[SLOT_ZONESETUP].priority = PRIORITY_ACTIVE
 
 end event

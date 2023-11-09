@@ -26,6 +26,7 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 # How to run
 * Get the RSDK Decomp (Check Compat Versions)
 * Install the Code (the Releases is Outdated)
+* please.. **ENABLE Txtscripts!**
 * In Settings.ini Set ``SkipMainMenu`` To True and ``DisableFocusPause`` to 1
 * Enable the ``for Test`` Mod
 * you're ready to go!

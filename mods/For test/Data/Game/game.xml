@@ -25,8 +25,7 @@
     <stage name="BLUEPRINT BREEZE" folder="Blueprint" id="1" highlight="true" />
   </regularStages>
   <specialStages>
-    <stage name="SPECIAL STAGE 1" folder="SS1" id="1" highlight="true" />
-    <stage name="2" folder="SS2" id="1" highlight="true" />
+    <stage name="Special Stage (Test)" folder="SS2" id="1" highlight="false" />
   </specialStages>
   <bonusStages />
 </game>

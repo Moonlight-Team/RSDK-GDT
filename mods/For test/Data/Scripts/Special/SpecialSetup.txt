@@ -234,7 +234,6 @@ event ObjectStartup
 	TileLayer[0].Type = LAYER_3DFLOOR
 
 	SetMusicTrack("SpecialStage.ogg", 0, true)
-	SetMusicTrack("TimeAttack.ogg", 0, true)
 	SetMusicTrack("ActComplete.ogg", 1, false)
 	
 	Stage.PauseEnabled = false

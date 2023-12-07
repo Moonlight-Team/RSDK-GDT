@@ -422,24 +422,23 @@ event ObjectUpdate
 			arrayPos0 = 0
 			arrayPos1 = 0
 			while arrayPos0 < 4
-				Object.PlayerListPos[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
-				Object.Lives[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
-				Object.Score[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
-				Object.StageListPos[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
-				Object.TimeStones[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
-				Object.SpecialListPos[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
-				Object.ScoreBonus[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
-				Object.GoodFutureList[+ArrayPos0] = saveRAM[arrayPos1]
-				arrayPos1++
+                Object.PlayerListPos[+arrayPos0] = saveRAM[arrayPos1]
+                arrayPos1++
+                Object.Lives[+arrayPos0] = saveRAM[arrayPos1]
+                arrayPos1++
+                Object.Score[+arrayPos0] = saveRAM[arrayPos1]
+                arrayPos1++
+                Object.ScoreBonus[+arrayPos0] = saveRAM[arrayPos1]
+                arrayPos1++
+                Object.StageListPos[+arrayPos0] = saveRAM[arrayPos1]
+                arrayPos1++
+                Object.TimeStones[+arrayPos0] = saveRAM[arrayPos1]
+                arrayPos1++
+                Object.SpecialListPos[+arrayPos0] = saveRAM[arrayPos1]
+                arrayPos1++
+                arrayPos1++
 
-				if Object.StageListPos[+ArrayPos0] > 0 // Is this save used?
+				if Object.StageListPos[+arrayPos0] > 0 // Is this save used?
 					Object.ShowDeleteButton = true
 				end if
 				arrayPos0++

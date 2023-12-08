@@ -167,7 +167,7 @@ event ObjectUpdate
 
 			// the Level Select, 
 			stage.activeList 		= PRESENTATION_STAGE
-			stage.listPos 			= 2
+			stage.listPos 			= 3
 			LoadStage()
 		end if
 		SetScreenFade(0x00, 0x00, 0x00, object.timer)

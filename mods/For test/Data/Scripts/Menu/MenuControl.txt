@@ -39,6 +39,7 @@ private alias 6 : MENUCONTROL_MENUBUTTON_CHECK
 private alias 7 : MENUCONTROL_ENTER_TROPHIES
 private alias 8 : MENUCONTROL_ENTER_LEADERBOARDS
 private alias 9 : MENUCONTROL_ENTER_LEVELSELECT
+private alias 10 : MENUCONTROL_EXIT_GAME
 
 // MenuButton States
 private alias 2 : MENUBUTTON_CONFIRM_SELECTION
@@ -296,6 +297,15 @@ event ObjectUpdate
 		else
 			stage.listPos = 2
 			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, Object.Fade)
+		break
+
+	case MENUCONTROL_EXIT_GAME
+		if Object.Fade < 320
+			Object.Fade += 8
+		else
+			CallNativeFunction(ExitGame)
 		end if
 		SetScreenFade(0, 0, 0, Object.Fade)
 		break

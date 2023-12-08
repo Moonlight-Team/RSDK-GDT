@@ -388,7 +388,7 @@ event ObjectUpdate
 				arrayPos1 = options.saveSlot
 				arrayPos1 <<= 3
 				if stage.player2Enabled == true
-					saveRAM[arrayPos1] = 3
+					saveRAM[arrayPos1] = 5
 				else
 					saveRAM[arrayPos1] = stage.playerListPos
 				end if

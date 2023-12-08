@@ -66,7 +66,6 @@ private alias 5 : MENUCONTROL_ENTER_DEMO
 private alias 7 : MENUCONTROL_ENTER_TROPHIES
 private alias 8 : MENUCONTROL_ENTER_LEADERBOARDS
 private alias 9 : MENUCONTROL_ENTER_LEVELSELECT
-private alias 10 : MENUCONTROL_EXIT_GAME
 
 // Menu Window States
 private alias 5 : MENUWINDOW_SOUNDTRACK_EXPAND
@@ -494,17 +493,18 @@ event ObjectUpdate
 				StopMusic()
 				object.state = MENUBUTTON_BLANK
 
-				MenuControl.State = MENUCONTROL_EXIT_GAME
+				MenuControl.State = MENUCONTROL_ENTER_TIMEATTACK
 				MenuControl.Fade = 0
 
-				MenuWindow.State = 47
 				ResetObjectEntity(63, TypeName[Blank Object], 0, 0, 0)
 				ResetObjectEntity(64, TypeName[Blank Object], 0, 0, 0)
 				ResetObjectEntity(65, TypeName[Blank Object], 0, 0, 0)
 				ResetObjectEntity(66, TypeName[Blank Object], 0, 0, 0)
-				break
 
 			case Menu_Soundtrack
+				//object.state = MENUBUTTON_BLANK
+				//MenuControl.State = MENUCONTROL_ENTER_LEVELSELECT
+				//MenuControl.Fade = 0
 				MenuHeading.State = MENUHEADING_LEAVE_SCREEN
 				MenuHeading.Header = SOUNDTRACK_HEADER
 
@@ -521,7 +521,6 @@ event ObjectUpdate
 				ResetObjectEntity(66, TypeName[Blank Object], 0, 0, 0)
 				object.type = TypeName[Blank Object]
 				break
-
 			end switch
 		end if
 		break

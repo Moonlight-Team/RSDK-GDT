@@ -5655,27 +5655,17 @@ event ObjectUpdate
 				if temp0 == GRAVITY_AIR
 					if player.prevGravity == GRAVITY_GROUND
 						player.badnikBonus = 0
-						CheckEqual(player.animation, ANI_JUMPING)
-						temp0 = checkResult
-						CheckEqual(player.animation, ANI_DROPDASH)
-						temp0 |= checkResult
-						if temp0 == true
+						if player.animation == ANI_JUMPING
 							if player.down == false
 								if player.state != Player_State_BubbleBounce
 									if player.state != Player_State_Roll
 										if player.state != Player_State_TubeRoll
-											// Fun fact: In Origins, they forgot to account for the player dropdashing
-											// So they appear to walk for a single frame before they dropdash
-											// Needless to say, no.
-											CallFunction(Player_GetDropDashCharge)
-											if temp7 < 20
-												player.animation = ANI_WALKING
-												if player.entityPos == camera[currentPlayer].target
-													camera[currentPlayer].adjustY = 0
-												end if
-
-												player.iypos += player.jumpOffset
+											player.animation = ANI_WALKING
+											if player.entityPos == camera[currentPlayer].target
+												camera[currentPlayer].adjustY = 0
 											end if
+
+											player.iypos += player.jumpOffset
 										end if
 									end if
 								end if
@@ -5754,28 +5744,17 @@ event ObjectUpdate
 			if temp0 == GRAVITY_AIR
 				if player.prevGravity == GRAVITY_GROUND
 					player.badnikBonus = 0
-					CheckEqual(player.animation, ANI_JUMPING)
-					temp0 = checkResult
-					CheckEqual(player.animation, ANI_DROPDASH)
-					temp0 |= checkResult
-					if temp0 == true
+					if player.animation == ANI_JUMPING
 						if player.down == false
 							if player.state != Player_State_BubbleBounce
 								if player.state != Player_State_Roll
 									if player.state != Player_State_TubeRoll
 										player.animation = ANI_WALKING
-										// Fun fact: In Origins, they forgot to account for the player dropdashing
-										// So they appear to walk for a single frame before they dropdash
-										// Needless to say, no.
-										CallFunction(Player_GetDropDashCharge)
-										if temp7 < 20
-											player.animation = ANI_WALKING
-											if player.entityPos == camera[currentPlayer].target
-												camera[currentPlayer].adjustY = 0
-											end if
-
-											player.iypos += player.jumpOffset
+										if player.entityPos == camera[currentPlayer].target
+											camera[currentPlayer].adjustY = 0
 										end if
+
+										player.iypos += player.jumpOffset
 									end if
 								end if
 							end if

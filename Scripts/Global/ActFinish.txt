@@ -59,14 +59,14 @@ private function ActFinish_CheckPlayerVictory
 		CheckEqual(player[currentPlayer].prevGravity, GRAVITY_GROUND)
 		temp0 &= checkResult
 
-        if temp0 == true
-            object[currentPlayer].state			= Player_State_Victory
-            object[currentPlayer].controlMode	= CONTROLMODE_NONE
+		if temp0 == true
+			object[currentPlayer].state			= Player_State_Victory
+			object[currentPlayer].controlMode	= CONTROLMODE_NONE
 			object[currentPlayer].speed			= 0
 			object[currentPlayer].xvel			= 0
 			object[currentPlayer].yvel			= 0
 			object[currentPlayer].animation		= ANI_VICTORY
-        end if
+		end if
 	next
 end function
 
@@ -367,22 +367,6 @@ event ObjectUpdate
 			StopSfx(SfxName[Tired])
 			
 			stage.listPos++
-			
-			// Hidden Palace Checks
-			if stage.listPos > 20
-				stage.listPos = 12 // Make the next stage Oil Ocean Zone Act 1
-				if options.stageSelectFlag == false
-					if stage.debugMode == false
-						if options.gameMode == MODE_NOSAVE
-							ReadSaveRAM()
-							saveRAM[46] = true // "unlockedHPZ"
-							WriteSaveRAM()
-						else
-							saveRAM[46] = true // "unlockedHPZ"
-						end if
-					end if
-				end if
-			end if
 
 			if options.gameMode == MODE_SAVEGAME
 				arrayPos1 = options.saveSlot
@@ -390,13 +374,20 @@ event ObjectUpdate
 				if stage.player2Enabled == true
 					saveRAM[arrayPos1] = 5
 				else
-					saveRAM[arrayPos1] = stage.playerListPos
-				end if
-				if stage.playerListPos == 4
-					saveRAM[arrayPos1]--
-				end if
-				if stage.playerListPos == 5
-					saveRAM[arrayPos1]--
+					switch stage.playerListPos
+					default
+						saveRAM[arrayPos1] = stage.playerListPos
+						break
+						
+					case PLAYER_AMY_ALONE
+						saveRAM[arrayPos1] = 3
+						break
+						
+					case PLAYER_METAL_ALONE
+						saveRAM[arrayPos1] = 4
+						break
+						
+					end switch
 				end if
 
 				arrayPos1++

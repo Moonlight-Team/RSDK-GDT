@@ -392,6 +392,12 @@ event ObjectUpdate
 				else
 					saveRAM[arrayPos1] = stage.playerListPos
 				end if
+				if stage.playerListPos == 4
+					saveRAM[arrayPos1]--
+				end if
+				if stage.playerListPos == 5
+					saveRAM[arrayPos1]--
+				end if
 
 				arrayPos1++
 				saveRAM[arrayPos1] = player.lives

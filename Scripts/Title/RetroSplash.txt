@@ -80,6 +80,7 @@ event ObjectUpdate
 				logo.type++
 				else
 				ResetObjectEntity(object.entityPos, TypeName[ST Screen], 0, object.xpos, object.ypos)
+				LoadPalette("VSS.act", 0, 0, 0, 256)
 				SetScreenFade(0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
 			end if
 			break

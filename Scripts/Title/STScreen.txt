@@ -10,6 +10,7 @@
 // ========================
 
 private alias object.value0 : object.whatever
+private alias object.value1 : object.temptimer
 
 // States
 private alias 0 : RETROLOGO_INITIALISE
@@ -48,20 +49,22 @@ private alias 2 : PLAYER_KNUX_ALONE
 event ObjectUpdate
 		switch object.state
 			case RETROLOGO_INITIALISE
-			LoadPalette("VSS.act", 0, 0, 0, 256)
 			logo.state = 1
 			PlaySfx(SfxName[VT], false)
 			object.whatever = 256
 			SetScreenFade(0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+			object.temptimer++
 			break
 
 		case RETROLOGO_FADEFROMBLACK
+			LoadPalette("VSS.act", 0, 0, 0, 257)
 			if object.whatever > 0
 				object.whatever -= 4
 			else
 				logo.state = 2
 			end if
 			SetScreenFade(0x00, 0x00, 0x00, object.whatever, 0x00, 0x00)
+			object.temptimer++
 			break
 
 		case RETROLOGO_WAIT
@@ -97,7 +100,9 @@ event ObjectDraw
 	if screen.xsize >= 425
 		temp0 -= 35
 	end if
-	DrawSpriteScreenXY(0, temp0, screen.ycenter)
+	if object.temptimer >= 2
+		DrawSpriteScreenXY(0, temp0, screen.ycenter)
+	end if
 end event
 
 

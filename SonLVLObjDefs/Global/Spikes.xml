@@ -43,7 +43,7 @@
       <Condition property="Direction" value="Down" />
 	  <!-- Intentional, S2 gives downwards facing spikes the FLIP_Y attr too
 		   May just migrate this obj def to C# to avoid this weird overlap -->
-      <ImageRef image="down" />
+      <ImageRef image="up" />
     </DisplayOption>
   </Display>
 </ObjDef>

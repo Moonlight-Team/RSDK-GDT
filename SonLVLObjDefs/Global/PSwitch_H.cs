@@ -23,21 +23,19 @@ namespace S2ObjectDefinitions.Global
 			int index = 0;
 			for (int i = 0; i < 8; i++)
 			{
-				sprites[index] = new Sprite(sheet.GetSection(42 + (i * 17), 130, 16, 16), -8, -8);
-				index++;
+				sprites[index++] = new Sprite(sheet.GetSection(42 + (i * 17), 130, 16, 16), -8, -8);
 			}
 			
 			for (int i = 0; i < 8; i++)
 			{
-				sprites[index] = new Sprite(sheet.GetSection(42 + (i * 17), 147, 16, 16), -8, -8);
-				index++;
+				sprites[index++] = new Sprite(sheet.GetSection(42 + (i * 17), 147, 16, 16), -8, -8);
 			}
 			
-			sprites[16] = new Sprite(sheet.GetSection(42, 164, 16, 16), -8, -8);
-			sprites[17] = new Sprite(sheet.GetSection(59, 164, 16, 16), -8, -8);
-			sprites[18] = new Sprite(sheet.GetSection(76, 164, 16, 16), -8, -8);
-			sprites[19] = new Sprite(sheet.GetSection(93, 164, 16, 16), -8, -8);
-			sprites[20] = new Sprite(sheet.GetSection(93, 113, 16, 16), -8, -8);
+			sprites[index++] = new Sprite(sheet.GetSection(42, 164, 16, 16), -8, -8);
+			sprites[index++] = new Sprite(sheet.GetSection(59, 164, 16, 16), -8, -8);
+			sprites[index++] = new Sprite(sheet.GetSection(76, 164, 16, 16), -8, -8);
+			sprites[index++] = new Sprite(sheet.GetSection(93, 164, 16, 16), -8, -8);
+			sprites[index++] = new Sprite(sheet.GetSection(93, 113, 16, 16), -8, -8);
 			
 			properties = new PropertySpec[7];
 			properties[0] = new PropertySpec("Size", typeof(int), "Extended",
@@ -49,7 +47,7 @@ namespace S2ObjectDefinitions.Global
 					{ "32 Nodes", 3 }
 				},
 				(obj) => obj.PropertyValue & 3,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 252) | (byte)((int)value)));
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~3) | (int)value));
 			
 			properties[1] = new PropertySpec("Top Collision Plane", typeof(int), "Extended",
 				"Which plane is above.", null, new Dictionary<string, int>
@@ -58,7 +56,7 @@ namespace S2ObjectDefinitions.Global
 					{ "Plane B", 4 }
 				},
 				(obj) => obj.PropertyValue & 4,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 251) | (byte)((int)value)));
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~4) | (int)value));
 			
 			properties[2] = new PropertySpec("Bottom Collision Plane", typeof(int), "Extended",
 				"Which plane is below.", null, new Dictionary<string, int>
@@ -67,7 +65,7 @@ namespace S2ObjectDefinitions.Global
 					{ "Plane B", 8 }
 				},
 				(obj) => obj.PropertyValue & 8,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 247) | (byte)((int)value)));
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~8) | (int)value));
 			
 			properties[3] = new PropertySpec("Top Draw Order", typeof(int), "Extended",
 				"Which draw layer is above.", null, new Dictionary<string, int>
@@ -76,7 +74,7 @@ namespace S2ObjectDefinitions.Global
 					{ "High Layer", 16 }
 				},
 				(obj) => obj.PropertyValue & 16,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 239) | (byte)((int)value)));
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~16) | (int)value));
 			
 			properties[4] = new PropertySpec("Bottom Draw Order", typeof(int), "Extended",
 				"Which draw layer is below.", null, new Dictionary<string, int>
@@ -85,7 +83,7 @@ namespace S2ObjectDefinitions.Global
 					{ "High Layer", 32 }
 				},
 				(obj) => obj.PropertyValue & 32,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 223) | (byte)((int)value)));
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~32) | (int)value));
 			
 			properties[5] = new PropertySpec("Only Draw Order", typeof(int), "Extended",
 				"If only Draw Order should be affected.", null, new Dictionary<string, int>
@@ -94,7 +92,7 @@ namespace S2ObjectDefinitions.Global
 					{ "True", 64 }
 				},
 				(obj) => obj.PropertyValue & 64,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 191) | (byte)((int)value)));
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~64) | (int)value));
 			
 			properties[6] = new PropertySpec("Grounded", typeof(int), "Extended",
 				"If only grounded players should be affected.", null, new Dictionary<string, int>
@@ -103,12 +101,7 @@ namespace S2ObjectDefinitions.Global
 					{ "True", 128 }
 				},
 				(obj) => obj.PropertyValue & 128,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 127) | (byte)((int)value)));
-		}
-		
-		public override byte DefaultSubtype
-		{
-			get { return 0; }
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~128) | (int)value));
 		}
 		
 		public override PropertySpec[] CustomProperties
@@ -123,36 +116,33 @@ namespace S2ObjectDefinitions.Global
 
 		public override Sprite Image
 		{
-			get { return sprites[16]; }
+			get { return sprites[0]; }
 		}
 
 		public override Sprite SubtypeImage(byte subtype)
 		{
-			return sprites[16];
+			return sprites[0];
 		}
 
 		public override Sprite GetSprite(ObjectEntry obj)
 		{
 			int count = Math.Max((1 << ((obj.PropertyValue & 3) + 2)), 1);
-			int frame = (obj.PropertyValue >> 2) & 15;
-			int temp = obj.PropertyValue & 64;
-			if (temp != 0)
-				frame = (frame >> 2) + 16;
 			int sx = -(((count) * 16) / 2) + 8;
+			
+			int index = (obj.PropertyValue >> 2) & 15;
+			if ((obj.PropertyValue & 64) == 64)
+				index = (index >> 2) + 16;
+			
+			Sprite frame = new Sprite(sprites[index]);
+			if (obj.PropertyValue > 0x7f) // Grounded, add back sprite
+				frame = new Sprite(sprites[20], frame);
+			
 			List<Sprite> sprs = new List<Sprite>();
 			for (int i = 0; i < count; i++)
 			{
-				if (obj.PropertyValue > 127)
-				{
-					Sprite back = new Sprite(sprites[16]);
-					back.Offset(sx + (i * 16), 0);
-					sprs.Add(back);
-				}
-				
-				Sprite tmp = new Sprite(sprites[frame]);
-				tmp.Offset(sx + (i * 16), 0);
-				sprs.Add(tmp);
+				sprs.Add(new Sprite(frame, sx + (i * 16), 0));
 			}
+			
 			return new Sprite(sprs.ToArray());
 		}
 	}

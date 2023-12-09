@@ -8,14 +8,10 @@ namespace S2ObjectDefinitions.Global
 {
 	class Spikes : ObjectDefinition
 	{
-		private PropertySpec[] properties;
+		private PropertySpec[] properties = new PropertySpec[3];
 		private readonly Sprite[] sprites = new Sprite[4];
+		private readonly Sprite[] debug   = new Sprite[4];
 		
-		public override ReadOnlyCollection<byte> Subtypes
-		{
-			get { return new ReadOnlyCollection<byte>(new List<byte>()); }
-		}
-
 		public override void Init(ObjectData data)
 		{
 			BitmapBits sheet = LevelData.GetSpriteSheet("Global/Items2.gif");
@@ -24,8 +20,7 @@ namespace S2ObjectDefinitions.Global
 			sprites[2] = new Sprite(sheet.GetSection(215, 132, 32, 32), -16, -16);
 			sprites[3] = new Sprite(sheet.GetSection(215, 99, 32, 32), -16, -16);
 			
-			properties = new PropertySpec[3];
-			properties[0] = new PropertySpec("Orientation", typeof(int), "Extended",
+			properties[0] = new PropertySpec("Direction", typeof(int), "Extended",
 				"Which way the Spikes are facing.", null, new Dictionary<string, int>
 				{
 					{ "Up", 0 },
@@ -33,29 +28,38 @@ namespace S2ObjectDefinitions.Global
 					{ "Left", 2 },
 					{ "Down", 3 }
 				},
-				(obj) => (obj.PropertyValue & 3),
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 252) | (byte)((int)value)));
+				(obj) => obj.PropertyValue & 3,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~3) | (int)value));
 			
-			properties[1] = new PropertySpec("Moving", typeof(int), "Extended",
-				"If these Spikes are retracting or not. Their position in the scene is their extended position.", null, new Dictionary<string, int>
-				{
-					{ "False", 0 },
-					{ "True", 128 }
-				},
-				(obj) => (obj.PropertyValue & 128),
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 127) | (byte)((int)value)));
+			properties[1] = new PropertySpec("Moving", typeof(bool), "Extended",
+				"If the Spikes should peek in and out.", null,
+				(obj) => obj.PropertyValue > 3,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 3) | ((bool)value ? 0x80 : 0)));
 			
 			properties[2] = new PropertySpec("Parent Offset", typeof(int), "Extended",
-				"The entity pos offset of these Spikes' parent. Only applicable if state is set to 5, to be carried by another object.", null,
+				"The object slot offset of this Spikes' parent, used for series of vertically retracting spikes.", null,
 				(obj) => ((V4ObjectEntry)obj).Value2,
-				(obj, value) => ((V4ObjectEntry)obj).Value2 = ((int)value));
+				(obj, value) =>
+				{
+					((V4ObjectEntry)obj).Value2 = (int)value;
+					((V4ObjectEntry)obj).State = ((int)value == 0) ? 0 : 5; // if non-zero value, then set state to 5, otherwise reset it
+				});
+			
+			BitmapBits bitmap = new BitmapBits(33, 33);
+			bitmap.DrawRectangle(6, 0, 0, 31, 31); // LevelData.ColorWhite
+			debug[0] = new Sprite(bitmap, -16,  16);
+			debug[1] = new Sprite(bitmap, -48, -16);
+			debug[2] = new Sprite(bitmap,  16, -16);
+			debug[3] = new Sprite(bitmap, -16, -48);
 		}
 		
-		public override byte DefaultSubtype
+		public override ReadOnlyCollection<byte> Subtypes
 		{
-			get { return 0; }
+			// moving spikes are iffy, in ported zones they use the top bit while in new scenes (hpz, probably some origins missions) they use the 3rd bit
+			// since most levels use the top bit, let's stick with that
+			get { return new ReadOnlyCollection<byte>(new byte[] { 0, 1, 2, 3, 0x80, 0x81, 0x82, 0x83 }); }
 		}
-		
+
 		public override PropertySpec[] CustomProperties
 		{
 			get { return properties; }
@@ -63,7 +67,12 @@ namespace S2ObjectDefinitions.Global
 
 		public override string SubtypeName(byte subtype)
 		{
-			return null;
+			string[] directions = { "Up", "Right", "Left", "Down" };
+			string name = "Facing " + directions[subtype & 3];
+			
+			if (subtype > 3) name += " (Moving)";
+			
+			return name;
 		}
 
 		public override Sprite Image
@@ -73,12 +82,17 @@ namespace S2ObjectDefinitions.Global
 
 		public override Sprite SubtypeImage(byte subtype)
 		{
-			return sprites[0];
+			return sprites[subtype & 3];
 		}
 
 		public override Sprite GetSprite(ObjectEntry obj)
 		{
 			return sprites[obj.PropertyValue & 3];
+		}
+		
+		public override Sprite GetDebugOverlay(ObjectEntry obj)
+		{
+			return (obj.PropertyValue > 3) ? debug[obj.PropertyValue & 3] : null;
 		}
 	}
 }

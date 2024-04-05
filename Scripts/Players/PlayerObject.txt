@@ -1,8 +1,7 @@
 // ----------------------------------
-// RSDK Project: RSDK-GDT
-// Script Description: Player Object
-// Script Author: Christian Whitehead, Nd, Geared, Klashicola, Twanvanb1, Zombstech, Zero242, Megadeglitcher
-// Original S2 Script Unpacked by Rubberduckycooly's script unpacker
+// RSDK Project: Virtua Scarlet
+// Script Description: Player Object Object
+// Script Author: Virtua Team
 // ----------------------------------
 
 // ========================
@@ -355,6 +354,8 @@ reserve function Player_Action_DblJumpAmy
 reserve function Player_Metal_DblJump
 reserve function Player_Action_DblJumpMSonic
 reserve function Player_State_Victory
+reserve function Player_State_WallClingCheck
+reserve function Player_State_WallCling
 
 // ========================
 // Static Values
@@ -375,6 +376,8 @@ public value Player_attractTablePos 	= 0
 public value Player_attractTableSize 	= 0
 public value Player_attractFrameCount 	= 0
 public value Player_attractDuration 	= 0
+public value Player_coyoteTime 	= 0
+public value Player_canCoyoteTime 	= false
 // All these below are unused
 private value Player_unusedValue1 = 0
 private value Player_unusedValue2 = 0
@@ -2404,6 +2407,12 @@ end function
 
 
 public function Player_HandleAirMovement
+	if player.jumpPress == true
+		if stage.playerListPos == PLAYER_SONIC_ALONE
+			player.state = Player_State_WallClingCheck
+		end if
+	end if
+
 	player.scrollTracking = true
 	player.yvel += player.gravityStrength
 	if player.yvel < player.jumpCap
@@ -2861,6 +2870,122 @@ public function Player_Action_DblJumpMSonic
 			end if
 	end if
 end function
+
+
+public function Player_State_WallClingCheck
+	GetBit(temp0, player.direction, 0)
+	if temp0 == FLIP_NONE
+		ObjectTileCollision(CSIDE_LWALL, 12, -2, player.collisionPlane)
+		temp1 = checkResult
+	else
+		ObjectTileCollision(CSIDE_RWALL, -12, -2, player.collisionPlane)
+		temp1 = checkResult
+	end if
+
+	if checkResult == true
+			player.state = Player_State_WallCling
+			player.speed = 0
+			player.xvel = 0
+			player.yvel = 0
+			player.timer = 0
+			PlaySfx(SfxName[Catch], false)
+	end if
+	
+	CallFunction(Player_State_Air)
+end function
+
+
+public function Player_State_WallCling
+	if player.gravity == GRAVITY_AIR
+		player.animation = ANI_CLIMBING
+			if player.down == true
+				if Player_superState == SUPERSTATE_SUPER
+					player.yvel = 0x20000
+				else
+					player.yvel = 0x10000
+				end if
+
+				player.timer++
+				if player.timer == 4
+					player.timer = 0
+					if player.frame < 1
+						player.frame += 6
+					end if
+
+					player.frame--
+				end if
+			else
+				if player.timer < 9
+					player.timer ++
+				else
+					player.yvel = 0x8000
+				endif
+			end if
+
+		if player.jumpPress == true
+			player.animation = ANI_FLY_LIFT_DOWN 
+			player.timer = 0
+			PlaySfx(SfxName[Jump], false)
+
+			if player.direction == FACING_LEFT
+				player.xvel = 0x40000
+				player.speed = 0x40000
+				player.direction = FACING_RIGHT
+			else
+				player.xvel = -0x40000
+				player.speed = -0x40000
+				player.direction = FACING_LEFT
+			end if
+
+			player.yvel = -0x60000
+			if player.gravityStrength != 0x3800
+				player.xvel >>= 1
+				player.speed >>= 1
+				player.yvel >>= 1
+			end if
+
+			player.state = Player_State_WallClingCheck
+		else
+			if player.direction == FACING_RIGHT
+				temp2 = player.xpos
+				ObjectTileGrip(CSIDE_LWALL, 10, -10, player.collisionPlane)
+
+				temp0 = checkResult
+				temp3 = player.xpos
+				player.xpos = temp2
+				ObjectTileGrip(CSIDE_LWALL, 10, 11, player.collisionPlane)
+
+				temp1 = checkResult
+				if player.xpos > temp3
+					player.xpos = temp3
+				end if
+			else
+				temp2 = player.xpos
+				ObjectTileGrip(CSIDE_RWALL, -10, -10, player.collisionPlane)
+
+				temp0 = checkResult
+				temp3 = player.xpos
+				player.xpos = temp2
+				ObjectTileGrip(CSIDE_RWALL, -10, 11, player.collisionPlane)
+
+				temp1 = checkResult
+				if player.xpos < temp3
+					player.xpos = temp3
+				end if
+			end if
+
+
+				if temp1 == false
+					player.state = Player_State_Air
+				end if
+		end if
+	else
+		player.animation = ANI_WALKING
+		player.state = Player_State_Ground
+		CallFunction(Player_HandleOnGround)
+	end if
+end function
+
 
 public function Player_Action_DblJumpSonic
 	if keyPress[1].buttonY != false
@@ -3562,6 +3687,30 @@ public function Player_State_Air
 	if player.gravity == GRAVITY_AIR
 		CallFunction(Player_HandleAirMovement)
 
+		// Celeste Time's code (i know this is actually called Coyote Time but Celeste is peaker than it, so)
+		if player.yvel >= 0
+			Player_coyoteTime++
+			if Player_coyoteTime <= 5 //  Only 5 frames?! You gotta be fast to do this!...unless you're a cheater-ass and edit the code to have more time than only this!
+				Player_canCoyoteTime = true
+				if Player_canCoyoteTime == true
+					if player.jumpPress == true
+						if player.jumpAbilityState == 0 // Jump ability state so the player doesn't go spam mode with it
+							CallFunction(Player_Action_Jump)
+						end if
+					end if
+				end if
+			else
+				Player_canCoyoteTime = false
+			end if
+		end if
+
+		// I regret being able to code functional messes like this...
+		// (Incase you didn't notice, this is the proper fix for the Celeste/Coyote Time previous bugs)
+		if player.yvel < 0
+			Player_canCoyoteTime = false // Deactivate the boolean
+			Player_coyoteTime = 6 // Set the timer to be more than 5 (in this case, 6), so the code above is ignored
+		end if
+
 		if player.yvel > 0x20000
 			if player.animation == ANI_FLAILING1
 				player.animation = ANI_WALKING
@@ -3815,27 +3964,22 @@ end function
 
 
 public function Player_State_Spindash
-	currentPlayer = player.entityPos
-	if player.entityPos == camera[currentPlayer].target
-		if player.direction == FACING_RIGHT
-			screen.cameraStyle = CAMERASTYLE_EXTENDED_OFFSET_L
-		else
-			screen.cameraStyle = CAMERASTYLE_EXTENDED_OFFSET_R
-		end if
+	if player.direction == FACING_RIGHT
+		screen.camerastyle = CAMERASTYLE_EXTENDED_OFFSET_L
+	else
+		screen.camerastyle = CAMERASTYLE_EXTENDED_OFFSET_R
 	end if
-
 	// start spindash air fix - Tracker_TD
 	if player.gravity == GRAVITY_AIR
 		player.down = true
 		player.jumpPress = false
 		CallFunction(Player_State_Air)
 		CallFunction(Player_HandleGroundMovement)
-		screen.cameraStyle = CAMERASTYLE_EXTENDED
+		screen.camerastyle = CAMERASTYLE_EXTENDED
 	else
 		player.speed = 0
-	end if // porteado directamente de Tracker tweaks gracias Tracker_TD :D
+	end if //porteado directamente de Tracker tweaks gracias Tracker_TD :D
 	// end spindash air fix - Tracker_TD
-
 	if player.jumpPress == true
 		if player.abilityTimer < 0x90000
 			player.abilityTimer += 0x20000
@@ -4646,7 +4790,7 @@ public function Player_State_Climb
 		end if
 
 		if player.jumpPress == true
-			player.animation = ANI_JUMPING
+			player.animation = ANI_FLY_LIFT_DOWN 
 			player.state = Player_State_Air
 			player.timer = 0
 			PlaySfx(SfxName[Jump], false)
@@ -5597,6 +5741,7 @@ event ObjectUpdate
 		else
 			if player.gravity == GRAVITY_GROUND
 				player.jumpAbilityState = 0
+				Player_coyoteTime = 0
 			end if
 
 			CallFunction(player.state)
@@ -5660,17 +5805,27 @@ event ObjectUpdate
 				if temp0 == GRAVITY_AIR
 					if player.prevGravity == GRAVITY_GROUND
 						player.badnikBonus = 0
-						if player.animation == ANI_JUMPING
+						CheckEqual(player.animation, ANI_JUMPING)
+						temp0 = checkResult
+						CheckEqual(player.animation, ANI_DROPDASH)
+						temp0 |= checkResult
+						if temp0 == true
 							if player.down == false
 								if player.state != Player_State_BubbleBounce
 									if player.state != Player_State_Roll
 										if player.state != Player_State_TubeRoll
-											player.animation = ANI_WALKING
-											if player.entityPos == camera[currentPlayer].target
-												camera[currentPlayer].adjustY = 0
-											end if
+											// Fun fact: In Origins, they forgot to account for the player dropdashing
+											// So they appear to walk for a single frame before they dropdash
+											// Needless to say, no.
+											CallFunction(Player_GetDropDashCharge)
+											if temp7 < 20
+												player.animation = ANI_WALKING
+												if player.entityPos == camera[currentPlayer].target
+													camera[currentPlayer].adjustY = 0
+												end if
 
-											player.iypos += player.jumpOffset
+												player.iypos += player.jumpOffset
+											end if
 										end if
 									end if
 								end if
@@ -5689,6 +5844,7 @@ event ObjectUpdate
 
 		if player.gravity == GRAVITY_GROUND
 			player.jumpAbilityState = 0
+			Player_coyoteTime = 0
 		end if
 
 		CallFunction(player.state)
@@ -5749,17 +5905,28 @@ event ObjectUpdate
 			if temp0 == GRAVITY_AIR
 				if player.prevGravity == GRAVITY_GROUND
 					player.badnikBonus = 0
-					if player.animation == ANI_JUMPING
+					CheckEqual(player.animation, ANI_JUMPING)
+					temp0 = checkResult
+					CheckEqual(player.animation, ANI_DROPDASH)
+					temp0 |= checkResult
+					if temp0 == true
 						if player.down == false
 							if player.state != Player_State_BubbleBounce
 								if player.state != Player_State_Roll
 									if player.state != Player_State_TubeRoll
 										player.animation = ANI_WALKING
-										if player.entityPos == camera[currentPlayer].target
-											camera[currentPlayer].adjustY = 0
-										end if
+										// Fun fact: In Origins, they forgot to account for the player dropdashing
+										// So they appear to walk for a single frame before they dropdash
+										// Needless to say, no.
+										CallFunction(Player_GetDropDashCharge)
+										if temp7 < 20
+											player.animation = ANI_WALKING
+											if player.entityPos == camera[currentPlayer].target
+												camera[currentPlayer].adjustY = 0
+											end if
 
-										player.iypos += player.jumpOffset
+											player.iypos += player.jumpOffset
+										end if
 									end if
 								end if
 							end if
@@ -5939,10 +6106,11 @@ event ObjectStartup
 			//this part was added for knux and tails because before, if you pressed up and jump playing with one of them, they just keeped looking up because they did not had a Peelout action check
 			player[SLOT_PLAYER1].actionPeelout = Player_Action_Jump
 			
-			// Note this check is actually bugged, this only checks for the last three save slots, ignoring the first one
+			// Note this check was actually bugged, this only checks for the last three save slots, ignoring the first one
 			// Also yes this check is still in Origins LOL
 			// It only works perchance, as per the bug listed right above
-			if options.saveSlot > 0
+			// Virtua Scarlet fixes this thankfully, not sure why hasn't this been fixed in GDT yet though...
+			if options.saveSlot > -1
 				stage.player2Enabled = false
 			end if
 			break

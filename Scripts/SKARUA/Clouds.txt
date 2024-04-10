@@ -102,7 +102,7 @@ event ObjectStartup
 	// Reset vertexes to their starting position
 	MatrixTranslateXYZ(MAT_WORLD, 0, 0, 0)
 	MatrixRotateXYZ(MAT_WORLD, 0, 0, 0)
-	MatrixRotateXYZ(MAT_VIEW, 12, 0, 0)
+	MatrixRotateXYZ(MAT_VIEW, -8, 32, 0)
 	
 	// Lots of values used here...
 	// - ArrayPos0 is the index of the current Vertex
@@ -122,7 +122,7 @@ event ObjectStartup
 	temp5 = 0
 	
 	// Make 10 Cloud columns
-	while temp3 < 10
+	while temp3 < 16
 		
 		temp0 = 0
 		temp1 = -0x2000

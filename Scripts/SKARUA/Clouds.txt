@@ -102,7 +102,7 @@ event ObjectStartup
 	// Reset vertexes to their starting position
 	MatrixTranslateXYZ(MAT_WORLD, 0, 0, 0)
 	MatrixRotateXYZ(MAT_WORLD, 0, 0, 0)
-	MatrixRotateXYZ(MAT_VIEW, 24, 0, 0)
+	MatrixRotateXYZ(MAT_VIEW, 12, 0, 0)
 	
 	// Lots of values used here...
 	// - ArrayPos0 is the index of the current Vertex

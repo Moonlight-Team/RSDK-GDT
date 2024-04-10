@@ -1,0 +1,69 @@
+// ----------------------------------
+// RSDK Project: RSDK-GDT
+// Script Description: Rock Object
+// Script Author: Klashie
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+// ========================
+// Function Declarations
+// ========================
+
+reserve function Rock_DebugDraw
+reserve function Rock_DebugSpawn
+
+
+// ========================
+// Function Definitions
+// ========================
+
+private function Rock_DebugDraw
+	DrawSprite(0)
+end function
+
+
+private function Rock_DebugSpawn
+	CreateTempObject(TypeName[Rock], 0, object.xpos, object.ypos)
+end function
+
+
+// ========================
+// Events
+// ========================
+
+
+
+event ObjectDraw
+	DrawSprite(0)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-24, -16, 64, 32, 1, 124)
+	
+	SetTableValue(TypeName[Rock], DebugMode_ObjCount, DebugMode_TypesTable)
+	SetTableValue(Rock_DebugDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(Rock_DebugSpawn, DebugMode_ObjCount, DebugMode_SpawnTable)
+	DebugMode_ObjCount++
+end event
+
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	CheckCurrentStageFolder("SH")
+	if checkResult == true
+		LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-24, -16, 64, 32, 1, 124)
+	end if
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

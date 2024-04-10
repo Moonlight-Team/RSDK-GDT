@@ -174,11 +174,11 @@ end event
 
 event ObjectStartup
 	// Check which sprites to load based on current folder
-		LoadSpriteSheet("DDZ/Objects1.gif")
-		SpriteFrame(-21, -13, 40, 28, 98, 127)
-		SpriteFrame(-20, -14, 39, 29, 139, 127)
-		SpriteFrame(-20, -13, 39, 28, 98, 156)
-		SpriteFrame(-20, -14, 39, 29, 139, 127)
+		LoadSpriteSheet("SH/Enemies.gif")
+		SpriteFrame(-21, -13, 40, 28, 103, 3)
+		SpriteFrame(-20, -14, 39, 29, 144, 3)
+		SpriteFrame(-20, -13, 41, 28, 101, 32)
+		SpriteFrame(-20, -14, 39, 29, 144, 3)
 	end if
 	// Setup all Motobugs
 	foreach (TypeName[Motobug], arrayPos0, ALL_ENTITIES)
@@ -253,17 +253,11 @@ end event
 
 event RSDKLoad
 	// Check which sprites to load based on current folder
-	CheckCurrentStageFolder("Zone07")
-	if checkResult == true
-		// Motobug in in MBZ - load MBZ frames
+
 		
-		LoadSpriteSheet("MBZ/Objects.gif")
-		SpriteFrame(-21, -13, 40, 28, 170, 145)
-	else
-		// Thanks to Origins using Motobugs everywhere, just load the GHZ sheet as a fallback, even if not in GHZ
+		LoadSpriteSheet("SH/Enemies.gif")
+		SpriteFrame(-21, -13, 40, 28, 103, 3)
 		
-		LoadSpriteSheet("DDZ/Objects1.gif")
-		SpriteFrame(-21, -13, 40, 28, 98, 127)
 	end if
 
 	AddEditorVariable("direction")

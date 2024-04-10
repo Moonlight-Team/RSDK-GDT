@@ -1,0 +1,88 @@
+// ----------------------------------
+// RSDK Project: RSDK-GDT
+// Script Description: Fan Object
+// Script Author: Christian Whitehead/Geared
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias object.value0  : object.timer
+
+// Property Values
+private alias 1 : FAN_ACTIVATED
+
+// Player Aliases
+private alias object.entityPos		 :	player.entityPos 		// Where the player is on the object list - P1 should be 0, P2 should be 1
+private alias object.yvel			 :	player.yvel
+
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		arrayPos0 = player[currentPlayer].entityPos
+		if object[arrayPos0].propertyValue == FAN_ACTIVATED
+			BoxCollisionTest(C_TOUCH, object.entityPos, -32, -480, 32, 8, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+			if checkResult == true
+				if player[currentPlayer].yvel > -262144
+					player[currentPlayer].yvel -= 12288
+				end if
+			end if
+		end if
+	next
+end event
+
+
+event ObjectDraw
+	object.timer++
+	if object.timer == 2
+		object.timer = 0
+		object.frame++
+		if object.frame > 4
+			object.frame = 0
+		end if
+	end if
+
+	DrawSprite(object.frame)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
+	
+	// Fan Frames
+	SpriteFrame(-14, -8, 26, 16, 99, 62)
+	SpriteFrame(-11, -8, 20, 16, 99, 79)
+	SpriteFrame(-6, -8, 14, 16, 99, 96)
+	SpriteFrame(-7, -8, 20, 16, 99, 113)
+	SpriteFrame(-10, -8, 26, 16, 99, 130)
+
+	// Setup any fans that are
+	// present in the level
+	
+	foreach (TypeName[Fan], arrayPos0, ALL_ENTITIES)
+		// Set the fan to be drawn infront of the player
+		object[arrayPos0].drawOrder = 4
+	next
+end event
+
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
+	SpriteFrame(-14, -8, 26, 16, 99, 62)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

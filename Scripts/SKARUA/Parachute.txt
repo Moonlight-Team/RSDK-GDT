@@ -1,0 +1,204 @@
+// ----------------------------------
+// RSDK Project: RSDK-GDT
+// Script Description: Parachute Object 
+// Script Author: Christian Whitehead/Twanvanb1
+// ----------------------------------
+
+
+private alias Object.Value0 : Object.PlayerNo
+private alias Object.Value1 : Object.StartX
+private alias Object.Value2 : Object.StartY
+
+event ObjectUpdate
+
+	switch Object.State
+	case 1
+		Object[0].EntityPos = Object.PlayerNo
+		Object[0].Animation = ANI_HANGING
+
+		if Object[0].Left == true
+			Object[0].Direction = FACING_LEFT
+		end if
+		
+		if Object[0].Right == true
+			Object[0].Direction = FACING_RIGHT
+		end if
+
+		if Object[0].Direction == FACING_RIGHT
+			if Object[0].Speed < -196608
+				Object[0].Speed *= 104
+				Object[0].Speed >>= 7
+			end if
+
+			if Object[0].Speed > 196608
+				Object[0].Speed *= 104
+				Object[0].Speed >>= 7
+				if Object[0].Speed < 196608
+					Object[0].Speed = 196608
+				end if
+			else
+				Object[0].Speed += 4096
+				if Object[0].Speed > 196608
+					Object[0].Speed = 196608
+				end if
+			end if
+		else
+			if Object[0].Speed > 196608
+				Object[0].Speed *= 104
+				Object[0].Speed >>= 7
+			end if
+
+			if Object[0].Speed < -196608
+				Object[0].Speed *= 104
+				Object[0].Speed >>= 7
+				if Object[0].Speed > -196608
+					Object[0].Speed = -196608
+				end if
+			else
+				Object[0].Speed -= 4096
+				if Object[0].Speed < -196608
+					Object[0].Speed = -196608
+				end if
+			end if
+
+		end if
+
+		Object[0].XVel = Object[0].Speed
+		Object.XPos = Object[0].XPos
+		Object.YPos = Object[0].YPos
+		Object.DrawOrder = 5 // first part of the fix of Sonic not holding correctly the glider/parachute
+		temp0 = Object[0].CollisionTop
+		temp0 -= 19 // second part of the fix :star_struck:
+		temp0 <<= 16
+		Object.YPos += temp0
+
+		if Object[0].yvel > 0x8000
+			Object[0].yvel -= 0x3500
+		end if
+
+		if Object[0].State == Player_State_Hurt
+			Object.Priority = 1
+			Object.State = 2
+			Object.XVel = Object[0].XVel
+		end if
+
+		if Object[0].Gravity == false
+			Object.Priority = 1
+			Object.State = 2
+			Object.XVel = Object[0].XVel
+		else
+			Object.YVel = Object[0].YVel
+		end if
+
+		if Object[0].JumpPress == true
+			PlaySfx(SfxName[Jump], false)
+			Object[0].State = Player_State_Air
+			Object[0].Animation = ANI_JUMPING
+			Object[0].YVel = -262144
+			Object[0].Gravity = true
+
+			Object.Priority = 1
+			Object.State = 2
+			Object.XVel = Object[0].XVel
+		end if
+
+		break
+	case 2
+		if Object.YVel < 65536
+			Object.YVel += -8192
+		end if
+
+		Object.XPos += Object.XVel
+		Object.YPos += Object.YVel
+
+		if Object.OutOfBounds == true
+			Object.State = 3
+			Object.XPos = Object.StartX
+			Object.YPos = Object.StartY
+		end if
+		break
+
+	case 3
+		if Object.OutOfBounds == true
+			Object.State = 0
+			Object.Priority = 0
+		end if
+		break
+	end switch
+
+	if Object.State == 0
+	 BoxCollisionTest(C_TOUCH, object.entityPos, -16, 20, 16, 24, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+		if checkResult == true
+			Object.StartX = Object.XPos
+			Object.StartY = Object.YPos
+
+			Object.PlayerNo = Object[0].EntityPos
+			Object[0].yvel -= 0x3000
+			Object[0].Animation = ANI_HANGING
+			Object.XPos = Object[0].XPos
+			Object.YPos = Object[0].YPos
+			Object.DrawOrder = 5 // looks like we also need to put the code here huh?
+			temp0 = Object[0].CollisionTop
+			temp0 -= 19
+			temp0 <<= 16
+			Object[0].Speed = Object[0].XVel
+			Object.YPos += temp0
+			Object.State = 1
+			Object[0].YVel = 0
+			Object[0].Gravity = true
+			PlaySfx(SfxName[Catch], false)
+	    end if
+	end if
+	
+end event
+
+event ObjectDraw
+
+	switch Object.State
+	case 0
+		DrawSprite(0)
+		break
+	case 1
+	case 2
+		temp0 = Object.Frame
+		temp0 >>= 3
+		DrawSprite(temp0)
+		Object.Frame++
+		if Object.Frame > 63
+			Object.Frame = 0
+		end if
+		DrawSprite(temp0)
+		break
+	end switch
+
+end event
+
+event ObjectStartup
+	
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
+	
+	//Parachute Frames
+	SpriteFrame(-24, -20, 48, 43, 50, 62)
+	SpriteFrame(-19, -20, 48, 43, 1, 106)
+	SpriteFrame(-15, -20, 48, 43, 50, 106)
+	SpriteFrame(-19, -20, 48, 43, 1, 106)
+	SpriteFrame(-24, -20, 48, 43, 50, 62)
+	SpriteFrame(-29, -20, 48, 43, 1, 55)
+	SpriteFrame(-34, -20, 47, 43, 72, 18)
+	SpriteFrame(-29, -20, 48, 43, 1, 55)
+	
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("DDZ/Gimmicks.gif")
+	
+	//Parachute Frames
+SpriteFrame(-24, -20, 48, 43, 50, 62)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

@@ -1,10 +1,15 @@
-Klashicola - Level desgin (its rough but it works) and the Idea.
+Klashicola - Project Manager , Logo Creator, Ported Sakrua Hill Art to GDT , And Porting Scarlets Moveset to GDT
 
-Twanvanb1 - Parallax, Script Generator and additional Help
+CyberFog - Sprite Artist (wall jump, badniks)
+
+Dr. S - Sprite Editior
+
+Hame - Level Desginer
+
+Twanvanb1 - Script Generator and additional Help
 
 Geared - Extended Camera and  title card
 
-SS - For the Sleeping Sonic Team Sprite.
 
 Creators of various sprites:
 
@@ -72,7 +77,7 @@ Pedro Games2
 
 If any of those mentioned here do not want their work to be in GDT, please contact zero242 so that it can be removed peacefully and if it is not credited correctly as well.
 
-At virtua studio we don't want to affect anyone so this is a project with the purpose of helping people so we don't want problems either :D
+At Moonlight Team we don't want to affect anyone so this is a project with the purpose of helping people so we don't want problems either :D
 
 REMS - For existing. 
 

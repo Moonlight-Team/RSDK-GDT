@@ -4,6 +4,8 @@ CyberFog - Sprite Artist (wall jump, badniks)
 
 Dr. S - Sprite Editior
 
+Geoose - Tile Artist
+
 Hame - Level Desginer
 
 Twanvanb1 - Script Generator and additional Help

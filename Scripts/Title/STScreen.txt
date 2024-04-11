@@ -38,7 +38,6 @@ event ObjectUpdate
 			object.state = VIRTUATEAMLOGO_WAIT
 		end if
 
-		SetScreenFade(0x00, 0x00, 0x00, object.timer)
 		break
 	
 	case VIRTUATEAMLOGO_WAIT

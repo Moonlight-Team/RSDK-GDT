@@ -136,8 +136,8 @@ end function
 event ObjectUpdate
 	object.paletteCycleTimer++
 	if object.paletteCycleTimer > 4
-		object.paletteCycleTimer = 0
-		rotatePalette(0, 191, 192, true)
+		object.paletteCycleTimer = -2
+		rotatePalette(0, 193, 194, true)
 	end if
 	object.deformTimer++
 	if object.deformTimer > 4

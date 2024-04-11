@@ -62,7 +62,7 @@ end function
 event ObjectDraw
 	// The clouds move at a speed of 8 per second
 	// No good units to good here so let's just leave it at that, "8"...
-	Object.Scroll += 5
+	Object.Scroll += 20
 	
 	// Loop it around, once it reaches the end
 	Object.Scroll &= 0x7FF
@@ -71,7 +71,7 @@ event ObjectDraw
 	temp0 = Object.Scroll
 	FlipSign(temp0)
 	
-	MatrixTranslateXYZ(MAT_WORLD, -512, 720, temp0)
+	MatrixTranslateXYZ(MAT_WORLD, -512, 728, temp0)
 	
 	Draw3DScene()	
 end event
@@ -102,7 +102,7 @@ event ObjectStartup
 	// Reset vertexes to their starting position
 	MatrixTranslateXYZ(MAT_WORLD, 0, 0, 0)
 	MatrixRotateXYZ(MAT_WORLD, 0, 0, 0)
-	MatrixRotateXYZ(MAT_VIEW, -17, 32, 0)
+	MatrixRotateXYZ(MAT_VIEW, -19, 32, 0)
 	
 	// Lots of values used here...
 	// - ArrayPos0 is the index of the current Vertex
@@ -122,14 +122,14 @@ event ObjectStartup
 	temp5 = 0
 	
 	// Make 10 Cloud columns
-	while temp3 < 16
+	while temp3 < 20
 		
 		temp0 = 0
 		temp1 = -0x2000
 		temp4 = 0
 		
 		// Make 16 Cloud rows
-		while temp0 < 16
+		while temp0 < 22
 			
 			// Setup 4 vertexes, for a face
 			// Each face is to be hold a 64x64 texture

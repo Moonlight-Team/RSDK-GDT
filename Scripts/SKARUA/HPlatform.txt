@@ -117,8 +117,8 @@ end event
 
 
 event ObjectStartup
-	LoadSpriteSheet("BZ/Objects.gif")
-	SpriteFrame(-32, -8, 64, 24, 66, 95)
+	LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-32, -8, 54, 26, 31, 157)
 
 	foreach (TypeName[H Platform], arrayPos0, ALL_ENTITIES)
 		object[arrayPos0].centerPos.x = object[arrayPos0].xpos

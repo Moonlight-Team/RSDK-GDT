@@ -82,8 +82,8 @@ end event
 
 
 event ObjectStartup
-	LoadSpriteSheet("BZ/Objects.gif")
-	SpriteFrame(-32, -8, 64, 24, 1, 95)
+	LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-32, -8, 54, 26, 31, 157)
 
 	foreach (TypeName[V Platform], arrayPos0, ALL_ENTITIES)
 		object[arrayPos0].centerPos.y = object[arrayPos0].ypos

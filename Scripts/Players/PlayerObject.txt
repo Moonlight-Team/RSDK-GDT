@@ -34,8 +34,8 @@ public alias  2 : CONTROLMODE_P3 // Although unused by the game normally, RSDKv5
 public alias  3 : CONTROLMODE_P4
 
 // Pause Menu Aliases
-private alias object[10].drawOrder : PauseMenu.DrawOrder
-private alias object[10].priority : PauseMenu.Priority
+private alias object[11].drawOrder : PauseMenu.DrawOrder
+private alias object[11].priority : PauseMenu.Priority
 
 // Camera Styles
 public alias 0 : CAMERASTYLE_FOLLOW
@@ -1661,12 +1661,12 @@ public function Player_ProcessUpdate
 			end if
 			if temp0 == true
 				if options.vsMode == false
-					if object[10].type != TypeName[Pause Menu]
+					if object[11].type != TypeName[Pause Menu]
 						stage.state = STAGE_FROZEN
 						PlaySfx(SfxName[Menu Back], false)
 						StopSfx(SfxName[Flying])
 						StopSfx(SfxName[Tired])
-						object[10].type = TypeName[Pause Menu]
+						object[11].type = TypeName[Pause Menu]
 						PauseMenu.DrawOrder = 6
 						PauseMenu.Priority = PRIORITY_ALWAYS
 					end if

@@ -68,252 +68,421 @@ public value TitleCard_showZoneText = 0
 
 event ObjectUpdate
 	options.touchControls = false
-	
-	switch object.state
-	case TITLECARD_SETUP
-		object.alpha = 0xFF
-		object.actNamePos = screen.xcenter
-		object.actNamePos += 128
-		object.zonePos = screen.xcenter
-		object.zonePos += 160
-		object.blueRectPos = screen.xcenter
-		object.blueRectPos += 32
-		
-		//Twanvanb1 was here
-		switch object.propertyValue
-		case TITLECARD_TYPE_ACTNUM
-			object.displayedActNo  = stage.actNum
-			TitleCard_showZoneText = false
-			break
+	if stage.activeList != SPECIAL_STAGE
+		switch object.state
+		case TITLECARD_SETUP
+			object.alpha = 0xFF
+			object.actNamePos = screen.xcenter
+			object.actNamePos += 128
+			object.zonePos = screen.xcenter
+			object.zonePos += 160
+			object.blueRectPos = screen.xcenter
+			object.blueRectPos += 32
+			
+			//Twanvanb1 was here
+			switch object.propertyValue
+			case TITLECARD_TYPE_ACTNUM
+				object.displayedActNo  = stage.actNum
+				TitleCard_showZoneText = false
+				break
 
-		case TITLECARD_TYPE_ACT1
-			object.displayedActNo 	= 1
-			TitleCard_showZoneText 	= false
-			break
+			case TITLECARD_TYPE_ACT1
+				object.displayedActNo 	= 1
+				TitleCard_showZoneText 	= false
+				break
 
-		case TITLECARD_TYPE_ACT2
-			object.displayedActNo 	= 2
-			TitleCard_showZoneText 	= false
-			break
+			case TITLECARD_TYPE_ACT2
+				object.displayedActNo 	= 2
+				TitleCard_showZoneText 	= false
+				break
 
-		case TITLECARD_TYPE_ACT3
-			object.displayedActNo 	= 3
-			TitleCard_showZoneText 	= false
-			break
+			case TITLECARD_TYPE_ACT3
+				object.displayedActNo 	= 3
+				TitleCard_showZoneText 	= false
+				break
 
-		default
-			TitleCard_showZoneText = true
-			break
-		end switch
-		if credits.screen > 0
-			object.state = TITLECARD_CREDITSFADEIN
-			object.timer = 272
-			stage.state = STAGE_RUNNING
-			SetScreenFade(0, 0, 0, 255)
-		else
-			object.state++
-		end if
-		break
-		
-	case TITLECARD_DELAY
-		if object.timer < 30
-			object.timer++
-		else
-			object.timer = 0
-			PlayMusic(0)
-			object.state++
-		end if
-		break
-		
-	case TITLECARD_ENTERTITLECARD
-		// Wait a second. This code seems oddly... familiar. -Nd
-		if object.redRibbon.y > 180
-			object.redRibbon.y = 180
-		end if
-		if object.redRibbon.y < 180
-			object.redRibbon.y += 10
-		end if
-		if object.actNamePos > -0
-			object.actNamePos -= 16
-			if object.actNamePos < 18
-				object.actNamePos = 18
-			end if
-		end if
-		if object.zonePos > 0
-			object.zonePos -= 16
-			if object.zonePos < 18
-				object.actNamePos = 18
-			end if
-		end if
-		if object.zonePos <= 48
-			if object.blueRectPos > 20
-				object.blueRectPos -= 16
-				if object.blueRectPos < 20
-					object.blueRectPos = 20
-				end if
+			default
+				TitleCard_showZoneText = true
+				break
+			end switch
+			if credits.screen > 0
+				object.state = TITLECARD_CREDITSFADEIN
+				object.timer = 272
+				stage.state = STAGE_RUNNING
+				SetScreenFade(0, 0, 0, 255)
 			else
 				object.state++
 			end if
-		end if
-		break
-		
-	case TITLECARD_SHOWTITLECARD
-		if object.timer < 60
-			object.timer++
-		else
-			object.timer = 0
-			object.alpha = 248
-			stage.state = STAGE_RUNNING
-			currentPlayer = 0
-			object.state++
-		end if
-		break
-		
-	case TITLECARD_FADEOUT
-		if object.alpha > 0
-			object.alpha -= 8
-		else
-			object.state++
-			currentPlayer = 0
-			while currentPlayer < playerCount
-				object[currentPlayer].controlMode = 0
-				currentPlayer++
-			loop
-			stage.timeEnabled = true
-		end if
-		break
-		
-	case TITLECARD_STARTSTAGE
-		object.redRibbon.y -= 20
-		object.actNamePos += 32
-		object.zonePos += 32
-		object.blueRectPos += 32
-		if object.timer < 20
-			object.timer++
-		else
-			object.timer = 0
-			object.type = TypeName[Blank Object]
-		end if
-		break
-		
-	case TITLECARD_CREDITSFADEIN
-		if object.timer > 0
-			object.timer -= 16
-			SetScreenFade(0, 0, 0, object.timer)
-		else
-			currentPlayer = 0
-			while currentPlayer < playerCount
-				object[currentPlayer].controlMode = 0
-				currentPlayer++
-			loop
-			ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
-		end if
-		break
-		
-	case TITLECARD_FADETOTITLE
-		if object.timer < 300
-			object.timer += 5
-			if credits.screen == 0
-				music.volume -= 2
-			end if
-		else
-			stage.activeList = PRESENTATION_STAGE
-			if credits.screen > 0
-				stage.listPos = 2
+			break
+			
+		case TITLECARD_DELAY
+			if object.timer < 30
+				object.timer++
 			else
-				stage.listPos = 0
-				StopMusic()
+				object.timer = 0
+				PlayMusic(0)
+				object.state++
 			end if
-			LoadStage()
-		end if
-		SetScreenFade(0, 0, 0, object.timer)
-		break
-	end switch
+			break
+			
+		case TITLECARD_ENTERTITLECARD
+			// Wait a second. This code seems oddly... familiar. -Nd
+			if object.redRibbon.y > 180
+				object.redRibbon.y = 180
+			end if
+			if object.redRibbon.y < 180
+				object.redRibbon.y += 10
+			end if
+			if object.actNamePos > -0
+				object.actNamePos -= 16
+				if object.actNamePos < 18
+					object.actNamePos = 18
+				end if
+			end if
+			if object.zonePos > 0
+				object.zonePos -= 16
+				if object.zonePos < 18
+					object.actNamePos = 18
+				end if
+			end if
+			if object.zonePos <= 48
+				if object.blueRectPos > 20
+					object.blueRectPos -= 16
+					if object.blueRectPos < 20
+						object.blueRectPos = 20
+					end if
+				else
+					object.state++
+				end if
+			end if
+			break
+			
+		case TITLECARD_SHOWTITLECARD
+			if object.timer < 60
+				object.timer++
+			else
+				object.timer = 0
+				object.alpha = 248
+				stage.state = STAGE_RUNNING
+				currentPlayer = 0
+				object.state++
+			end if
+			break
+			
+		case TITLECARD_FADEOUT
+			if object.alpha > 0
+				object.alpha -= 8
+			else
+				object.state++
+				currentPlayer = 0
+				while currentPlayer < playerCount
+					object[currentPlayer].controlMode = 0
+					currentPlayer++
+				loop
+				stage.timeEnabled = true
+			end if
+			break
+			
+		case TITLECARD_STARTSTAGE
+			object.redRibbon.y -= 20
+			object.actNamePos += 32
+			object.zonePos += 32
+			object.blueRectPos += 32
+			if object.timer < 20
+				object.timer++
+			else
+				object.timer = 0
+				object.type = TypeName[Blank Object]
+			end if
+			break
+			
+		case TITLECARD_CREDITSFADEIN
+			if object.timer > 0
+				object.timer -= 16
+				SetScreenFade(0, 0, 0, object.timer)
+			else
+				currentPlayer = 0
+				while currentPlayer < playerCount
+					object[currentPlayer].controlMode = 0
+					currentPlayer++
+				loop
+				ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+			end if
+			break
+			
+		case TITLECARD_FADETOTITLE
+			if object.timer < 300
+				object.timer += 5
+				if credits.screen == 0
+					music.volume -= 2
+				end if
+			else
+				stage.activeList = PRESENTATION_STAGE
+				if credits.screen > 0
+					stage.listPos = 2
+				else
+					stage.listPos = 0
+					StopMusic()
+				end if
+				LoadStage()
+			end if
+			SetScreenFade(0, 0, 0, object.timer)
+			break
+		end switch
+	else
+		switch object.state
+		case TITLECARD_SETUP
+			object.alpha = 0xFF
+			object.actNamePos = screen.xcenter
+			object.actNamePos += 128
+			object.zonePos = screen.xcenter
+			object.zonePos += 160
+			object.blueRectPos = screen.xcenter
+			object.blueRectPos += 32
+			
+			//Twanvanb1 was here
+			switch object.propertyValue
+			case TITLECARD_TYPE_ACTNUM
+				object.displayedActNo  = stage.actNum
+				TitleCard_showZoneText = false
+				break
+
+			case TITLECARD_TYPE_ACT1
+				object.displayedActNo 	= 1
+				TitleCard_showZoneText 	= false
+				break
+
+			case TITLECARD_TYPE_ACT2
+				object.displayedActNo 	= 2
+				TitleCard_showZoneText 	= false
+				break
+
+			case TITLECARD_TYPE_ACT3
+				object.displayedActNo 	= 3
+				TitleCard_showZoneText 	= false
+				break
+
+			default
+				TitleCard_showZoneText = true
+				break
+			end switch
+			if credits.screen > 0
+				object.state = TITLECARD_CREDITSFADEIN
+				object.timer = 272
+				stage.state = STAGE_RUNNING
+				SetScreenFade(0, 0, 0, 255)
+			else
+				object.state++
+			end if
+			break
+			
+		case TITLECARD_DELAY
+			if object.timer < 30
+				object.timer++
+			else
+				object.timer = 0
+				PlayMusic(0)
+				object.state++
+			end if
+			break
+			
+		case TITLECARD_ENTERTITLECARD
+			// Wait a second. This code seems oddly... familiar. -Nd
+			if object.actNamePos > -0
+				object.actNamePos -= 16
+				if object.actNamePos < 18
+					object.actNamePos = 18
+				end if
+			end if
+			if object.zonePos > 0
+				object.zonePos -= 16
+				if object.zonePos < 18
+					object.actNamePos = 18
+				end if
+			end if
+			if object.zonePos <= 48
+				if object.blueRectPos > 20
+					object.blueRectPos -= 16
+					if object.blueRectPos < 20
+						object.blueRectPos = 20
+					end if
+				else
+					object.state++
+				end if
+			end if
+			break
+			
+		case TITLECARD_SHOWTITLECARD
+			if object.timer < 60
+				object.timer++
+			else
+				object.timer = 0
+				object.alpha = 248
+				stage.state = STAGE_RUNNING
+				currentPlayer = 0
+				object.state++
+			end if
+			break
+			
+		case TITLECARD_FADEOUT
+			if object.alpha > 0
+				object.alpha -= 8
+			else
+				object.state++
+				currentPlayer = 0
+				while currentPlayer < playerCount
+					object[currentPlayer].controlMode = 0
+					currentPlayer++
+				loop
+				stage.timeEnabled = true
+			end if
+			break
+			
+		case TITLECARD_STARTSTAGE
+			object.redRibbon.y -= 20
+			object.actNamePos += 32
+			object.zonePos += 32
+			object.blueRectPos += 32
+			if object.timer < 20
+				object.timer++
+			else
+				object.timer = 0
+				object.type = TypeName[Blank Object]
+			end if
+			break
+			
+		case TITLECARD_CREDITSFADEIN
+			if object.timer > 0
+				object.timer -= 16
+				SetScreenFade(0, 0, 0, object.timer)
+			else
+				currentPlayer = 0
+				while currentPlayer < playerCount
+					object[currentPlayer].controlMode = 0
+					currentPlayer++
+				loop
+				ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+			end if
+			break
+			
+		case TITLECARD_FADETOTITLE
+			if object.timer < 300
+				object.timer += 5
+				if credits.screen == 0
+					music.volume -= 2
+				end if
+			else
+				stage.activeList = PRESENTATION_STAGE
+				if credits.screen > 0
+					stage.listPos = 2
+				else
+					stage.listPos = 0
+					StopMusic()
+				end if
+				LoadStage()
+			end if
+			SetScreenFade(0, 0, 0, object.timer)
+			break
+		end switch
+	end if
 end event
 
 
 event ObjectDraw
-	if object.state < TITLECARD_CREDITSFADEIN
-		SetActivePalette(0, 0, screen.ysize)
-		DrawRect(0, 0, screen.xsize, screen.ysize, 8, 8, 11, object.alpha) // Black that fades out
+	if stage.activeList != SPECIAL_STAGE
+		if object.state < TITLECARD_CREDITSFADEIN
+			SetActivePalette(0, 0, screen.ysize)
+			DrawRect(0, 0, screen.xsize, screen.ysize, 8, 8, 11, object.alpha) // Black that fades out
 
-		// The red ribbon
-		temp0 = screen.xcenter
-		temp0 -= 109
-		DrawRect(temp0, 0, 12, object.redRibbon.y, 224, 0, 0, 255)
-		temp0 += 12
-		DrawRect(temp0, 0, 8, object.redRibbon.y, 192, 0, 32, 255)
-		temp0 += 8
-		DrawRect(temp0, 0, 10, object.redRibbon.y, 128, 0, 0, 255)
-		temp0 += 10
-		DrawRect(temp0, 0, 8, object.redRibbon.y, 96, 0, 32, 255)
-		temp0 += 8
-		DrawRect(temp0, 0, 11, object.redRibbon.y, 128, 0, 0, 255)
-		temp0 += 11
-		DrawRect(temp0, 0, 7, object.redRibbon.y, 192, 0, 32, 255)
-		temp0 += 7
-		DrawRect(temp0, 0, 12, object.redRibbon.y, 224, 0, 0, 255)
-
-		if object.redRibbon.y > 8
-			// the "Project Virtua" text
+			// The red ribbon
 			temp0 = screen.xcenter
-			temp0 -= 106
-			DrawSpriteScreenXY(30, temp0, object.redRibbon.y)
-		end if
+			temp0 -= 109
+			DrawRect(temp0, 0, 12, object.redRibbon.y, 224, 0, 0, 255)
+			temp0 += 12
+			DrawRect(temp0, 0, 8, object.redRibbon.y, 192, 0, 32, 255)
+			temp0 += 8
+			DrawRect(temp0, 0, 10, object.redRibbon.y, 128, 0, 0, 255)
+			temp0 += 10
+			DrawRect(temp0, 0, 8, object.redRibbon.y, 96, 0, 32, 255)
+			temp0 += 8
+			DrawRect(temp0, 0, 11, object.redRibbon.y, 128, 0, 0, 255)
+			temp0 += 11
+			DrawRect(temp0, 0, 7, object.redRibbon.y, 192, 0, 32, 255)
+			temp0 += 7
+			DrawRect(temp0, 0, 12, object.redRibbon.y, 224, 0, 0, 255)
 
-		// Act name
-		temp0 = screen.xcenter
-		temp0 += 100
-		temp0 += object.actNamePos
-		DrawActName(0, temp0, 100, 0, 0, 8, 0)
-
-		// Zone Text
-		if screen.xsize <= 320
-			temp0 = screen.xcenter
-			temp0 += 28
-			temp0 += object.zonePos
-			DrawSpriteScreenXY(26, temp0, 100)
-		else 
-			if screen.xsize <= 424
+			if object.redRibbon.y > 8
+				// the "Project Virtua" text
 				temp0 = screen.xcenter
-				temp0 += 39
+				temp0 -= 106
+				DrawSpriteScreenXY(30, temp0, object.redRibbon.y)
+			end if
+
+			// Act name
+			temp0 = screen.xcenter
+			temp0 += 100
+			temp0 += object.actNamePos
+			DrawActName(0, temp0, 100, 0, 0, 8, 0)
+
+			// Zone Text
+			if screen.xsize <= 320
+				temp0 = screen.xcenter
+				temp0 += 28
 				temp0 += object.zonePos
 				DrawSpriteScreenXY(26, temp0, 100)
 			else 
+				if screen.xsize <= 424
+					temp0 = screen.xcenter
+					temp0 += 39
+					temp0 += object.zonePos
+					DrawSpriteScreenXY(26, temp0, 100)
+				else 
+					temp0 = screen.xcenter
+					temp0 += 34
+					temp0 += object.zonePos
+					DrawSpriteScreenXY(26, temp0, 100)
+				end if
+			end if
+
+			if screen.ysize > 320
 				temp0 = screen.xcenter
-				temp0 += 34
-				temp0 += object.zonePos
-				DrawSpriteScreenXY(26, temp0, 100)
+				temp0 -= 20
+				temp0 += object.blueRectPos
+				if stage.actNum < 5
+					temp1 = 26
+					temp1 += stage.actNum
+					if temp1 > 30
+						temp1 = 30
+					end if
+					DrawSpriteScreenXY(temp1, temp0, 102)
+				end if
+			else 
+				temp0 = screen.xcenter
+				temp0 -= 26
+				temp0 += object.blueRectPos
+				temp0 += object.propertyValue
+
+				// add the actnum customization from S2
+				if object.displayedActNo > 0
+					temp1 = 26
+					temp1 += object.displayedActNo
+					if temp1 > 30
+						temp1 = 30
+					end if
+					DrawSpriteScreenXY(temp1, temp0, 102)
+				end if
 			end if
 		end if
-
-		if screen.ysize > 320
+	else 
+		if object.state < TITLECARD_CREDITSFADEIN
+			SetActivePalette(0, 0, screen.ysize)
+			DrawRect(0, 0, screen.xsize, screen.ysize, 8, 8, 11, object.alpha) // Black that fades out
+			
+			// Act name
 			temp0 = screen.xcenter
-			temp0 -= 20
-			temp0 += object.blueRectPos
-			if stage.actNum < 5
-				temp1 = 26
-				temp1 += stage.actNum
-				if temp1 > 30
-					temp1 = 30
-				end if
-				DrawSpriteScreenXY(temp1, temp0, 102)
-			end if
-		else 
-			temp0 = screen.xcenter
-			temp0 -= 26
-			temp0 += object.blueRectPos
-			temp0 += object.propertyValue
-
-			// add the actnum customization from S2
-			if object.displayedActNo > 0
-				temp1 = 26
-				temp1 += object.displayedActNo
-				if temp1 > 30
-					temp1 = 30
-				end if
-				DrawSpriteScreenXY(temp1, temp0, 102)
-			end if
+			temp0 += 80
+			temp0 += object.actNamePos
+			DrawActName(0, temp0, 100, 0, 0, 8, 0)
 		end if
 	end if
 end event

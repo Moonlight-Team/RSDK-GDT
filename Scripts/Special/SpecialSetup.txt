@@ -233,7 +233,7 @@ event ObjectStartup
 	// -> This way, it'll render in high-quality mode if possible, as opposed to the "3d Floor" type
 	TileLayer[0].Type = LAYER_3DFLOOR
 
-	SetMusicTrack("SpecialStage.ogg", 0, true)
+	SetMusicTrack("SpecialStage.ogg", 0, 1, 4591616)
 	SetMusicTrack("ActComplete.ogg", 1, false)
 	
 	Stage.PauseEnabled = false

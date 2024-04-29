@@ -1,8 +1,7 @@
 // ----------------------------------
-// RSDK Project: Sonic 2
+// RSDK Project: RSDK-GDT
 // Script Description: Bridge Object
-// Script Author: Christian Whitehead/Simon Thomley
-// Unpacked by Rubberduckycooly's script unpacker
+// Script Author: Klashicola/Geared
 // ----------------------------------
 
 // ========================
@@ -304,9 +303,8 @@ end event
 
 
 event ObjectStartup
-		LoadSpriteSheet("SH/Enemies.gif")
-		SpriteFrame(-8, -8, 16, 16, 1, 157)
-	end if
+	LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-8, -8, 16, 16, 1, 157)
 
 	foreach (TypeName[Bridge], arrayPos0, ALL_ENTITIES)
 		object[arrayPos0].startPos = object[arrayPos0].length
@@ -356,9 +354,8 @@ end event
 
 
 event RSDKLoad
-		LoadSpriteSheet("SH/Enemies.gif")
-		SpriteFrame(-8, -8, 16, 16, 133, 25)
-	end if
+	LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-8, -8, 16, 16, 133, 25)
 	
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "length")
 end event

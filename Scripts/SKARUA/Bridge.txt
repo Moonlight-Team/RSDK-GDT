@@ -304,8 +304,8 @@ end event
 
 
 event ObjectStartup
-		LoadSpriteSheet("SakuraHill/Objects.gif")
-		SpriteFrame(-8, -8, 16, 16, 133, 25)
+		LoadSpriteSheet("SH/Enemies.gif")
+		SpriteFrame(-8, -8, 16, 16, 1, 157)
 	end if
 
 	foreach (TypeName[Bridge], arrayPos0, ALL_ENTITIES)
@@ -356,7 +356,7 @@ end event
 
 
 event RSDKLoad
-		LoadSpriteSheet("SakuraHill/Objects.gif")
+		LoadSpriteSheet("SH/Enemies.gif")
 		SpriteFrame(-8, -8, 16, 16, 133, 25)
 	end if
 	

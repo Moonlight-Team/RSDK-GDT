@@ -156,14 +156,8 @@ end event
 
 
 event RSDKLoad
-	CheckCurrentStageFolder("Zone01")
-	if checkResult == true
-		LoadSpriteSheet("EHZ/Objects.gif")
-		SpriteFrame(-32, -12, 64, 32, 127, 98)
-	else
-		LoadSpriteSheet("MBZ/Objects.gif")
-		SpriteFrame(-32, -8, 64, 32, 1, 402)
-	end if
+LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-32, -8, 54, 26, 31, 157)
 
 	AddEditorVariable("startDir")
 	SetActiveVariable("startDir")

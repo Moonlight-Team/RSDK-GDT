@@ -1,0 +1,61 @@
+// ----------------------------------
+// RSDK Project: RSDK-GDT
+// Script Description: Bullet Object
+// Script Author: Klashicola/Geared
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+event ObjectUpdate
+	object.xpos += object.xvel
+	object.ypos += object.yvel
+
+	// Yeah, instead of an entire complicated process to check it's position compared to it's update range
+	// Here we just use "object.outOfBounds", it's an easier but worse method than the one mentioned above
+	if object.outOfBounds == true
+		object.type = TypeName[Blank Object]
+	end if
+
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		BoxCollisionTest(C_TOUCH, object.entityPos, -4, -4, 4, 4, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+		if checkResult == true
+			CallFunction(Player_ProjectileHit)
+		end if
+	next
+end event
+
+
+event ObjectDraw
+	temp0 = object.frame
+	temp0 >>= 2
+	DrawSprite(temp0)
+
+	object.frame++
+	object.frame %= 8
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-4, -4, 8, 8, 85, 41)
+	SpriteFrame(-4, -4, 8, 8, 85, 50)
+end event
+
+
+// ========================
+// Function Definitions
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("SH/Enemies.gif")
+	SpriteFrame(-4, -4, 8, 8, 85, 41)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

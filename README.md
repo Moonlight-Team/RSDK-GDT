@@ -18,12 +18,6 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 * ~~Main Menu From CD (work in progress)~~ Not in the Basic Edition
 * ~~3D Special Stage~~ Not in the Basic Edition
 
-# Planned Features
-* Boss battle
-* DDZ Act 2
-* Badnik overhaul
-* Improved test level design
-
 # How to run
 * Get the RSDK Decomp (Check Compat Versions)
 * Install the Code (the Releases is Outdated)

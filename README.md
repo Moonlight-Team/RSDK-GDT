@@ -15,8 +15,8 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 * Drop dash from Sonic Origins
 * Roll Jump Lock removed
 * Pause Menu From CD
-* Main Menu From CD (work in progress)
-* 3D Special Stage
+* ~~Main Menu From CD (work in progress)~~ Not in the Basic Edition
+* ~~3D Special Stage~~ Not in the Basic Edition
 
 # Planned Features
 * Boss battle
@@ -29,7 +29,6 @@ This Project is NOT a "free Replacement" for existing mods, dont tell us if your
 * Install the Code (the Releases is Outdated)
 * please.. **ENABLE Txtscripts!**
 * In Settings.ini Set ``SkipMainMenu`` To True and ``DisableFocusPause`` to 1
-* Enable the ``for Test`` Mod
 * you're ready to go!
 
 # How to Setup For making Games?
